@@ -21,7 +21,7 @@ const applicationSchema = new Schema(
   { timestamps: true }
 );
 
-// Prevent duplicate application by the same user for the same job
+// Compound Index: Prevents duplicate applications at DB level
 applicationSchema.index({ job: 1, applicant: 1 }, { unique: true });
 
 export const Application = mongoose.model("Application", applicationSchema);
