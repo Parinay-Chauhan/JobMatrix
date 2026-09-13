@@ -6,6 +6,77 @@ import {
   uploadOnCloudinary,
   deleteFromCloudinary,
 } from "../utils/cloudinary.js";
+import { Job } from "../models/job.model.js";
+import { Application } from "../models/application.model.js";
+
+
+// Recruiter Dashboard Aggregated Stats
+const getRecruiterDashboardStats = asyncHandler(async (req, res) => {
+  const recruiterProfile = await RecruiterProfile.findOne({
+    user: req.user._id,
+  });
+
+  if (!recruiterProfile) {
+    throw new ApiError(404, "Recruiter profile not found");
+  }
+
+  // Fetch job counts
+  const totalJobsPosted = await Job.countDocuments({
+    recruiter: recruiterProfile._id,
+  });
+
+  const activeJobs = await Job.countDocuments({
+    recruiter: recruiterProfile._id,
+    isActive: true,
+  });
+
+  // Get array of job ObjectIds created by this recruiter
+  const recruiterJobs = await Job.find({
+    recruiter: recruiterProfile._id,
+  }).select("_id");
+  const jobIds = recruiterJobs.map((job) => job._id);
+
+  // Application stats aggregation breakdown
+  const applicationStats = await Application.aggregate([
+    { $match: { job: { $in: jobIds } } },
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const statsSummary = {
+    totalApplications: 0,
+    pending: 0,
+    reviewed: 0,
+    accepted: 0,
+    rejected: 0,
+  };
+
+  applicationStats.forEach((item) => {
+    statsSummary.totalApplications += item.count;
+    if (Object.prototype.hasOwnProperty.call(statsSummary, item._id)) {
+      statsSummary[item._id] = item.count;
+    }
+  });
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        jobs: {
+          total: totalJobsPosted,
+          active: activeJobs,
+          closed: totalJobsPosted - activeJobs,
+        },
+        applications: statsSummary,
+      },
+      "Recruiter dashboard analytics retrieved successfully",
+    ),
+  );
+});
 
 // 1. Create or Update Recruiter Profile
 const createRecruiterProfile = asyncHandler(async (req, res) => {
@@ -233,4 +304,5 @@ export {
   uploadCompanyLogo,
   updateCompanyLogo,
   deleteCompanyLogo,
+  getRecruiterDashboardStats,
 };
