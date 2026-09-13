@@ -37,7 +37,7 @@ const postJob = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Salary must be a valid non-negative number");
   }
 
-  // 3. Strict Numeric Validation for Positions
+  // Strict Numeric Validation for Positions
   let positionsValue = 1;
   if (positions !== undefined && positions !== null) {
     positionsValue = Number(positions);
@@ -89,29 +89,58 @@ const postJob = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, job, "Job posted successfully"));
 });
 
-// 2. Get All Jobs (Public / Candidate Feed with Filtering & Search)
+// 2. Get All Jobs (Public Feed with Search, Multi-Filter & Pagination)
 const getAllJobs = asyncHandler(async (req, res) => {
-  const { keyword, location, jobType, page = 1, limit = 10 } = req.query;
+  const {
+    search,
+    keyword,
+    location,
+    jobType,
+    workMode,
+    category,
+    experienceLevel,
+    page = 1,
+    limit = 10,
+  } = req.query;
 
   const query = { isActive: true };
 
-  // Search keyword in title or description
-  if (keyword) {
+  // 1. Text Search across Title, Description, and Requirements
+  const searchTerm = search || keyword;
+  if (searchTerm && searchTerm.trim() !== "") {
+    const searchRegex = new RegExp(searchTerm.trim(), "i");
     query.$or = [
-      { title: { $regex: keyword, $options: "i" } },
-      { description: { $regex: keyword, $options: "i" } },
+      { title: searchRegex },
+      { description: searchRegex },
+      { requirements: searchRegex },
     ];
   }
 
-  if (location) {
-    query.location = { $regex: location, $options: "i" };
+  // 2. Exact/Case-Insensitive Filters
+  if (location && location.trim() !== "") {
+    query.location = { $regex: location.trim(), $options: "i" };
   }
 
-  if (jobType) {
-    query.jobType = jobType;
+  if (jobType && jobType.trim() !== "") {
+    query.jobType = jobType.trim();
   }
 
-  const skip = (Number(page) - 1) * Number(limit);
+  if (workMode && workMode.trim() !== "") {
+    query.workMode = workMode.trim();
+  }
+
+  if (category && category.trim() !== "") {
+    query.category = category.trim();
+  }
+
+  if (experienceLevel && experienceLevel.trim() !== "") {
+    query.experienceLevel = experienceLevel.trim();
+  }
+
+  // 3. Pagination calculation
+  const numericPage = Math.max(1, parseInt(page, 10) || 1);
+  const numericLimit = Math.max(1, parseInt(limit, 10) || 10);
+  const skip = (numericPage - 1) * numericLimit;
 
   const jobs = await Job.find(query)
     .populate({
@@ -120,9 +149,10 @@ const getAllJobs = asyncHandler(async (req, res) => {
     })
     .sort({ createdAt: -1 })
     .skip(skip)
-    .limit(Number(limit));
+    .limit(numericLimit);
 
   const totalJobs = await Job.countDocuments(query);
+  const totalPages = Math.ceil(totalJobs / numericLimit);
 
   return res.status(200).json(
     new ApiResponse(
@@ -131,8 +161,10 @@ const getAllJobs = asyncHandler(async (req, res) => {
         jobs,
         pagination: {
           totalJobs,
-          currentPage: Number(page),
-          totalPages: Math.ceil(totalJobs / Number(limit)),
+          currentPage: numericPage,
+          totalPages,
+          hasNextPage: numericPage < totalPages,
+          hasPrevPage: numericPage > 1,
         },
       },
       "Jobs fetched successfully",
@@ -225,6 +257,36 @@ const deleteJob = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Job deleted successfully"));
 });
 
+// 7. Toggle Job Active/Inactive Status (Recruiter Owner Only)
+const toggleJobStatus = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const job = await Job.findById(id);
+
+  if (!job) {
+    throw new ApiError(404, "Job not found");
+  }
+
+  // Authorization check
+  if (job.createdBy.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, "You are not authorized to modify this job status");
+  }
+
+  job.isActive = !job.isActive;
+  await job.save();
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        job,
+        `Job listing successfully ${job.isActive ? "reopened" : "closed"}`,
+      ),
+    );
+});
+
+// Clean export update
 export {
   postJob,
   getAllJobs,
@@ -232,6 +294,5 @@ export {
   getJobById,
   updateJob,
   deleteJob,
+  toggleJobStatus,
 };
-
-
