@@ -8,6 +8,7 @@ import {
   uploadCompanyLogo,
   updateCompanyLogo,
   deleteCompanyLogo,
+  getRecruiterDashboardStats,
 } from "../controllers/recruiter.controller.js";
 
 const router = Router();
@@ -30,5 +31,9 @@ router
   .post(upload.single("logo"), uploadCompanyLogo) // First time logo upload (201 Created)
   .patch(upload.single("logo"), updateCompanyLogo) // Replace existing logo (200 OK)
   .delete(deleteCompanyLogo);
+
+router
+  .route("/dashboard/stats")
+  .get(authorizeRoles("recruiter"), getRecruiterDashboardStats);
 
 export default router;
