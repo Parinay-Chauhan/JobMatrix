@@ -7,6 +7,7 @@ import {
   getJobById,
   updateJob,
   deleteJob,
+  toggleJobStatus,
 } from "../controllers/job.controller.js";
 
 const router = Router();
@@ -26,5 +27,10 @@ router
   .route("/:id")
   .patch(verifyJWT, authorizeRoles("recruiter"), updateJob)
   .delete(verifyJWT, authorizeRoles("recruiter"), deleteJob);
+
+// Dedicated Toggle Route for Recruiter
+router
+  .route("/toggle-status/:id")
+  .patch(verifyJWT, authorizeRoles("recruiter"), toggleJobStatus);
 
 export default router;
