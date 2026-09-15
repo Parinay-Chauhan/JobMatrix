@@ -9,7 +9,6 @@ import {
 import { Job } from "../models/job.model.js";
 import { Application } from "../models/application.model.js";
 
-
 // Recruiter Dashboard Aggregated Stats
 const getRecruiterDashboardStats = asyncHandler(async (req, res) => {
   const recruiterProfile = await RecruiterProfile.findOne({
@@ -231,42 +230,54 @@ const uploadCompanyLogo = asyncHandler(async (req, res) => {
 });
 
 // 2. Update Logo
+// Update / Replace Company Logo with Safe Rollback Pattern
 const updateCompanyLogo = asyncHandler(async (req, res) => {
   const logoLocalPath = req.file?.path;
 
+  // 1. Validate file input
   if (!logoLocalPath) {
-    throw new ApiError(400, "New logo file is required for update");
+    throw new ApiError(400, "Logo image file is required");
   }
 
+  // 2. Fetch recruiter profile
   const profile = await RecruiterProfile.findOne({ user: req.user._id });
-
   if (!profile) {
     throw new ApiError(404, "Recruiter profile not found");
   }
 
+  // 3. Store old logo public_id for safe cleanup after DB persistence
   const oldLogoPublicId = profile.logoPublicId;
-  const newLogo = await uploadOnCloudinary(logoLocalPath);
-  const newLogoUrl = newLogo?.secure_url || newLogo?.url;
+
+  // 4. Upload NEW logo image first
+  const uploadedLogo = await uploadOnCloudinary(logoLocalPath, "image");
+  const newLogoUrl = uploadedLogo?.secure_url || uploadedLogo?.url;
 
   if (!newLogoUrl) {
-    throw new ApiError(500, "Error while uploading new logo to Cloudinary");
+    throw new ApiError(500, "Failed to upload company logo to Cloudinary");
   }
 
+  // 5. Update DB document with exact schema field names (companyLogo & logoPublicId)
   profile.companyLogo = newLogoUrl;
-  profile.logoPublicId = newLogo.public_id;
+  profile.logoPublicId = uploadedLogo.public_id;
 
   try {
     await profile.save();
   } catch (error) {
-    // DB Save Fail Rollback: Orphaned Naye Asset ko Cloudinary se Clean karein
-    if (newLogo.public_id) {
-      await deleteFromCloudinary(newLogo.public_id);
-    }
-    throw new ApiError(500, "Failed to update profile logo in database");
+    // DB Save failed -> Rollback: Delete newly uploaded image from Cloudinary
+    await deleteFromCloudinary(uploadedLogo.public_id, "image");
+    throw new ApiError(500, "Failed to save company logo details in database");
   }
 
+  // 6. DB update successful -> Safely delete OLD logo from Cloudinary
   if (oldLogoPublicId) {
-    await deleteFromCloudinary(oldLogoPublicId);
+    try {
+      await deleteFromCloudinary(oldLogoPublicId, "image");
+    } catch (cleanupError) {
+      console.error(
+        "Failed to delete old company logo from Cloudinary:",
+        cleanupError.message,
+      );
+    }
   }
 
   return res
