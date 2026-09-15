@@ -1,19 +1,22 @@
 import "dotenv/config";
-import connectDB from '../src/db/index.js'
-import { app } from './app.js'
+import http from "http";
+import connectDB from "./db/index.js";
+import { app } from "./app.js";
+import { initializeSocket } from "./socket.js";
 
-// dotenv.config({
-//     path: './.env'
-// })
+// 1. Express app ko http server me wrap karo
+const server = http.createServer(app);
+
+// 2. Socket.IO ko http server ke sath initialize karo
+initializeSocket(server);
 
 connectDB()
-    .then(() => {
-        app.listen(process.env.PORT || 8000, () => {
-            console.log(`⚙️  Server is running on port at ${process.env.PORT}`);
-
-        })
-    })
-    .catch((error) => {
-        console.log(`MondoDB connection fail !!!`, error);
-
-    })
+  .then(() => {
+    // 3. app.listen ki jagah HTTP server.listen use karo
+    server.listen(process.env.PORT || 8000, () => {
+      console.log(`⚙️  Server is running on port at ${process.env.PORT || 8000}`);
+    });
+  })
+  .catch((error) => {
+    console.log(`MongoDB connection fail !!!`, error);
+  });
