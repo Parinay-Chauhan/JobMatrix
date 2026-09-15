@@ -1,12 +1,12 @@
 class ApiError extends Error {
   constructor(
     statusCode,
-    message = "something went wrong",
+    message = "Something went wrong",
     errors = [],
-    stack = "",
+    stack = ""
   ) {
     super(message);
-    this.statusCode = statusCode;
+    this.statusCode = statusCode; // Fixed: Property name matched with standard middleware expectation
     this.data = null;
     this.message = message;
     this.success = false;
