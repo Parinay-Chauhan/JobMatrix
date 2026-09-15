@@ -28,32 +28,35 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   // +++++++++++++ Data Validation +++++++++++++
-
-  const { username, email, password, fullName, role } = req.body;
+  const { fullName, email, password } = req.body;
+  // const { username, email, password, fullName, role } = req.body;
 
   // Check if all required fields are provided and not empty
 
-  if ([username, email, password].some((field) => !field?.trim())) {
+  if ([fullName, email, password].some((field) => !field?.trim())) {
     throw new ApiError(400, "All fields are required");
   }
 
   // Check if the user already exists in the database
 
-  const existedUser = await User.findOne({
-    $or: [{ username }, { email }],
-  });
+  const existedUser = await User.findOne({ email: email.toLowerCase() });
   if (existedUser) {
-    throw new ApiError(409, "User already exists");
+    throw new ApiError(409, "User with this email already exists");
   }
+
+  // Force role assignment to 'candidate' for public registration
+  // Security Hardening: Public users cannot self-assign 'recruiter' or 'admin' roles
+  const userRole = "candidate";
 
   // Create a new user in the database ( MongoDB will handle password hashing if you have set up pre-save middleware in the User model)
 
   const user = await User.create({
     fullName,
-    email,
+    email: email.toLowerCase(),
     password,
-    username,
-    role: role || "candidate", // Default role is "candidate" if not provided
+    role: userRole,
+    // username,
+    // role: role || "candidate", // Default role is "candidate" if not provided
   });
 
   // Fetch the newly created user from the database and exclude the password field from the response
