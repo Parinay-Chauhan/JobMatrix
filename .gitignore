@@ -146,4 +146,4 @@ dist
 .env.test.local
 .env.production.local
 .envrc
-/congig
+./config
