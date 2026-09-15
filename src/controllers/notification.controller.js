@@ -27,4 +27,39 @@ const getMyNotifications = asyncHandler(async (req, res) => {
   );
 });
 
-export { getMyNotifications };
+// Mark a single notification as read
+const markNotificationAsRead = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user._id;
+
+  // Fetch notification ensuring both ID and recipient match (Ownership Check)
+  const notification = await Notification.findById(id);
+
+  if (!notification) {
+    throw new ApiError(404, "Notification not found");
+  }
+
+  // Strict Authorization Guard Check
+  if (notification.recipient.toString() !== userId.toString()) {
+    throw new ApiError(
+      403,
+      "You are not authorized to mark this notification as read"
+    );
+  }
+
+  // Idempotent Check: Avoid unnecessary DB saves if already read
+  if (!notification.isRead) {
+    notification.isRead = true;
+    await notification.save({ validateBeforeSave: false });
+  }
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      notification,
+      "Notification marked as read successfully"
+    )
+  );
+});
+
+export { getMyNotifications, markNotificationAsRead };
