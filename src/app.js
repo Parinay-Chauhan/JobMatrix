@@ -25,6 +25,7 @@ import candidateRouter from "./routes/candidate.routes.js";
 import recruiterRouter from "./routes/recruiter.routes.js";
 import jobRouter from "./routes/job.routes.js";
 import applicationRouter from "./routes/application.routes.js";
+import notificationRouter from "./routes/notification.routes.js";
 
 //  --------------- routes declaration --------------------
 
@@ -33,5 +34,6 @@ app.use("/api/v1/candidates", candidateRouter);
 app.use("/api/v1/recruiters", recruiterRouter);
 app.use("/api/v1/jobs", jobRouter);
 app.use("/api/v1/applications", applicationRouter);
+app.use("/api/v1/notifications", notificationRouter);
 
 export { app };
