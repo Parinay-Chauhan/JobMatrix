@@ -131,6 +131,7 @@ const getApplicants = asyncHandler(async (req, res) => {
 });
 
 // 4. Update Application Status (Recruiter Only)
+// 4. Update Application Status (Recruiter Only)
 const updateStatus = asyncHandler(async (req, res) => {
   const applicationId = req.params.id;
   const { status } = req.body;
@@ -155,9 +156,12 @@ const updateStatus = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Application not found");
   }
 
-  // Authorization check
+  // Authorization check: Verify logged-in recruiter owns the job
   if (application.job.createdBy.toString() !== req.user._id.toString()) {
-    throw new ApiError(403, "Not authorized to update this application status");
+    throw new ApiError(
+      403,
+      "Not authorized to update this application status"
+    );
   }
 
   application.status = normalizedStatus;
@@ -171,20 +175,25 @@ const updateStatus = asyncHandler(async (req, res) => {
       await Notification.create({
         recipient: candidateUserId,
         type: "APPLICATION_STATUS_UPDATED",
-        message: `Your application status for "${application.job.title}" has been updated to "${normalizedStatus}".`,
+        message: `Your application for "${application.job.title}" has been ${normalizedStatus}.`,
         relatedJob: application.job._id,
         relatedApplication: application._id,
         isRead: false,
       });
     }
   } catch (error) {
+    // Application status update fails nahi honi chahiye agar notification creation throw kare
     console.error("Failed to generate candidate status notification:", error.message);
   }
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, application, "Application status updated successfully")
+      new ApiResponse(
+        200,
+        application,
+        "Application status updated successfully"
+      )
     );
 });
 
