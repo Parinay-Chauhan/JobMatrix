@@ -62,4 +62,45 @@ const markNotificationAsRead = asyncHandler(async (req, res) => {
   );
 });
 
-export { getMyNotifications, markNotificationAsRead };
+// Mark ALL notifications as read for logged-in user
+const markAllNotificationsAsRead = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const result = await Notification.updateMany(
+    { recipient: userId, isRead: false },
+    { $set: { isRead: true } }
+  );
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { modifiedCount: result.modifiedCount },
+      "All notifications marked as read successfully"
+    )
+  );
+});
+
+// Get unread notification count (For badge counters in UI)
+const getUnreadNotificationCount = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const count = await Notification.countDocuments({
+    recipient: userId,
+    isRead: false,
+  });
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { unreadCount: count },
+      "Unread notification count fetched successfully"
+    )
+  );
+});
+
+export {
+  getMyNotifications,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+  getUnreadNotificationCount,
+};
