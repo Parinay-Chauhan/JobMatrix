@@ -6,7 +6,7 @@ class ApiError extends Error {
     stack = ""
   ) {
     super(message);
-    this.statusCode = statusCode; // Fixed: Property name matched with standard middleware expectation
+    this.statusCode = statusCode; // Fixed: Matches Express Error Handler expectation (err.statusCode)
     this.data = null;
     this.message = message;
     this.success = false;
