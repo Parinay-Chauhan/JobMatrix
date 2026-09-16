@@ -3,36 +3,42 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import jwt from "jsonwebtoken";
 
-export const verifyJWT = asyncHandler(async (req, _, next) => {
+export const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
-      throw new ApiError(401, "Unauthorize request");
+      // Standard JSON response bina global exception throw kiye
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized request" });
     }
 
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
     const user = await User.findById(decodedToken?._id).select(
-      "-password -refreshToken");
+      "-password, -refreshToken",
+    );
 
     if (!user) {
-      throw new ApiError(401, "Invalid access Token");
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid Access Token" });
     }
 
     req.user = user;
-    next()
+    next();
   } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid access token");
+    return res.status(401).json({
+      success: false,
+      message: error?.message || "Invalid access token",
+    });
   }
 });
 
-
 export const authorizeRoles = (...allowedRoles) => {
   return (req, _, next) => {
-
     if (!req.user) {
       throw new ApiError(401, "Unauthorized request");
     }
