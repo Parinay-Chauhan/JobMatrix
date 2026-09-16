@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import api from "../api/axios";
-import { User, AuthContextType } from "../types/auth";
+import type { User, AuthContextType } from "../types/auth";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
