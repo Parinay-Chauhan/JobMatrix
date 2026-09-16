@@ -13,27 +13,32 @@ export const initializeSocket = (server) => {
   });
 
   // Socket.IO Handshake Authentication Middleware
+  // Backend handshake middleware code update:
   io.use(async (socket, next) => {
     try {
-      // 1. // Token extraction from auth object or Authorization headers
+      // Cookie parsing support for socket handshake
+      const cookieHeader = socket.handshake.headers?.cookie || "";
+      const cookies = Object.fromEntries(
+        cookieHeader.split("; ").map((c) => c.split("=")),
+      );
+
+      // Token extract: Auth object > Authorization Header > Cookies
       const token =
         socket.handshake.auth?.token ||
-        socket.handshake.headers?.authorization?.replace("Bearer ", "");
+        socket.handshake.headers?.authorization?.replace("Bearer ", "") ||
+        cookies?.accessToken;
 
       if (!token) {
         return next(new Error("Authentication error: Token missing"));
       }
 
-      // 2. Verify token
       const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-      // 3. Find user from DB
       const user = await User.findById(decoded?._id).select("-password");
+
       if (!user) {
         return next(new Error("Authentication error: User not found"));
       }
 
-      // 4. Attach verified user to socket context
       socket.user = user;
       next();
     } catch (error) {
@@ -44,9 +49,11 @@ export const initializeSocket = (server) => {
   io.on("connection", (socket) => {
     const userId = socket.user._id.toString();
 
-    // SERVER-SIDE ROOM JOINING (Secure & Non-spoofable)
+    // SERVER-SIDE ROOM JOINING
     socket.join(userId);
-    console.log(`🔒 Authenticated user ${socket.user.fullName} (${userId}) connected to socket`);
+    console.log(
+      `🔒 Authenticated user ${socket.user.fullName} (${userId}) connected to socket`,
+    );
 
     socket.on("disconnect", () => {
       console.log(`User ${userId} disconnected`);
