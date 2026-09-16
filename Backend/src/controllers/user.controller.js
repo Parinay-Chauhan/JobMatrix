@@ -28,18 +28,21 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   // +++++++++++++ Data Validation +++++++++++++
-  const { fullName, email, password } = req.body;
+  const { username, fullName, email, password } = req.body;
   // const { username, email, password, fullName, role } = req.body;
 
   // Check if all required fields are provided and not empty
 
-  if ([fullName, email, password].some((field) => !field?.trim())) {
+  if ([username, fullName, email, password].some((field) => !field?.trim())) {
     throw new ApiError(400, "All fields are required");
   }
 
   // Check if the user already exists in the database
 
-  const existedUser = await User.findOne({ email: email.toLowerCase() });
+  const existedUser = await User.findOne({
+    $or: [{ username }, { email: email.toLowerCase() }],
+  });
+
   if (existedUser) {
     throw new ApiError(409, "User with this email already exists");
   }
@@ -55,7 +58,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email: email.toLowerCase(),
     password,
     role: userRole,
-    // username,
+    username,
     // role: role || "candidate", // Default role is "candidate" if not provided
   });
 
