@@ -4,6 +4,7 @@ import api from "../api/axios";
 
 export const Register: React.FC = () => {
   const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,8 +18,7 @@ export const Register: React.FC = () => {
     setLoading(true);
 
     try {
-      // Backend automatically defaults/locks registered role to 'candidate'
-      await api.post("/users/register", { fullName, email, password });
+      await api.post("/users/register", { fullName, username, email, password });
       navigate("/login");
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");
@@ -42,6 +42,17 @@ export const Register: React.FC = () => {
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
+              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <input
+              type="text"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value.toLowerCase().trim())}
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
             />
           </div>
