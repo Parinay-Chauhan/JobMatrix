@@ -93,7 +93,6 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const query = username ? { username } : { email };
-
   const user = await User.findOne(query);
 
   if (!user) {
@@ -117,7 +116,9 @@ const loginUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    // Changed from 'strict' to 'lax' for local dev
+    // sameSite: "strict",
+    sameSite: "lax",
   };
 
   return res
@@ -127,7 +128,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { user: loggedInUser },
+        { user: loggedInUser, accessToken, refreshToken },
 
         "User loggedIn successfully",
       ),
