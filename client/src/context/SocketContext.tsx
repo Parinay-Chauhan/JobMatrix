@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { useAuth } from "./AuthContext";
 
-// Context Type Definition
 interface SocketContextType {
   socket: Socket | null;
   isConnected: boolean;
@@ -12,38 +12,52 @@ const SocketContext = createContext<SocketContextType>({
   isConnected: false,
 });
 
-interface SocketProviderProps {
-  children: ReactNode;
-}
-
-export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
+export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
-    // Socket initialization with explicit type safety
-    const socketInstance: Socket = io(import.meta.env.VITE_SOCKET_URL as string, {
+    if (!user) {
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+        setIsConnected(false);
+      }
+      return;
+    }
+
+    const token = localStorage.getItem("accessToken") || "";
+
+    const socketInstance = io("http://localhost:8000", {
       withCredentials: true,
-      autoConnect: true,
+      transports: ["websocket", "polling"], // Force fallback handling
+      auth: {
+        token: token,
+      },
     });
 
     socketInstance.on("connect", () => {
+      console.log("🔒 Socket Connected Successfully:", socketInstance.id);
       setIsConnected(true);
-      console.log("⚡ Socket connected:", socketInstance.id);
+    });
+
+    socketInstance.on("connect_error", (err) => {
+      console.error("Socket Auth Failed:", err.message);
+      setIsConnected(false);
     });
 
     socketInstance.on("disconnect", () => {
+      console.log("❌ Socket Disconnected");
       setIsConnected(false);
-      console.log("❌ Socket disconnected");
     });
 
     setSocket(socketInstance);
 
-    // Cleanup on unmount
     return () => {
       socketInstance.disconnect();
     };
-  }, []);
+  }, [user]);
 
   return (
     <SocketContext.Provider value={{ socket, isConnected }}>
@@ -52,7 +66,4 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   );
 };
 
-// Custom Hook for consuming socket
-export const useSocket = (): SocketContextType => {
-  return useContext(SocketContext);
-};
+export const useSocket = () => useContext(SocketContext);
