@@ -20,6 +20,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const response = await api.get("/users/current-user");
         setUser(response.data.data);
       } catch (error) {
+        // Unauthenticated session - token cleanup
+        localStorage.removeItem("accessToken");
         setUser(null);
       } finally {
         setLoading(false);
@@ -29,16 +31,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     checkAuthStatus();
   }, []);
 
-  const login = (userData: User) => {
+  // Updated: Handle userData along with token storage
+  const login = (userData: User, token?: string) => {
+    if (token) {
+      localStorage.setItem("accessToken", token);
+    }
     setUser(userData);
   };
 
+  // Updated: Clear token on logout
   const logout = async () => {
     try {
       await api.post("/users/logout");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
+      localStorage.removeItem("accessToken");
       setUser(null);
     }
   };
