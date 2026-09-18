@@ -8,7 +8,10 @@ const storage = multer.diskStorage({
 
   filename: function (req, file, cb) {
     // file ka naam kya hoga
-    cb(null, Date.now() + "-" + file.originalname);
+    // Sanitize filename: replace spaces with underscores
+    // cb(null, Date.now() + "-" + file.originalname);
+    const sanitizedFileName = file.originalname.replace(/\s+/g, "_");
+    cb(null, `${Date.now()}-${sanitizedFileName}`);
   },
 });
 
