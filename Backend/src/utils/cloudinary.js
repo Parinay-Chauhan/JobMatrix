@@ -7,14 +7,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadOnCloudinary = async (localFilePath) => {
+const uploadOnCloudinary = async (localFilePath, resourceType = "auto") => {
   try {
     if (!localFilePath) return null;
-  
+
     const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto",
+      resource_type: resourceType,
     });
- 
+
     if (fs.existsSync(localFilePath)) {
       fs.unlinkSync(localFilePath);
     }
@@ -31,12 +31,12 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-const deleteFromCloudinary = async (publicId) => {
+const deleteFromCloudinary = async (publicId, resourceType = "raw") => {
   try {
     if (!publicId) return null;
 
     const response = await cloudinary.uploader.destroy(publicId, {
-      resource_type: "image",
+      resource_type: resourceType, // Allows deleting PDFs ("raw" or "auto") and images
     });
 
     return response;
