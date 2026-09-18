@@ -142,7 +142,7 @@ const getApplicants = asyncHandler(async (req, res) => {
 // 4. Update Application Status (Recruiter Only)
 // Update Application Status (Recruiter Only)
 const updateStatus = asyncHandler(async (req, res) => {
-  const { status } = req.body;
+  const { status } = req.body || {};
   const applicationId = req.params.id;
 
   // 1. Validate Input Status (Includes 'reviewed' as per Schema)
@@ -164,6 +164,13 @@ const updateStatus = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Application not found");
   }
 
+  if (!application.job) {
+    throw new ApiError(
+      404,
+      "The job post associated with this application no longer exists",
+    );
+  }
+
   // 3. Recruiter Ownership Authorization Guard Check
   if (application.job.createdBy.toString() !== req.user._id.toString()) {
     throw new ApiError(
@@ -178,7 +185,7 @@ const updateStatus = asyncHandler(async (req, res) => {
 
   // 5. Non-Fatal Notification Creation & Real-Time Socket Emission
   try {
-    const candidateUserId = application.applicant; // Candidate User ID
+    const candidateUserId = application.applicant;
 
     const notification = await Notification.create({
       recipient: candidateUserId,
@@ -200,7 +207,6 @@ const updateStatus = asyncHandler(async (req, res) => {
       );
     }
   } catch (notificationError) {
-    // Log error only; status update remains committed in DB
     console.error(
       "Failed to create notification for updateStatus:",
       notificationError.message,
