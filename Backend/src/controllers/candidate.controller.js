@@ -382,7 +382,8 @@ const uploadAndUpdateResume = asyncHandler(async (req, res) => {
   }
 
   // 2. Fetch candidate profile
-  const profile = await CandidateProfile.findOne({ user: req.user._id });
+  // Change CandidateProfile.findOne to Candidate.findOne
+  const profile = await Candidate.findOne({ user: req.user._id });
   if (!profile) {
     throw new ApiError(404, "Candidate profile not found");
   }
