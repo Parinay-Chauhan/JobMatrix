@@ -1,12 +1,13 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { ProtectedRoute } from "../components/ProtectedRoute";
+// Updated import path if ProtectedRoute is inside src/routes/
+import { ProtectedRoute } from "./ProtectedRoute";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 
 // Placeholder Views
 const JobListings = () => (
-  <div className="p-8 font-bold">Public Jobs Listing</div>
+  <div className="p-8 font-bold text-gray-800">Public Jobs Listing</div>
 );
 const CandidateDashboard = () => (
   <div className="p-8 font-bold text-green-600">Candidate Dashboard</div>
