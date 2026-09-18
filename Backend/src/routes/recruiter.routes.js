@@ -13,7 +13,7 @@ import {
 
 const router = Router();
 
-// Only "recruiter" role can access these routes
+// Secure all recruiter routes
 router.use(verifyJWT);
 router.use(authorizeRoles("recruiter"));
 // router.use(verifyJWT, authorizeRoles("recruiter"));
@@ -32,8 +32,7 @@ router
   .patch(upload.single("logo"), updateCompanyLogo) // Replace existing logo (200 OK)
   .delete(deleteCompanyLogo);
 
-router
-  .route("/dashboard/stats")
-  .get(authorizeRoles("recruiter"), getRecruiterDashboardStats);
+// Dashboard Routes
+router.route("/dashboard/stats").get(getRecruiterDashboardStats);
 
 export default router;
