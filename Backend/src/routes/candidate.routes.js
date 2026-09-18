@@ -17,6 +17,7 @@ import { upload } from "../middleware/multer.middleware.js";
 
 const router = Router();
 
+// Secure all candidate routes
 router.use(verifyJWT);
 router.use(authorizeRoles("candidate"));
 
