@@ -28,8 +28,8 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   // +++++++++++++ Data Validation +++++++++++++
-  const { username, fullName, email, password } = req.body;
-  // const { username, email, password, fullName, role } = req.body;
+  // const { username, fullName, email, password } = req.body;
+  const { username, email, password, fullName, role } = req.body;
 
   // Check if all required fields are provided and not empty
 
@@ -49,7 +49,11 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Force role assignment to 'candidate' for public registration
   // Security Hardening: Public users cannot self-assign 'recruiter' or 'admin' roles
-  const userRole = "candidate";
+  // const userRole = "candidate";
+
+  // 2. Allow 'candidate' or 'recruiter' (prevent unauthorized 'admin' assignment)
+  const allowedRoles = ["candidate", "recruiter"];
+  const userRole = allowedRoles.includes(role) ? role : "candidate";
 
   // Create a new user in the database ( MongoDB will handle password hashing if you have set up pre-save middleware in the User model)
 
