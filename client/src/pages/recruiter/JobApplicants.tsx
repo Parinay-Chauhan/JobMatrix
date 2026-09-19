@@ -4,14 +4,22 @@ import api from "../../api/axios";
 
 interface Applicant {
   _id: string;
-  candidate: {
+  applicant?: {
     _id: string;
     fullName?: string;
+    fullname?: string;
+    name?: string;
+    email?: string;
+  };
+  candidate?: {
+    _id: string;
+    fullName?: string;
+    fullname?: string;
+    name?: string;
     email?: string;
   };
   status: string;
   createdAt: string;
-  resumeUrl?: string;
 }
 
 export const JobApplicants: React.FC = () => {
@@ -24,11 +32,19 @@ export const JobApplicants: React.FC = () => {
     const fetchApplicants = async () => {
       try {
         setLoading(true);
-        // Endpoint structure according to backend
         const response = await api.get(`/applications/${jobId}/applicants`);
-        const data = response.data?.data || response.data || [];
-        setApplicants(Array.isArray(data) ? data : []);
+
+        console.log("Applicants Data Log:", response.data);
+
+        const data =
+          response.data?.data?.applications ||
+          response.data?.applications ||
+          response.data?.data ||
+          (Array.isArray(response.data) ? response.data : []);
+
+        setApplicants(data);
       } catch (err: any) {
+        console.error("Fetch Applicants Error:", err);
         setError(err.response?.data?.message || "Failed to load applicants.");
       } finally {
         setLoading(false);
@@ -45,7 +61,7 @@ export const JobApplicants: React.FC = () => {
     newStatus: string,
   ) => {
     try {
-      await api.patch(`/applications/${applicationId}/status`, {
+      await api.post(`/applications/status/${applicationId}/update`, {
         status: newStatus,
       });
       setApplicants((prev) =>
@@ -105,43 +121,64 @@ export const JobApplicants: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 text-sm">
-              {applicants.map((app) => (
-                <tr
-                  key={app._id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <div className="font-semibold text-gray-900">
-                      {app.candidate?.fullName || "Candidate"}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {app.candidate?.email}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">
-                    {new Date(app.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-block px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 capitalize">
-                      {app.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right space-x-2">
-                    <button
-                      onClick={() => handleStatusChange(app._id, "shortlisted")}
-                      className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md font-medium"
-                    >
-                      Shortlist
-                    </button>
-                    <button
-                      onClick={() => handleStatusChange(app._id, "rejected")}
-                      className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md font-medium"
-                    >
-                      Reject
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {applicants.map((app) => {
+                const userObj = app.applicant || app.candidate;
+                const candidateName =
+                  userObj?.fullName ||
+                  userObj?.fullname ||
+                  userObj?.name ||
+                  "Candidate";
+                const candidateEmail = userObj?.email || "";
+
+                return (
+                  <tr
+                    key={app._id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="font-semibold text-gray-900">
+                        {candidateName}
+                      </div>
+                      {candidateEmail && (
+                        <div className="text-xs text-gray-500">
+                          {candidateEmail}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      {new Date(app.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold capitalize ${
+                          app.status?.toLowerCase() === "accepted" ||
+                          app.status?.toLowerCase() === "shortlisted"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : app.status?.toLowerCase() === "rejected"
+                              ? "bg-red-50 text-red-700"
+                              : "bg-blue-50 text-blue-700"
+                        }`}
+                      >
+                        {app.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right space-x-2">
+                      <button
+                        onClick={() => handleStatusChange(app._id, "accepted")}
+                        className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md font-medium"
+                      >
+                        Shortlist
+                      </button>
+                      <button
+                        onClick={() => handleStatusChange(app._id, "rejected")}
+                        className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md font-medium"
+                      >
+                        Reject
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
