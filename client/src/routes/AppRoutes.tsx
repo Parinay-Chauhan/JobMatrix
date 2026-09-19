@@ -4,6 +4,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import { CandidateLayout } from "../layouts/CandidateLayout";
+import { RecruiterLayout } from "../layouts/RecruiterLayout";
 
 // Placeholder Views
 const JobListings = () => (
@@ -19,9 +20,22 @@ const CandidateApplications = () => (
     My Applications List Page
   </div>
 );
+
+// Recruiter Placeholders
 const RecruiterDashboard = () => (
-  <div className="p-8 font-bold text-blue-600">Recruiter Dashboard</div>
+  <div className="font-bold text-blue-600 text-xl">
+    Recruiter Dashboard Page
+  </div>
 );
+const PostJob = () => (
+  <div className="font-bold text-indigo-600 text-xl">
+    Post New Job Form Page
+  </div>
+);
+const ManageJobs = () => (
+  <div className="font-bold text-gray-800 text-xl">Manage Jobs List Page</div>
+);
+
 const Unauthorized = () => (
   <div className="p-8 text-red-500 font-bold">403 - Unauthorized Access</div>
 );
@@ -35,7 +49,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* Protected Candidate Routes with Layout */}
+      {/* Protected Candidate Routes with Candidate Layout */}
       <Route element={<ProtectedRoute allowedRoles={["candidate"]} />}>
         <Route element={<CandidateLayout />}>
           <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
@@ -46,9 +60,13 @@ export const AppRoutes: React.FC = () => {
         </Route>
       </Route>
 
-      {/* Protected Recruiter Routes */}
+      {/* Protected Recruiter Routes with Recruiter Layout */}
       <Route element={<ProtectedRoute allowedRoles={["recruiter"]} />}>
-        <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+        <Route element={<RecruiterLayout />}>
+          <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+          <Route path="/recruiter/jobs/new" element={<PostJob />} />
+          <Route path="/recruiter/jobs" element={<ManageJobs />} />
+        </Route>
       </Route>
 
       {/* Fallback Catch-all */}
