@@ -45,12 +45,16 @@ export const PostJob: React.FC = () => {
 
       await api.post("/jobs", payload);
       navigate("/recruiter/jobs");
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to create job posting.");
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to create job posting.";
+      setError(msg);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-200">
