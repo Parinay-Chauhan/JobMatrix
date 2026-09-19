@@ -119,6 +119,19 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
     portfolio,
   } = req.body;
 
+  // Formatting skills if passed as comma-separated string or array
+  let formattedSkills;
+  if (skills !== undefined) {
+    if (Array.isArray(skills)) {
+      formattedSkills = skills;
+    } else if (typeof skills === "string") {
+      formattedSkills = skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+  }
+
   const updateCandidate = await Candidate.findByIdAndUpdate(
     existedcandidate._id,
     {
@@ -136,6 +149,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
     },
     {
       new: true,
+      upsert: true, // Candidate profile create bhi kar dega agar exist nahi karti
       runValidators: true,
     },
   ).populate("user", ["fullName", "email"]); // User Details Include karne ke liye
