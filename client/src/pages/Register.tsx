@@ -7,6 +7,7 @@ export const Register: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"candidate" | "recruiter">("candidate");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +19,13 @@ export const Register: React.FC = () => {
     setLoading(true);
 
     try {
-      await api.post("/users/register", { fullName, username, email, password });
+      await api.post("/users/register", {
+        fullName,
+        username,
+        email,
+        password,
+        role,
+      });
       navigate("/login");
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");
@@ -30,13 +37,21 @@ export const Register: React.FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">Create Candidate Account</h2>
+        <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
+          Create Account
+        </h2>
 
-        {error && <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-600">{error}</div>}
+        {error && (
+          <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-600">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Full Name
+            </label>
             <input
               type="text"
               required
@@ -47,7 +62,9 @@ export const Register: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Username
+            </label>
             <input
               type="text"
               required
@@ -58,7 +75,9 @@ export const Register: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               required
@@ -69,7 +88,9 @@ export const Register: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               required
@@ -77,6 +98,22 @@ export const Register: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              I am a
+            </label>
+            <select
+              value={role}
+              onChange={(e) =>
+                setRole(e.target.value as "candidate" | "recruiter")
+              }
+              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
+            >
+              <option value="candidate">Candidate (Job Seeker)</option>
+              <option value="recruiter">Recruiter (Employer)</option>
+            </select>
           </div>
 
           <button

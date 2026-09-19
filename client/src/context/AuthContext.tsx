@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import api from "../api/axios";
 import type { User, AuthContextType } from "../types/auth";
 
@@ -9,7 +10,9 @@ const AuthContext = createContext<AuthContextType>({
   logout: async () => {},
 });
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -31,7 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     checkAuthStatus();
   }, []);
 
-  // Updated: Handle userData along with token storage
+  // Handle userData along with token storage
   const login = (userData: User, token?: string) => {
     if (token) {
       localStorage.setItem("accessToken", token);
@@ -39,7 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(userData);
   };
 
-  // Updated: Clear token on logout
+  // Clear token on logout
   const logout = async () => {
     try {
       await api.post("/users/logout");

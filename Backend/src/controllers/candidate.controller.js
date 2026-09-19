@@ -75,7 +75,7 @@ const createCandidateProfile = asyncHandler(async (req, res) => {
 const getCandidateProfile = asyncHandler(async (req, res) => {
   const candidateProfile = await Candidate.findOne({
     user: req.user._id,
-  });
+  }).populate("user", ["fullName", "email"]);
 
   if (!candidateProfile) {
     throw new ApiError(404, "Candidate profile not found");
@@ -108,6 +108,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
   }
 
   const {
+    phone,
     bio,
     location,
     skills,
@@ -118,10 +119,24 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
     portfolio,
   } = req.body;
 
+  // Formatting skills if passed as comma-separated string or array
+  let formattedSkills;
+  if (skills !== undefined) {
+    if (Array.isArray(skills)) {
+      formattedSkills = skills;
+    } else if (typeof skills === "string") {
+      formattedSkills = skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+  }
+
   const updateCandidate = await Candidate.findByIdAndUpdate(
     existedcandidate._id,
     {
       $set: {
+        ...(phone !== undefined && { phone }),
         ...(bio !== undefined && { bio }),
         ...(location !== undefined && { location }),
         ...(skills !== undefined && { skills }),
@@ -134,9 +149,10 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
     },
     {
       new: true,
+      upsert: true, // Candidate profile create bhi kar dega agar exist nahi karti
       runValidators: true,
     },
-  );
+  ).populate("user", ["fullName", "email"]); // User Details Include karne ke liye
 
   return res
     .status(200)

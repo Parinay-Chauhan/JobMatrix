@@ -19,9 +19,13 @@ export const Login: React.FC = () => {
 
     try {
       const response = await api.post("/users/login", { email, password });
-      const userData = response.data.data.user;
 
-      login(userData);
+      // Extract user and token from backend response
+      const userData = response.data.data.user;
+      const accessToken = response.data.data.accessToken;
+
+      // Pass token to AuthContext so localStorage updates immediately
+      login(userData, accessToken);
 
       // Role-Based Navigation
       if (userData.role === "recruiter") {
@@ -30,7 +34,10 @@ export const Login: React.FC = () => {
         navigate("/candidate/dashboard");
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed. Please check credentials.");
+      setError(
+        err.response?.data?.message ||
+          "Login failed. Please check credentials.",
+      );
     } finally {
       setLoading(false);
     }
@@ -39,13 +46,21 @@ export const Login: React.FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">Login to JobPortal</h2>
-        
-        {error && <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-600">{error}</div>}
+        <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
+          Login to JobPortal
+        </h2>
+
+        {error && (
+          <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-600">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               required
@@ -56,7 +71,9 @@ export const Login: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               required
