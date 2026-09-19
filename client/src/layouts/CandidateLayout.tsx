@@ -28,7 +28,7 @@ export const CandidateLayout: React.FC = () => {
               </Link>
               <nav className="hidden md:flex space-x-4">
                 <Link
-                  to="/"
+                  to="/candidate/find-jobs"
                   className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium"
                 >
                   Find Jobs
@@ -40,10 +40,10 @@ export const CandidateLayout: React.FC = () => {
                   My Applications
                 </Link>
                 <Link
-                  to="/candidate/dashboard"
+                  to="/candidate/profile"
                   className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium"
                 >
-                  Dashboard
+                  Profile
                 </Link>
               </nav>
             </div>
