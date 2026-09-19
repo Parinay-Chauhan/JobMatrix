@@ -22,19 +22,41 @@ export const FindJobs: React.FC = () => {
   );
 
   useEffect(() => {
-    fetchJobs();
+    fetchJobsAndApplications();
   }, []);
 
-  const fetchJobs = async () => {
+  const fetchJobsAndApplications = async () => {
     try {
       setLoading(true);
-      const response = await api.get("/jobs");
+
+      // 1. Fetch Jobs
+      const jobsRes = await api.get("/jobs");
       const extractedJobs =
-        response.data?.data?.jobs ||
-        response.data?.data ||
-        response.data?.jobs ||
-        (Array.isArray(response.data) ? response.data : []);
+        jobsRes.data?.data?.jobs ||
+        jobsRes.data?.data ||
+        jobsRes.data?.jobs ||
+        (Array.isArray(jobsRes.data) ? jobsRes.data : []);
       setJobs(extractedJobs);
+
+      // 2. Fetch User's Already Applied Applications using correct route (/applications/get)
+      try {
+        const appRes = await api.get("/applications/get");
+        const myApps =
+          appRes.data?.data?.applications ||
+          appRes.data?.data ||
+          appRes.data?.application ||
+          appRes.data ||
+          [];
+
+        if (Array.isArray(myApps)) {
+          const appliedIds = myApps.map((app: any) =>
+            typeof app.job === "object" ? app.job?._id : app.job,
+          );
+          setAppliedJobs(appliedIds.filter(Boolean));
+        }
+      } catch (appErr) {
+        console.warn("Could not sync applied jobs:", appErr);
+      }
     } catch (err: any) {
       console.error("Error fetching jobs:", err);
     } finally {
@@ -47,7 +69,7 @@ export const FindJobs: React.FC = () => {
       setApplyingId(jobId);
       setMessage(null);
 
-      // Most standard backend controllers use POST for application submission:
+      // Apply via POST API
       await api.post(`/applications/apply/${jobId}`);
 
       setAppliedJobs((prev) => [...prev, jobId]);
@@ -58,20 +80,19 @@ export const FindJobs: React.FC = () => {
     } catch (err: any) {
       console.error("Apply Job Error Log:", err.response);
 
-      // Alternative fallback endpoint hit in case route is /applications/:id/apply
-      try {
-        await api.get(`/applications/apply/${jobId}`);
+      const errorMsg =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Failed to apply for this job.";
+
+      setMessage({ type: "error", text: errorMsg });
+
+      // Agar user pehle se apply kar chuka hai, toh button ko frontend me immediately "Applied" set kar do
+      if (
+        err.response?.status === 400 ||
+        errorMsg.toLowerCase().includes("already applied")
+      ) {
         setAppliedJobs((prev) => [...prev, jobId]);
-        setMessage({
-          type: "success",
-          text: "Successfully applied for this job!",
-        });
-      } catch (fallbackErr: any) {
-        const errorMsg =
-          err.response?.data?.message ||
-          fallbackErr.response?.data?.message ||
-          "Failed to apply for this job.";
-        setMessage({ type: "error", text: errorMsg });
       }
     } finally {
       setApplyingId(null);
