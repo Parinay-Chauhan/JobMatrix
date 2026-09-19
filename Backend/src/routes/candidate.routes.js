@@ -26,6 +26,7 @@ router
   .route("/profile")
   .post(createCandidateProfile)
   .get(getCandidateProfile)
+  .put(updateCandidateProfile) // <--- Add PUT here
   .patch(updateCandidateProfile);
 
 // Experience Routes
@@ -49,42 +50,6 @@ router
   .delete(deleteResume);
 
 export default router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // ++++++++++++++++++  Old Candidate Route +++++++++++++++++++++++++++++++++++
 
