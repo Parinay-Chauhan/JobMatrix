@@ -8,21 +8,16 @@ import { RecruiterLayout } from "../layouts/RecruiterLayout";
 import { PostJob } from "../pages/recruiter/PostJob";
 import { ManageJobs } from "../pages/recruiter/ManageJobs";
 import { JobApplicants } from "../pages/recruiter/JobApplicants";
+import { RecruiterDashboard } from "../pages/recruiter/RecruiterDashboard";
 import { FindJobs } from "../pages/candidate/FindJobs";
 import { MyApplications } from "../pages/candidate/MyApplications";
 import { CandidateProfile } from "../pages/candidate/CandidateProfile";
+import { Home } from "../pages/Home";
 
 // Placeholder Views
-const JobListings = () => (
-  <div className="font-bold text-gray-800">Public Jobs Listing</div>
-);
-
-// Recruiter Placeholders
-const RecruiterDashboard = () => (
-  <div className="font-bold text-blue-600 text-xl">
-    Recruiter Dashboard Page
-  </div>
-);
+// const JobListings = () => (
+//   <div className="font-bold text-gray-800">Public Jobs Listing</div>
+// );
 
 const Unauthorized = () => (
   <div className="p-8 text-red-500 font-bold">403 - Unauthorized Access</div>
@@ -32,7 +27,8 @@ export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/" element={<JobListings />} />
+      <Route path="/" element={<Home />} />
+      {/* <Route path="/" element={<JobListings />} /> */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/unauthorized" element={<Unauthorized />} />

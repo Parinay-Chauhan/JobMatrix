@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api/axios";
 
+
 interface Experience {
   _id?: string;
   company: string;
@@ -66,42 +67,53 @@ export const CandidateProfile: React.FC = () => {
     endYear: "",
   });
 
+  const [refreshKey, setRefreshKey] = useState(0);
+  const refetchProfile = () => setRefreshKey((prev) => prev + 1);
+
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    let isMounted = true;
 
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get("/candidates/profile");
-      const data =
-        response.data?.candidate || response.data?.data || response.data;
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get("/candidates/profile");
+        const data =
+          response.data?.candidate || response.data?.data || response.data;
 
-      if (data) {
-        setProfile({
-          fullname: data.user?.fullName || data.fullName || "",
-          email: data.user?.email || data.email || "",
-          phone: data.phone || "",
-          bio: data.bio || "",
-          skills: data.skills || [],
-          resume: data.resume || "",
-          experience: data.experience || [],
-          education: data.education || [],
-        });
+        if (data && isMounted) {
+          setProfile({
+            fullname: data.user?.fullName || data.fullName || "",
+            email: data.user?.email || data.email || "",
+            phone: data.phone || "",
+            bio: data.bio || "",
+            skills: data.skills || [],
+            resume: data.resume || "",
+            experience: data.experience || [],
+            education: data.education || [],
+          });
 
-        const currentSkills = data.skills || [];
-        setSkillsInput(
-          Array.isArray(currentSkills)
-            ? currentSkills.join(", ")
-            : currentSkills,
-        );
+          const currentSkills = data.skills || [];
+          setSkillsInput(
+            Array.isArray(currentSkills)
+              ? currentSkills.join(", ")
+              : currentSkills,
+          );
+        }
+      } catch (err: unknown) {
+        console.error("Profile Fetch Error:", err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-    } catch (err: any) {
-      console.error("Profile Fetch Error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [refreshKey]);
+
 
   // Add Experience via dedicated endpoint /experience
   const handleAddExperience = async () => {
@@ -118,9 +130,12 @@ export const CandidateProfile: React.FC = () => {
         endDate: "",
         description: "",
       });
-      fetchProfile();
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to add experience");
+      refetchProfile();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to add experience";
+      alert(msg);
     }
   };
 
@@ -129,9 +144,12 @@ export const CandidateProfile: React.FC = () => {
     if (!id) return;
     try {
       await api.delete(`/candidates/experience/${id}`);
-      fetchProfile();
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to delete experience");
+      refetchProfile();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to delete experience";
+      alert(msg);
     }
   };
 
@@ -150,9 +168,12 @@ export const CandidateProfile: React.FC = () => {
         startYear: "",
         endYear: "",
       });
-      fetchProfile();
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to add education");
+      refetchProfile();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to add education";
+      alert(msg);
     }
   };
 
@@ -161,9 +182,12 @@ export const CandidateProfile: React.FC = () => {
     if (!id) return;
     try {
       await api.delete(`/candidates/education/${id}`);
-      fetchProfile();
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to delete education");
+      refetchProfile();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to delete education";
+      alert(msg);
     }
   };
 
@@ -202,18 +226,22 @@ export const CandidateProfile: React.FC = () => {
         text: "Profile details updated successfully!",
       });
       setResumeFile(null);
-      fetchProfile();
-    } catch (err: any) {
-      console.error("Profile Update Error Details:", err.response?.data || err);
+      refetchProfile();
+    } catch (err: unknown) {
+      console.error("Profile Update Error Details:", err);
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to update profile details.";
       setMessage({
         type: "error",
-        text:
-          err.response?.data?.message || "Failed to update profile details.",
+        text: msg,
       });
     } finally {
       setSaving(false);
     }
   };
+
+
 
   if (loading) {
     return (

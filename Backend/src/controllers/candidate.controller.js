@@ -42,8 +42,21 @@ const createCandidateProfile = asyncHandler(async (req, res) => {
     portfolio,
   } = req.body;
 
+  // Formatting skills if passed as comma-separated string or array
+  let formattedSkills = [];
+  if (skills !== undefined) {
+    if (Array.isArray(skills)) {
+      formattedSkills = skills;
+    } else if (typeof skills === "string") {
+      formattedSkills = skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+  }
+
   // Essential / Required fields validation
-  if (!skills || !Array.isArray(skills) || skills.length === 0) {
+  if (!formattedSkills || formattedSkills.length === 0) {
     throw new ApiError(400, "At least one skill is required");
   }
 
@@ -53,7 +66,7 @@ const createCandidateProfile = asyncHandler(async (req, res) => {
     phone,
     bio,
     location,
-    skills,
+    skills: formattedSkills,
     experience,
     education,
     linkedin,
@@ -139,7 +152,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
         ...(phone !== undefined && { phone }),
         ...(bio !== undefined && { bio }),
         ...(location !== undefined && { location }),
-        ...(skills !== undefined && { skills }),
+        ...(formattedSkills !== undefined && { skills: formattedSkills }),
         ...(experience !== undefined && { experience }),
         ...(education !== undefined && { education }),
         ...(linkedin !== undefined && { linkedin }),
@@ -163,6 +176,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
         "Candidate profile updated successfully",
       ),
     );
+
 });
 
 const addExperience = asyncHandler(async (req, res) => {

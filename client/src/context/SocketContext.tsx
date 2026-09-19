@@ -12,24 +12,23 @@ const SocketContext = createContext<SocketContextType>({
   isConnected: false,
 });
 
-export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
     if (!user) {
-      if (socket) {
-        socket.disconnect();
-        setSocket(null);
-        setIsConnected(false);
-      }
       return;
     }
 
     const token = localStorage.getItem("accessToken") || "";
+    const socketUrl =
+      (import.meta.env.VITE_SOCKET_URL as string) || "http://localhost:8000";
 
-    const socketInstance = io("http://localhost:8000", {
+    const socketInstance = io(socketUrl, {
       withCredentials: true,
       transports: ["websocket", "polling"], // Force fallback handling
       auth: {
@@ -39,6 +38,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     socketInstance.on("connect", () => {
       console.log("🔒 Socket Connected Successfully:", socketInstance.id);
+      setSocket(socketInstance);
       setIsConnected(true);
     });
 
@@ -49,15 +49,17 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     socketInstance.on("disconnect", () => {
       console.log("❌ Socket Disconnected");
+      setSocket(null);
       setIsConnected(false);
     });
 
-    setSocket(socketInstance);
-
     return () => {
       socketInstance.disconnect();
+      setSocket(null);
+      setIsConnected(false);
     };
   }, [user]);
+
 
   return (
     <SocketContext.Provider value={{ socket, isConnected }}>
@@ -66,4 +68,5 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   );
 };
 
-export const useSocket = () => useContext(SocketContext);
+// eslint-disable-next-line react-refresh/only-export-components
+export const useSocket = () => useContext(SocketContext);

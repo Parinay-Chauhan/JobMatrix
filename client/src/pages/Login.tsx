@@ -33,15 +33,16 @@ export const Login: React.FC = () => {
       } else {
         navigate("/candidate/dashboard");
       }
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          "Login failed. Please check credentials.",
-      );
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Login failed. Please check credentials.";
+      setError(msg);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
