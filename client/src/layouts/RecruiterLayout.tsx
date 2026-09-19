@@ -19,7 +19,7 @@ export const RecruiterLayout: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Brand Logo & Recruiter Links */}
-            <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-6">
               <Link
                 to="/recruiter/dashboard"
                 className="text-xl font-bold text-indigo-600 flex items-center gap-2"
@@ -30,22 +30,23 @@ export const RecruiterLayout: React.FC = () => {
                 </span>
               </Link>
 
-              <nav className="hidden md:flex space-x-4">
+              {/* Navigation Links (Visible on all screens) */}
+              <nav className="flex space-x-2 sm:space-x-4">
                 <Link
                   to="/recruiter/dashboard"
-                  className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium"
+                  className="text-gray-600 hover:text-indigo-600 px-2 py-2 text-sm font-medium"
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/recruiter/jobs/new"
-                  className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium"
+                  className="text-gray-600 hover:text-indigo-600 px-2 py-2 text-sm font-medium"
                 >
                   Post a Job
                 </Link>
                 <Link
                   to="/recruiter/jobs"
-                  className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium"
+                  className="text-gray-600 hover:text-indigo-600 px-2 py-2 text-sm font-medium"
                 >
                   Manage Jobs
                 </Link>
@@ -53,10 +54,10 @@ export const RecruiterLayout: React.FC = () => {
             </div>
 
             {/* Right Action Menu */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               <NotificationBell />
 
-              <div className="flex items-center space-x-3 border-l pl-4 border-gray-200">
+              <div className="flex items-center space-x-3 border-l pl-3 border-gray-200">
                 <div className="text-right hidden sm:block">
                   <p className="text-sm font-medium text-gray-700">
                     {user?.fullName}
