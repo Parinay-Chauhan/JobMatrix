@@ -35,24 +35,34 @@ export const CandidateProfile: React.FC = () => {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      // Candidate profile details fetch route
       const response = await api.get("/candidates/profile");
-      const user = response.data?.user || response.data?.data || response.data;
+      const data =
+        response.data?.user ||
+        response.data?.candidate ||
+        response.data?.data ||
+        response.data;
 
-      setProfile({
-        fullname: user.fullName || user.fullname || user.name || "",
-        email: user.email || "",
-        phone: user.profile?.phoneNumber || user.phoneNumber || "",
-        bio: user.profile?.bio || user.bio || "",
-        skills: user.profile?.skills || user.skills || [],
-        resume: user.profile?.resume || user.resume || "",
-      });
+      if (data) {
+        setProfile({
+          fullname:
+            data.fullName ||
+            data.fullname ||
+            data.name ||
+            data.user?.fullName ||
+            "",
+          email: data.email || data.user?.email || "",
+          phone: data.phone || data.phoneNumber || "",
+          bio: data.bio || "",
+          skills: data.skills || [],
+          resume: data.resume || "",
+        });
 
-      const currentSkills = user.profile?.skills || user.skills || [];
-      if (Array.isArray(currentSkills)) {
-        setSkillsInput(currentSkills.join(", "));
-      } else if (typeof currentSkills === "string") {
-        setSkillsInput(currentSkills);
+        const currentSkills = data.skills || [];
+        if (Array.isArray(currentSkills)) {
+          setSkillsInput(currentSkills.join(", "));
+        } else if (typeof currentSkills === "string") {
+          setSkillsInput(currentSkills);
+        }
       }
     } catch (err: any) {
       console.error("Profile Fetch Error:", err);
@@ -67,7 +77,6 @@ export const CandidateProfile: React.FC = () => {
       setSaving(true);
       setMessage(null);
 
-      // 1. Profile JSON update (/candidates/profile)
       const skillsArray = skillsInput
         .split(",")
         .map((s) => s.trim())
@@ -75,18 +84,27 @@ export const CandidateProfile: React.FC = () => {
 
       const profilePayload = {
         fullName: profile.fullname,
-        phoneNumber: profile.phone,
-        bio: profile.bio,
+        phone: profile.phone || "",
+        phoneNumber: profile.phone || "",
+        bio: profile.bio || "",
         skills: skillsArray,
       };
 
-      await api.post("/candidates/profile", profilePayload);
+      // 1. Profile Update (Try PUT first since profile exists, fallback to POST/PATCH)
+      try {
+        await api.put("/candidates/profile", profilePayload);
+      } catch (putErr) {
+        try {
+          await api.patch("/candidates/profile", profilePayload);
+        } catch (patchErr) {
+          await api.post("/candidates/profile", profilePayload);
+        }
+      }
 
-      // 2. Resume file upload (/candidates/resume)
+      // 2. Resume Upload if selected
       if (resumeFile) {
         const formData = new FormData();
         formData.append("resume", resumeFile);
-        formData.append("file", resumeFile);
 
         await api.post("/candidates/resume", formData, {
           headers: {
@@ -99,9 +117,11 @@ export const CandidateProfile: React.FC = () => {
       setResumeFile(null);
       fetchProfile();
     } catch (err: any) {
-      console.error("Profile Update Error:", err.response);
+      console.error("Profile Update Error Details:", err.response?.data || err);
       const errorMsg =
-        err.response?.data?.message || "Failed to update profile details.";
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Failed to update profile details.";
       setMessage({ type: "error", text: errorMsg });
     } finally {
       setSaving(false);
@@ -167,6 +187,7 @@ export const CandidateProfile: React.FC = () => {
               type="email"
               value={profile.email}
               disabled
+              placeholder="Loaded from account"
               className="w-full px-4 py-2.5 border border-gray-200 bg-gray-100 text-gray-600 rounded-lg text-sm cursor-not-allowed font-medium"
             />
           </div>
