@@ -10,6 +10,7 @@ import { ManageJobs } from "../pages/recruiter/ManageJobs";
 import { JobApplicants } from "../pages/recruiter/JobApplicants";
 import { FindJobs } from "../pages/candidate/FindJobs";
 import { MyApplications } from "../pages/candidate/MyApplications";
+import { CandidateProfile } from "../pages/candidate/CandidateProfile";
 
 // Placeholder Views
 const JobListings = () => (
@@ -42,6 +43,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="/candidate/dashboard" element={<FindJobs />} />
           <Route path="/candidate/find-jobs" element={<FindJobs />} />
           <Route path="/candidate/applications" element={<MyApplications />} />
+          <Route path="/candidate/profile" element={<CandidateProfile />} />
         </Route>
       </Route>
 
