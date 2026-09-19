@@ -7,21 +7,13 @@ import { CandidateLayout } from "../layouts/CandidateLayout";
 import { RecruiterLayout } from "../layouts/RecruiterLayout";
 import { PostJob } from "../pages/recruiter/PostJob";
 import { ManageJobs } from "../pages/recruiter/ManageJobs";
-import { JobApplicants } from "../pages/recruiter/JobApplicants"; // 1. Component Import Karo
+import { JobApplicants } from "../pages/recruiter/JobApplicants";
+import { FindJobs } from "../pages/candidate/FindJobs";
+import { MyApplications } from "../pages/candidate/MyApplications";
 
 // Placeholder Views
 const JobListings = () => (
   <div className="font-bold text-gray-800">Public Jobs Listing</div>
-);
-const CandidateDashboard = () => (
-  <div className="font-bold text-green-600 text-xl">
-    Candidate Dashboard Page
-  </div>
-);
-const CandidateApplications = () => (
-  <div className="font-bold text-indigo-600 text-xl">
-    My Applications List Page
-  </div>
 );
 
 // Recruiter Placeholders
@@ -47,11 +39,9 @@ export const AppRoutes: React.FC = () => {
       {/* Protected Candidate Routes */}
       <Route element={<ProtectedRoute allowedRoles={["candidate"]} />}>
         <Route element={<CandidateLayout />}>
-          <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
-          <Route
-            path="/candidate/applications"
-            element={<CandidateApplications />}
-          />
+          <Route path="/candidate/dashboard" element={<FindJobs />} />
+          <Route path="/candidate/find-jobs" element={<FindJobs />} />
+          <Route path="/candidate/applications" element={<MyApplications />} />
         </Route>
       </Route>
 
@@ -61,8 +51,6 @@ export const AppRoutes: React.FC = () => {
           <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
           <Route path="/recruiter/jobs/new" element={<PostJob />} />
           <Route path="/recruiter/jobs" element={<ManageJobs />} />
-
-          {/* 2. Direct Applicant Route Add Karo */}
           <Route
             path="/recruiter/jobs/:jobId/applicants"
             element={<JobApplicants />}
