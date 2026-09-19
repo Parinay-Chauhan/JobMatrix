@@ -2,14 +2,25 @@ import React, { useState } from "react";
 import { useNotifications } from "../context/NotificationContext";
 
 export const NotificationBell: React.FC = () => {
-  const { notifications, unreadCount, markAsRead } = useNotifications();
+  const { notifications, unreadCount, markAsRead, markAllAsRead } =
+    useNotifications();
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => {
+    const nextState = !isOpen;
+    setIsOpen(nextState);
+
+    // Dropdown open hote hi sabhi unread notifications read mark ho jayengi
+    if (nextState && unreadCount > 0 && markAllAsRead) {
+      markAllAsRead();
+    }
+  };
 
   return (
     <div className="relative inline-block">
-      {/* Bell Button */}
+      {/* Bell Icon Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         className="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
       >
         <svg
@@ -26,7 +37,7 @@ export const NotificationBell: React.FC = () => {
           />
         </svg>
 
-        {/* Unread Badge Count */}
+        {/* Unread Badge Counter - Sirf tabhi dikhega jab unreadCount > 0 hoga */}
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
             {unreadCount}
@@ -34,14 +45,18 @@ export const NotificationBell: React.FC = () => {
         )}
       </button>
 
-      {/* Notification Dropdown Menu */}
+      {/* Notifications Dropdown Menu */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
           <div className="p-3 border-b border-gray-100 flex justify-between items-center font-semibold text-gray-700">
             <span>Notifications</span>
-            <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">
-              {unreadCount} new
-            </span>
+            {unreadCount > 0 ? (
+              <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">
+                {unreadCount} new
+              </span>
+            ) : (
+              <span className="text-xs text-gray-400">All read</span>
+            )}
           </div>
 
           <div className="divide-y divide-gray-100">
@@ -55,7 +70,9 @@ export const NotificationBell: React.FC = () => {
                   key={item._id}
                   onClick={() => markAsRead(item._id)}
                   className={`p-3 text-sm cursor-pointer transition-colors ${
-                    !item.isRead ? "bg-indigo-50/50 hover:bg-indigo-50" : "hover:bg-gray-50"
+                    !item.isRead
+                      ? "bg-indigo-50/50 hover:bg-indigo-50"
+                      : "hover:bg-gray-50"
                   }`}
                 >
                   <p className="text-gray-800 font-medium">{item.message}</p>
@@ -74,3 +91,5 @@ export const NotificationBell: React.FC = () => {
     </div>
   );
 };
+
+export default NotificationBell;
