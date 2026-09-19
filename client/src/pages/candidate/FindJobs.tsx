@@ -22,47 +22,59 @@ export const FindJobs: React.FC = () => {
   );
 
   useEffect(() => {
-    fetchJobsAndApplications();
-  }, []);
+    let isMounted = true;
 
-  const fetchJobsAndApplications = async () => {
-    try {
-      setLoading(true);
-
-      // 1. Fetch Jobs
-      const jobsRes = await api.get("/jobs");
-      const extractedJobs =
-        jobsRes.data?.data?.jobs ||
-        jobsRes.data?.data ||
-        jobsRes.data?.jobs ||
-        (Array.isArray(jobsRes.data) ? jobsRes.data : []);
-      setJobs(extractedJobs);
-
-      // 2. Fetch User's Already Applied Applications using correct route (/applications/get)
+    const fetchJobsAndApplications = async () => {
       try {
-        const appRes = await api.get("/applications/get");
-        const myApps =
-          appRes.data?.data?.applications ||
-          appRes.data?.data ||
-          appRes.data?.application ||
-          appRes.data ||
-          [];
+        // 1. Fetch Jobs
+        const jobsRes = await api.get("/jobs");
+        const extractedJobs =
+          jobsRes.data?.data?.jobs ||
+          jobsRes.data?.data ||
+          jobsRes.data?.jobs ||
+          (Array.isArray(jobsRes.data) ? jobsRes.data : []);
 
-        if (Array.isArray(myApps)) {
-          const appliedIds = myApps.map((app: any) =>
-            typeof app.job === "object" ? app.job?._id : app.job,
-          );
-          setAppliedJobs(appliedIds.filter(Boolean));
+        if (isMounted) {
+          setJobs(extractedJobs);
         }
-      } catch (appErr) {
-        console.warn("Could not sync applied jobs:", appErr);
+
+        // 2. Fetch User's Already Applied Applications using correct route (/applications/get)
+        try {
+          const appRes = await api.get("/applications/get");
+          const myApps =
+            appRes.data?.data?.applications ||
+            appRes.data?.data ||
+            appRes.data?.application ||
+            appRes.data ||
+            [];
+
+          if (Array.isArray(myApps) && isMounted) {
+            const appliedIds = myApps.map(
+              (app: { job?: string | { _id: string } }) =>
+                typeof app.job === "object" ? app.job?._id : app.job,
+            );
+            setAppliedJobs(
+              appliedIds.filter((id): id is string => Boolean(id)),
+            );
+          }
+        } catch (appErr) {
+          console.warn("Could not sync applied jobs:", appErr);
+        }
+      } catch (err: unknown) {
+        console.error("Error fetching jobs:", err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-    } catch (err: any) {
-      console.error("Error fetching jobs:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchJobsAndApplications();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleApply = async (jobId: string) => {
     try {
@@ -77,19 +89,20 @@ export const FindJobs: React.FC = () => {
         type: "success",
         text: "Successfully applied for this job!",
       });
-    } catch (err: any) {
-      console.error("Apply Job Error Log:", err.response);
+    } catch (err: unknown) {
+      console.error("Apply Job Error Log:", err);
 
+      const errResponse = (err as { response?: { data?: { message?: string; error?: string }; status?: number } })?.response;
       const errorMsg =
-        err.response?.data?.message ||
-        err.response?.data?.error ||
+        errResponse?.data?.message ||
+        errResponse?.data?.error ||
         "Failed to apply for this job.";
 
       setMessage({ type: "error", text: errorMsg });
 
       // Agar user pehle se apply kar chuka hai, toh button ko frontend me immediately "Applied" set kar do
       if (
-        err.response?.status === 400 ||
+        errResponse?.status === 400 ||
         errorMsg.toLowerCase().includes("already applied")
       ) {
         setAppliedJobs((prev) => [...prev, jobId]);
@@ -98,6 +111,7 @@ export const FindJobs: React.FC = () => {
       setApplyingId(null);
     }
   };
+
 
   if (loading) {
     return (
