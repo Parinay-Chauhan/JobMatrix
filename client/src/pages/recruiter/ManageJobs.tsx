@@ -23,12 +23,7 @@ export const ManageJobs: React.FC = () => {
 
     const fetchRecruiterJobs = async () => {
       try {
-        setLoading(true);
-        // Step 1: Agar '/jobs' sabhi jobs deta hai ya authenticated recruiter ki, check endpoint
-        const response = await api.get("/jobs");
-
-        // Debugging log: Browser Console me response structure check karein
-        console.log("Fetched Jobs API Response:", response.data);
+        const response = await api.get("/jobs/my-jobs");
 
         if (isMounted) {
           // Flexible extraction for different backend response wrapper formats
@@ -40,10 +35,13 @@ export const ManageJobs: React.FC = () => {
 
           setJobs(extractedJobs);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("API Error fetching jobs:", err);
         if (isMounted) {
-          setError(err.response?.data?.message || "Failed to fetch jobs.");
+          const msg =
+            (err as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message || "Failed to fetch jobs.";
+          setError(msg);
         }
       } finally {
         if (isMounted) {
@@ -51,6 +49,8 @@ export const ManageJobs: React.FC = () => {
         }
       }
     };
+
+
 
     fetchRecruiterJobs();
 
