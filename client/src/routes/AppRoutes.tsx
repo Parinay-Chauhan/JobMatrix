@@ -1,16 +1,23 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-// Updated import path if ProtectedRoute is inside src/routes/
 import { ProtectedRoute } from "./ProtectedRoute";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
+import { CandidateLayout } from "../layouts/CandidateLayout";
 
 // Placeholder Views
 const JobListings = () => (
-  <div className="p-8 font-bold text-gray-800">Public Jobs Listing</div>
+  <div className="font-bold text-gray-800">Public Jobs Listing</div>
 );
 const CandidateDashboard = () => (
-  <div className="p-8 font-bold text-green-600">Candidate Dashboard</div>
+  <div className="font-bold text-green-600 text-xl">
+    Candidate Dashboard Page
+  </div>
+);
+const CandidateApplications = () => (
+  <div className="font-bold text-indigo-600 text-xl">
+    My Applications List Page
+  </div>
 );
 const RecruiterDashboard = () => (
   <div className="p-8 font-bold text-blue-600">Recruiter Dashboard</div>
@@ -28,9 +35,15 @@ export const AppRoutes: React.FC = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* Protected Candidate Routes */}
+      {/* Protected Candidate Routes with Layout */}
       <Route element={<ProtectedRoute allowedRoles={["candidate"]} />}>
-        <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
+        <Route element={<CandidateLayout />}>
+          <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
+          <Route
+            path="/candidate/applications"
+            element={<CandidateApplications />}
+          />
+        </Route>
       </Route>
 
       {/* Protected Recruiter Routes */}
