@@ -7,6 +7,7 @@ import { CandidateLayout } from "../layouts/CandidateLayout";
 import { RecruiterLayout } from "../layouts/RecruiterLayout";
 import { PostJob } from "../pages/recruiter/PostJob";
 import { ManageJobs } from "../pages/recruiter/ManageJobs";
+import { JobApplicants } from "../pages/recruiter/JobApplicants"; // 1. Component Import Karo
 
 // Placeholder Views
 const JobListings = () => (
@@ -29,9 +30,6 @@ const RecruiterDashboard = () => (
     Recruiter Dashboard Page
   </div>
 );
-// const ManageJobs = () => (
-//   <div className="font-bold text-gray-800 text-xl">Manage Jobs List Page</div>
-// );
 
 const Unauthorized = () => (
   <div className="p-8 text-red-500 font-bold">403 - Unauthorized Access</div>
@@ -63,6 +61,12 @@ export const AppRoutes: React.FC = () => {
           <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
           <Route path="/recruiter/jobs/new" element={<PostJob />} />
           <Route path="/recruiter/jobs" element={<ManageJobs />} />
+
+          {/* 2. Direct Applicant Route Add Karo */}
+          <Route
+            path="/recruiter/jobs/:jobId/applicants"
+            element={<JobApplicants />}
+          />
         </Route>
       </Route>
 
