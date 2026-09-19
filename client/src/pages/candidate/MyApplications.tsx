@@ -4,11 +4,14 @@ import api from "../../api/axios";
 interface Application {
   _id: string;
   job: {
+    _id: string;
     title: string;
-    category?: string;
+    company?: string;
     location?: string;
+    jobType?: string;
+    salary?: number;
   };
-  status: string;
+  status: "pending" | "accepted" | "rejected";
   createdAt: string;
 }
 
@@ -17,23 +20,33 @@ export const MyApplications: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchMyApplications();
+    fetchApplications();
   }, []);
 
-  const fetchMyApplications = async () => {
+  const fetchApplications = async () => {
     try {
       setLoading(true);
-      const response = await api.get("/applications/get");
-      const data =
-        response.data?.data?.applications ||
-        response.data?.applications ||
-        response.data?.data ||
-        (Array.isArray(response.data) ? response.data : []);
-      setApplications(data);
-    } catch (err: any) {
+      const res = await api.get("/applications/get");
+
+      const apps =
+        res.data?.data?.applications || res.data?.data || res.data || [];
+
+      setApplications(Array.isArray(apps) ? apps : []);
+    } catch (err) {
       console.error("Error fetching applications:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "accepted":
+        return "bg-green-100 text-green-700 border-green-200";
+      case "rejected":
+        return "bg-red-100 text-red-700 border-red-200";
+      default:
+        return "bg-yellow-100 text-yellow-700 border-yellow-200";
     }
   };
 
@@ -48,48 +61,63 @@ export const MyApplications: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">
-        My Job Applications
-      </h2>
+    <div className="max-w-5xl mx-auto px-4 py-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">My Applications</h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Track the current status of all the jobs you have applied for.
+        </p>
+      </div>
 
       {applications.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-800 mb-1">
-            No Applications Found
-          </h3>
-          <p className="text-gray-500 text-sm">
+          <h3 className="text-lg font-semibold text-gray-800">
             You haven't applied to any jobs yet.
-          </p>
+          </h3>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase">
-                <th className="px-6 py-4">Job Title</th>
-                <th className="px-6 py-4">Applied Date</th>
-                <th className="px-6 py-4">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 text-sm">
-              {applications.map((app) => (
-                <tr key={app._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-semibold text-gray-900">
-                    {app.job?.title || "N/A"}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">
-                    {new Date(app.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-block px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 capitalize">
-                      {app.status}
+        <div className="space-y-4">
+          {applications.map((app) => {
+            const job = app.job || {};
+            return (
+              <div
+                key={app._id}
+                className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+              >
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {job.title || "Job Title Unavailable"}
+                  </h3>
+                  <div className="flex flex-wrap gap-2 text-xs text-gray-500 mt-2">
+                    {job.location && (
+                      <span className="bg-gray-100 px-2 py-1 rounded">
+                        📍 {job.location}
+                      </span>
+                    )}
+                    {job.jobType && (
+                      <span className="bg-gray-100 px-2 py-1 rounded">
+                        💼 {job.jobType}
+                      </span>
+                    )}
+                    <span className="bg-gray-100 px-2 py-1 rounded">
+                      📅 Applied on:{" "}
+                      {new Date(app.createdAt).toLocaleDateString()}
                     </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                </div>
+
+                <div>
+                  <span
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border capitalize ${getStatusBadge(
+                      app.status,
+                    )}`}
+                  >
+                    {app.status || "Pending"}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
