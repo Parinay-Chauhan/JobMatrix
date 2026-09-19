@@ -6,6 +6,7 @@ import { Register } from "../pages/Register";
 import { CandidateLayout } from "../layouts/CandidateLayout";
 import { RecruiterLayout } from "../layouts/RecruiterLayout";
 import { PostJob } from "../pages/recruiter/PostJob";
+import { ManageJobs } from "../pages/recruiter/ManageJobs";
 
 // Placeholder Views
 const JobListings = () => (
@@ -28,9 +29,9 @@ const RecruiterDashboard = () => (
     Recruiter Dashboard Page
   </div>
 );
-const ManageJobs = () => (
-  <div className="font-bold text-gray-800 text-xl">Manage Jobs List Page</div>
-);
+// const ManageJobs = () => (
+//   <div className="font-bold text-gray-800 text-xl">Manage Jobs List Page</div>
+// );
 
 const Unauthorized = () => (
   <div className="p-8 text-red-500 font-bold">403 - Unauthorized Access</div>
