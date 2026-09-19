@@ -25,16 +25,13 @@ export const useNotificationSocket = () => {
     // 1. Recruiter Event: New Job Application Received
     const handleNewNotification = (data: NotificationPayload) => {
       console.log("🔔 [SOCKET EVENT] new_notification received:", data);
-      // Temporary testing log / alert
-      alert(`[Testing Realtime] New Notification: ${data.message}`);
     };
 
     // 2. Candidate Event: Application Status Updated
     const handleStatusUpdated = (data: NotificationPayload) => {
       console.log("🔔 [SOCKET EVENT] application_status_updated received:", data);
-      // Temporary testing log / alert
-      alert(`[Testing Realtime] Status Update: ${data.message}`);
     };
+
 
     socket.on("new_notification", handleNewNotification);
     socket.on("application_status_updated", handleStatusUpdated);

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { useSocket } from "./SocketContext";
 import api from "../api/axios";
 
@@ -17,6 +18,7 @@ interface NotificationContextType {
   notifications: NotificationItem[];
   unreadCount: number;
   markAsRead: (id: string) => Promise<void>;
+  markAllAsRead: () => Promise<void>;
   clearAll: () => void;
 }
 
@@ -24,10 +26,13 @@ const NotificationContext = createContext<NotificationContextType>({
   notifications: [],
   unreadCount: 0,
   markAsRead: async () => {},
+  markAllAsRead: async () => {},
   clearAll: () => {},
 });
 
-export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const { socket, isConnected } = useSocket();
 
@@ -61,7 +66,9 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
       try {
         const audio = new Audio("/sounds/notification.mp3");
         audio.play().catch(() => {}); // ignore auto-play restriction blocks
-      } catch (err) {}
+      } catch {
+        // audio playback might be restricted by browser policy
+      }
     };
 
     socket.on("application_status_updated", handleIncomingNotification);
@@ -78,10 +85,24 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
     try {
       await api.patch(`/notifications/${id}/read`);
       setNotifications((prev) =>
-        prev.map((item) => (item._id === id ? { ...item, isRead: true } : item))
+        prev.map((item) =>
+          item._id === id ? { ...item, isRead: true } : item,
+        ),
       );
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
+    }
+  };
+
+  // Mark all notifications as read
+  const markAllAsRead = async () => {
+    try {
+      await api.patch("/notifications/read-all");
+      setNotifications((prev) =>
+        prev.map((item) => ({ ...item, isRead: true })),
+      );
+    } catch (error) {
+      console.error("Failed to mark all notifications as read:", error);
     }
   };
 
@@ -93,11 +114,20 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, unreadCount, markAsRead, clearAll }}
+      value={{
+        notifications,
+        unreadCount,
+        markAsRead,
+        markAllAsRead,
+        clearAll,
+      }}
     >
       {children}
     </NotificationContext.Provider>
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useNotifications = () => useContext(NotificationContext);
+
+
