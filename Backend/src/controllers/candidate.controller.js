@@ -75,7 +75,7 @@ const createCandidateProfile = asyncHandler(async (req, res) => {
 const getCandidateProfile = asyncHandler(async (req, res) => {
   const candidateProfile = await Candidate.findOne({
     user: req.user._id,
-  });
+  }).populate("user", ["fullName", "email"]);
 
   if (!candidateProfile) {
     throw new ApiError(404, "Candidate profile not found");
