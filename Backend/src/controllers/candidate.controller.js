@@ -108,6 +108,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
   }
 
   const {
+    phone,
     bio,
     location,
     skills,
@@ -122,6 +123,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
     existedcandidate._id,
     {
       $set: {
+        ...(phone !== undefined && { phone }),
         ...(bio !== undefined && { bio }),
         ...(location !== undefined && { location }),
         ...(skills !== undefined && { skills }),
@@ -136,7 +138,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
       new: true,
       runValidators: true,
     },
-  );
+  ).populate("user", ["fullName", "email"]); // User Details Include karne ke liye
 
   return res
     .status(200)
