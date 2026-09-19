@@ -15,27 +15,37 @@ export const RecruiterDashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchDashboardData = async () => {
+      try {
+        // Fetch recruiter's posted jobs
+        const res = await api.get("/jobs/my-jobs");
+        const fetchedJobs =
+          res.data?.data?.jobs ||
+          res.data?.data ||
+          res.data?.jobs ||
+          (Array.isArray(res.data) ? res.data : []);
+
+        if (isMounted) {
+          setJobs(fetchedJobs);
+        }
+      } catch (error: unknown) {
+        console.error("Error loading dashboard data:", error);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
     fetchDashboardData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      // Fetch recruiter's posted jobs
-      const res = await api.get("/jobs/my-jobs");
-      const fetchedJobs =
-        res.data?.data?.jobs ||
-        res.data?.data ||
-        res.data?.jobs ||
-        (Array.isArray(res.data) ? res.data : []);
-
-      setJobs(fetchedJobs);
-    } catch (error) {
-      console.error("Error loading dashboard data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return (
