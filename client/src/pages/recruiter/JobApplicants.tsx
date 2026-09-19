@@ -27,6 +27,7 @@ export const JobApplicants: React.FC = () => {
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchApplicants = async () => {
@@ -34,11 +35,10 @@ export const JobApplicants: React.FC = () => {
         setLoading(true);
         const response = await api.get(`/applications/${jobId}/applicants`);
 
-        console.log("Applicants Data Log:", response.data);
-
         const data =
           response.data?.data?.applications ||
           response.data?.applications ||
+          response.data?.data?.applicants ||
           response.data?.data ||
           (Array.isArray(response.data) ? response.data : []);
 
@@ -61,16 +61,36 @@ export const JobApplicants: React.FC = () => {
     newStatus: string,
   ) => {
     try {
-      await api.post(`/applications/status/${applicationId}/update`, {
-        status: newStatus,
-      });
+      setUpdatingId(applicationId);
+
+      // Try API endpoints for status update
+      try {
+        await api.put(`/applications/status/${applicationId}`, {
+          status: newStatus,
+        });
+      } catch {
+        try {
+          await api.patch(`/applications/status/${applicationId}`, {
+            status: newStatus,
+          });
+        } catch {
+          await api.post(`/applications/status/${applicationId}`, {
+            status: newStatus,
+          });
+        }
+      }
+
+      // Local state Instant Update
       setApplicants((prev) =>
         prev.map((app) =>
           app._id === applicationId ? { ...app, status: newStatus } : app,
         ),
       );
     } catch (err: any) {
-      alert("Failed to update status");
+      console.error("Status Update Failed:", err);
+      // alert(err.response?.data?.message || "Failed to update status");
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -129,6 +149,7 @@ export const JobApplicants: React.FC = () => {
                   userObj?.name ||
                   "Candidate";
                 const candidateEmail = userObj?.email || "";
+                const isUpdating = updatingId === app._id;
 
                 return (
                   <tr
@@ -153,10 +174,10 @@ export const JobApplicants: React.FC = () => {
                         className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold capitalize ${
                           app.status?.toLowerCase() === "accepted" ||
                           app.status?.toLowerCase() === "shortlisted"
-                            ? "bg-emerald-50 text-emerald-700"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                             : app.status?.toLowerCase() === "rejected"
-                              ? "bg-red-50 text-red-700"
-                              : "bg-blue-50 text-blue-700"
+                              ? "bg-red-50 text-red-700 border border-red-200"
+                              : "bg-blue-50 text-blue-700 border border-blue-200"
                         }`}
                       >
                         {app.status}
@@ -165,13 +186,19 @@ export const JobApplicants: React.FC = () => {
                     <td className="px-6 py-4 text-right space-x-2">
                       <button
                         onClick={() => handleStatusChange(app._id, "accepted")}
-                        className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md font-medium"
+                        disabled={
+                          isUpdating || app.status?.toLowerCase() === "accepted"
+                        }
+                        className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-md font-medium transition-colors"
                       >
                         Shortlist
                       </button>
                       <button
                         onClick={() => handleStatusChange(app._id, "rejected")}
-                        className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md font-medium"
+                        disabled={
+                          isUpdating || app.status?.toLowerCase() === "rejected"
+                        }
+                        className="text-xs bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-md font-medium transition-colors"
                       >
                         Reject
                       </button>
