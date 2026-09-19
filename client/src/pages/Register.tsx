@@ -27,12 +27,16 @@ export const Register: React.FC = () => {
         role,
       });
       navigate("/login");
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Registration failed");
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Registration failed";
+      setError(msg);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
