@@ -5,6 +5,7 @@ import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import { CandidateLayout } from "../layouts/CandidateLayout";
 import { RecruiterLayout } from "../layouts/RecruiterLayout";
+import { PostJob } from "../pages/recruiter/PostJob";
 
 // Placeholder Views
 const JobListings = () => (
@@ -27,11 +28,6 @@ const RecruiterDashboard = () => (
     Recruiter Dashboard Page
   </div>
 );
-const PostJob = () => (
-  <div className="font-bold text-indigo-600 text-xl">
-    Post New Job Form Page
-  </div>
-);
 const ManageJobs = () => (
   <div className="font-bold text-gray-800 text-xl">Manage Jobs List Page</div>
 );
@@ -49,7 +45,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* Protected Candidate Routes with Candidate Layout */}
+      {/* Protected Candidate Routes */}
       <Route element={<ProtectedRoute allowedRoles={["candidate"]} />}>
         <Route element={<CandidateLayout />}>
           <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
@@ -60,7 +56,7 @@ export const AppRoutes: React.FC = () => {
         </Route>
       </Route>
 
-      {/* Protected Recruiter Routes with Recruiter Layout */}
+      {/* Protected Recruiter Routes */}
       <Route element={<ProtectedRoute allowedRoles={["recruiter"]} />}>
         <Route element={<RecruiterLayout />}>
           <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
