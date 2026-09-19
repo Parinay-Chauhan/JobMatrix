@@ -30,9 +30,10 @@ export const JobApplicants: React.FC = () => {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchApplicants = async () => {
       try {
-        setLoading(true);
         const response = await api.get(`/applications/${jobId}/applicants`);
 
         const data =
@@ -42,18 +43,31 @@ export const JobApplicants: React.FC = () => {
           response.data?.data ||
           (Array.isArray(response.data) ? response.data : []);
 
-        setApplicants(data);
-      } catch (err: any) {
+        if (isMounted) {
+          setApplicants(data);
+        }
+      } catch (err: unknown) {
         console.error("Fetch Applicants Error:", err);
-        setError(err.response?.data?.message || "Failed to load applicants.");
+        if (isMounted) {
+          const msg =
+            (err as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message || "Failed to load applicants.";
+          setError(msg);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     if (jobId) {
       fetchApplicants();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [jobId]);
 
   const handleStatusChange = async (
@@ -63,22 +77,9 @@ export const JobApplicants: React.FC = () => {
     try {
       setUpdatingId(applicationId);
 
-      // Try API endpoints for status update
-      try {
-        await api.put(`/applications/status/${applicationId}`, {
-          status: newStatus,
-        });
-      } catch {
-        try {
-          await api.patch(`/applications/status/${applicationId}`, {
-            status: newStatus,
-          });
-        } catch {
-          await api.post(`/applications/status/${applicationId}`, {
-            status: newStatus,
-          });
-        }
-      }
+      await api.patch(`/applications/status/${applicationId}`, {
+        status: newStatus,
+      });
 
       // Local state Instant Update
       setApplicants((prev) =>
@@ -86,13 +87,18 @@ export const JobApplicants: React.FC = () => {
           app._id === applicationId ? { ...app, status: newStatus } : app,
         ),
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Status Update Failed:", err);
-      // alert(err.response?.data?.message || "Failed to update status");
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to update status";
+      setError(msg);
     } finally {
       setUpdatingId(null);
     }
   };
+
+
 
   if (loading) {
     return (
