@@ -1,67 +1,44 @@
-import React, { useEffect, useState } from "react";
-import api from "../../api/axios";
-
-interface Job {
-  _id: string;
-  title: string;
-  category?: string;
-  location?: string;
-  jobType?: string;
-  workMode?: string;
-  salary?: number;
-  description?: string;
-}
+import React, { useEffect, useState, useMemo } from "react";
+import type { Job } from "../../types";
+import { jobService, applicationService } from "../../services";
+import { JobCard, JobCardSkeleton, EmptyState, Input, Select } from "../../components/common";
 
 export const FindJobs: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [applyingId, setApplyingId] = useState<string | null>(null);
-  const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
-  const [message, setMessage] = useState<{ type: string; text: string } | null>(
-    null,
-  );
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedJobType, setSelectedJobType] = useState("");
 
   useEffect(() => {
     let isMounted = true;
 
-    const fetchJobsAndApplications = async () => {
+    const loadData = async () => {
       try {
-        // 1. Fetch Jobs
-        const jobsRes = await api.get("/jobs");
-        const extractedJobs =
-          jobsRes.data?.data?.jobs ||
-          jobsRes.data?.data ||
-          jobsRes.data?.jobs ||
-          (Array.isArray(jobsRes.data) ? jobsRes.data : []);
+        const [jobsData, myApps] = await Promise.all([
+          jobService.getAllJobs().catch(() => []),
+          applicationService.getMyApplications().catch(() => []),
+        ]);
 
         if (isMounted) {
-          setJobs(extractedJobs);
-        }
-
-        // 2. Fetch User's Already Applied Applications using correct route (/applications/get)
-        try {
-          const appRes = await api.get("/applications/get");
-          const myApps =
-            appRes.data?.data?.applications ||
-            appRes.data?.data ||
-            appRes.data?.application ||
-            appRes.data ||
-            [];
-
-          if (Array.isArray(myApps) && isMounted) {
-            const appliedIds = myApps.map(
-              (app: { job?: string | { _id: string } }) =>
-                typeof app.job === "object" ? app.job?._id : app.job,
-            );
-            setAppliedJobs(
-              appliedIds.filter((id): id is string => Boolean(id)),
-            );
-          }
-        } catch (appErr) {
-          console.warn("Could not sync applied jobs:", appErr);
+          setJobs(jobsData);
+          const appliedIds = myApps.map((app) =>
+            typeof app.job === "object" ? app.job?._id : app.job
+          );
+          setAppliedJobs(appliedIds.filter((id): id is string => Boolean(id)));
         }
       } catch (err: unknown) {
-        console.error("Error fetching jobs:", err);
+        if (isMounted) {
+          const errorMsg =
+            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+            "Failed to load jobs list.";
+          setMessage({ type: "error", text: errorMsg });
+        }
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -69,7 +46,7 @@ export const FindJobs: React.FC = () => {
       }
     };
 
-    fetchJobsAndApplications();
+    loadData();
 
     return () => {
       isMounted = false;
@@ -81,17 +58,14 @@ export const FindJobs: React.FC = () => {
       setApplyingId(jobId);
       setMessage(null);
 
-      // Apply via POST API
-      await api.post(`/applications/apply/${jobId}`);
+      await applicationService.applyForJob(jobId);
 
       setAppliedJobs((prev) => [...prev, jobId]);
       setMessage({
         type: "success",
-        text: "Successfully applied for this job!",
+        text: "Application submitted successfully! Check 'My Applications' to track its status.",
       });
     } catch (err: unknown) {
-      console.error("Apply Job Error Log:", err);
-
       const errResponse = (err as { response?: { data?: { message?: string; error?: string }; status?: number } })?.response;
       const errorMsg =
         errResponse?.data?.message ||
@@ -100,11 +74,7 @@ export const FindJobs: React.FC = () => {
 
       setMessage({ type: "error", text: errorMsg });
 
-      // Agar user pehle se apply kar chuka hai, toh button ko frontend me immediately "Applied" set kar do
-      if (
-        errResponse?.status === 400 ||
-        errorMsg.toLowerCase().includes("already applied")
-      ) {
+      if (errResponse?.status === 400 || errorMsg.toLowerCase().includes("already applied")) {
         setAppliedJobs((prev) => [...prev, jobId]);
       }
     } finally {
@@ -112,101 +82,121 @@ export const FindJobs: React.FC = () => {
     }
   };
 
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    jobs.forEach((j) => {
+      if (j.category) cats.add(j.category);
+    });
+    return Array.from(cats);
+  }, [jobs]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="text-gray-500 font-medium">
-          Loading available jobs...
-        </div>
-      </div>
-    );
-  }
+  const filteredJobs = useMemo(() => {
+    return jobs.filter((job) => {
+      const matchSearch =
+        searchTerm === "" ||
+        job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.location?.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchCategory =
+        !selectedCategory || job.category?.toLowerCase() === selectedCategory.toLowerCase();
+
+      const matchType =
+        !selectedJobType || job.jobType?.toLowerCase() === selectedJobType.toLowerCase();
+
+      return matchSearch && matchCategory && matchType;
+    });
+  }, [jobs, searchTerm, selectedCategory, selectedJobType]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
           Explore Job Opportunities
-        </h2>
+        </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Browse open roles and apply to build your career.
+          Discover vetted tech, product, and engineering roles matching your profile.
         </p>
       </div>
 
+      {/* Alert Messages */}
       {message && (
         <div
-          className={`mb-6 p-4 rounded-lg text-sm font-medium ${
+          className={`mb-6 p-4 rounded-xl text-sm font-medium border transition-all ${
             message.type === "success"
-              ? "bg-green-50 border border-green-200 text-green-700"
-              : "bg-red-50 border border-red-200 text-red-700"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+              : "bg-red-50 border-red-200 text-red-700"
           }`}
         >
           {message.text}
         </div>
       )}
 
-      {jobs.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-800">
-            No active job listings
-          </h3>
+      {/* Filter Bar */}
+      <div className="bg-white rounded-2xl border border-gray-200/80 p-4 sm:p-5 shadow-xs mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Input
+            placeholder="Search by title, skill, or location..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+          <Select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            options={[
+              { value: "", label: "All Categories" },
+              ...categories.map((cat) => ({ value: cat, label: cat })),
+            ]}
+          />
+
+          <Select
+            value={selectedJobType}
+            onChange={(e) => setSelectedJobType(e.target.value)}
+            options={[
+              { value: "", label: "All Job Types" },
+              { value: "Full-time", label: "Full-time" },
+              { value: "Part-time", label: "Part-time" },
+              { value: "Contract", label: "Contract" },
+              { value: "Internship", label: "Internship" },
+              { value: "Remote", label: "Remote" },
+            ]}
+          />
         </div>
+      </div>
+
+      {/* Job Grid / States */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+        </div>
+      ) : filteredJobs.length === 0 ? (
+        <EmptyState
+          title="No jobs found"
+          description={
+            searchTerm || selectedCategory || selectedJobType
+              ? "Try adjusting your search criteria or filters."
+              : "There are currently no active job postings available."
+          }
+        />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {jobs.map((job) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredJobs.map((job) => {
             const isApplied = appliedJobs.includes(job._id);
             return (
-              <div
+              <JobCard
                 key={job._id}
-                className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-bold text-gray-900">
-                      {job.title}
-                    </h3>
-                    <span className="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-1 rounded">
-                      {job.jobType || "Full-time"}
-                    </span>
-                  </div>
-                  <p className="text-xs text-indigo-600 font-medium mb-3">
-                    {job.category || "Technology"}
-                  </p>
-                  <p className="text-sm text-gray-600 line-clamp-2 mb-4">
-                    {job.description || "No description provided."}
-                  </p>
-                  <div className="flex flex-wrap gap-2 text-xs text-gray-500 mb-4">
-                    <span className="bg-gray-100 px-2 py-1 rounded">
-                      📍 {job.location || "Remote"}
-                    </span>
-                    <span className="bg-gray-100 px-2 py-1 rounded">
-                      💼 {job.workMode || "On-site"}
-                    </span>
-                    {job.salary && (
-                      <span className="bg-gray-100 px-2 py-1 rounded">
-                        💰 ₹{job.salary.toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => handleApply(job._id)}
-                  disabled={isApplied || applyingId === job._id}
-                  className={`w-full py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                    isApplied
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-indigo-600 hover:bg-indigo-700 text-white"
-                  }`}
-                >
-                  {applyingId === job._id
-                    ? "Applying..."
-                    : isApplied
-                      ? "Applied"
-                      : "Apply Now"}
-                </button>
-              </div>
+                job={job}
+                isApplied={isApplied}
+                isLoading={applyingId === job._id}
+                onAction={handleApply}
+              />
             );
           })}
         </div>
@@ -214,3 +204,5 @@ export const FindJobs: React.FC = () => {
     </div>
   );
 };
+
+export default FindJobs;
