@@ -1,26 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useSocket } from "./SocketContext";
-import api from "../api/axios";
-
-export interface NotificationItem {
-  _id: string;
-  recipient: string;
-  type: string;
-  message: string;
-  relatedJob?: string;
-  relatedApplication?: string;
-  isRead: boolean;
-  createdAt: string;
-}
-
-interface NotificationContextType {
-  notifications: NotificationItem[];
-  unreadCount: number;
-  markAsRead: (id: string) => Promise<void>;
-  markAllAsRead: () => Promise<void>;
-  clearAll: () => void;
-}
+import { notificationService } from "../services";
+import type { NotificationItem, NotificationContextType } from "../types";
 
 const NotificationContext = createContext<NotificationContextType>({
   notifications: [],
@@ -36,13 +18,15 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const { socket, isConnected } = useSocket();
 
-  // 1. Initial Unread Notifications fetch from Backend
+  // 1. Initial Notifications fetch from Backend
   useEffect(() => {
+    let isMounted = true;
+
     const fetchInitialNotifications = async () => {
       try {
-        const response = await api.get("/notifications");
-        if (response.data?.data) {
-          setNotifications(response.data.data);
+        const response = await notificationService.getMyNotifications();
+        if (response.data && isMounted) {
+          setNotifications(response.data);
         }
       } catch (error) {
         console.error("Failed to fetch notifications:", error);
@@ -50,6 +34,10 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     fetchInitialNotifications();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // 2. Real-time Socket Event Listener
@@ -57,17 +45,15 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
     if (!socket || !isConnected) return;
 
     const handleIncomingNotification = (newNotif: NotificationItem) => {
-      console.log("🔔 Live Notification Received:", newNotif);
-
       // Append new notification to top of the list
       setNotifications((prev) => [newNotif, ...prev]);
 
       // Play soft audio alert sound (Optional)
       try {
         const audio = new Audio("/sounds/notification.mp3");
-        audio.play().catch(() => {}); // ignore auto-play restriction blocks
+        audio.play().catch(() => {});
       } catch {
-        // audio playback might be restricted by browser policy
+        // audio playback might be restricted
       }
     };
 
@@ -83,7 +69,7 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   // Mark single notification as read
   const markAsRead = async (id: string) => {
     try {
-      await api.patch(`/notifications/${id}/read`);
+      await notificationService.markAsRead(id);
       setNotifications((prev) =>
         prev.map((item) =>
           item._id === id ? { ...item, isRead: true } : item,
@@ -97,7 +83,7 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   // Mark all notifications as read
   const markAllAsRead = async () => {
     try {
-      await api.patch("/notifications/read-all");
+      await notificationService.markAllAsRead();
       setNotifications((prev) =>
         prev.map((item) => ({ ...item, isRead: true })),
       );
@@ -129,5 +115,3 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useNotifications = () => useContext(NotificationContext);
-
-
