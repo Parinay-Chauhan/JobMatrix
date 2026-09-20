@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import api from "../api/axios";
-import type { User, AuthContextType } from "../types/auth";
+import { authService } from "../services";
+import type { User, AuthContextType } from "../types";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -20,8 +20,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await api.get("/users/current-user");
-        setUser(response.data.data);
+        const response = await authService.getCurrentUser();
+        setUser(response.data);
       } catch {
         // Unauthenticated session - token cleanup
         localStorage.removeItem("accessToken");
@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   // Clear token on logout
   const logout = async () => {
     try {
-      await api.post("/users/logout");
+      await authService.logout();
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
@@ -63,4 +63,3 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
-
