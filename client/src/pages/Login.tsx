@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../api/axios";
+import { authService } from "../services";
 import { useAuth } from "../context/AuthContext";
+import { Button, Input } from "../components/common";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -18,16 +19,13 @@ export const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await api.post("/users/login", { email, password });
+      const response = await authService.login({ email, password });
 
-      // Extract user and token from backend response
-      const userData = response.data.data.user;
-      const accessToken = response.data.data.accessToken;
+      const userData = response.data.user;
+      const accessToken = response.data.accessToken;
 
-      // Pass token to AuthContext so localStorage updates immediately
       login(userData, accessToken);
 
-      // Role-Based Navigation
       if (userData.role === "recruiter") {
         navigate("/recruiter/dashboard");
       } else {
@@ -43,63 +41,81 @@ export const Login: React.FC = () => {
     }
   };
 
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
-          Login to JobPortal
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50/80 px-4 py-12">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8 space-y-6">
+        <div className="text-center space-y-2">
+          <Link
+            to="/"
+            className="inline-block text-2xl font-black text-indigo-600 tracking-tight"
+          >
+            JobPortal
+          </Link>
+          <h2 className="text-2xl font-extrabold text-gray-900">Welcome back</h2>
+          <p className="text-xs text-gray-500">
+            Sign in to access your dashboard and opportunities
+          </p>
+        </div>
 
         {error && (
-          <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-600">
-            {error}
+          <div className="rounded-xl bg-red-50 border border-red-200 p-3.5 text-xs text-red-700 font-medium flex items-center gap-2">
+            <svg
+              className="w-4 h-4 shrink-0 text-red-500"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
+          <Input
+            label="Email Address"
+            type="email"
+            required
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
+          <Input
+            label="Password"
+            type="password"
+            required
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-          <button
+          <Button
             type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-indigo-600 py-2 text-white hover:bg-indigo-700 disabled:bg-gray-400"
+            variant="primary"
+            size="md"
+            isLoading={loading}
+            className="w-full mt-2"
           >
-            {loading ? "Logging in..." : "Login"}
-          </button>
+            Sign In
+          </Button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="text-center text-xs text-gray-600">
           Don't have an account?{" "}
-          <Link to="/register" className="text-indigo-600 hover:underline">
-            Register
+          <Link
+            to="/register"
+            className="font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+          >
+            Create an account
           </Link>
         </p>
       </div>
     </div>
   );
 };
+
+export default Login;
