@@ -1,57 +1,24 @@
-import React, { useEffect, useState } from "react";
-import api from "../../api/axios";
-
-
-interface Experience {
-  _id?: string;
-  company: string;
-  title: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-}
-
-interface Education {
-  _id?: string;
-  institution: string;
-  degree: string;
-  fieldOfStudy: string;
-  startYear: number | string;
-  endYear: number | string;
-}
-
-interface ProfileData {
-  fullname: string;
-  email: string;
-  phone?: string;
-  bio?: string;
-  skills?: string[];
-  resume?: string;
-  experience: Experience[];
-  education: Education[];
-}
+import React, { useEffect, useState, useCallback } from "react";
+import type { CandidateProfile as CandidateProfileType, Experience, Education } from "../../types";
+import { candidateService } from "../../services";
+import { Input, Textarea, Button, Skeleton } from "../../components/common";
 
 export const CandidateProfile: React.FC = () => {
-  const [profile, setProfile] = useState<ProfileData>({
-    fullname: "",
-    email: "",
-    phone: "",
-    bio: "",
-    skills: [],
-    resume: "",
-    experience: [],
-    education: [],
-  });
-
+  const [profile, setProfile] = useState<CandidateProfileType | null>(null);
   const [skillsInput, setSkillsInput] = useState("");
+  const [phone, setPhone] = useState("");
+  const [bio, setBio] = useState("");
+  const [location, setLocation] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [github, setGithub] = useState("");
+  const [portfolio, setPortfolio] = useState("");
+  
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{ type: string; text: string } | null>(
-    null,
-  );
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  // New item form states for modal / inline adding
+  // New Experience State
   const [newExp, setNewExp] = useState<Experience>({
     company: "",
     title: "",
@@ -59,6 +26,9 @@ export const CandidateProfile: React.FC = () => {
     endDate: "",
     description: "",
   });
+  const [addingExp, setAddingExp] = useState(false);
+
+  // New Education State
   const [newEdu, setNewEdu] = useState<Education>({
     institution: "",
     degree: "",
@@ -66,40 +36,41 @@ export const CandidateProfile: React.FC = () => {
     startYear: "",
     endYear: "",
   });
+  const [addingEdu, setAddingEdu] = useState(false);
 
   const [refreshKey, setRefreshKey] = useState(0);
-  const refetchProfile = () => setRefreshKey((prev) => prev + 1);
+  const refetch = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   useEffect(() => {
     let isMounted = true;
 
-    const fetchProfile = async () => {
+    const loadProfile = async () => {
       try {
-        const response = await api.get("/candidates/profile");
-        const data =
-          response.data?.candidate || response.data?.data || response.data;
+        const response = await candidateService.getProfile();
+        const raw = response as unknown as { candidate?: CandidateProfileType; data?: CandidateProfileType };
+        const data = raw.candidate || raw.data || (response as unknown as CandidateProfileType);
 
         if (data && isMounted) {
-          setProfile({
-            fullname: data.user?.fullName || data.fullName || "",
-            email: data.user?.email || data.email || "",
-            phone: data.phone || "",
-            bio: data.bio || "",
-            skills: data.skills || [],
-            resume: data.resume || "",
-            experience: data.experience || [],
-            education: data.education || [],
-          });
+          setProfile(data);
+          setPhone(data.phone || "");
+          setBio(data.bio || "");
+          setLocation(data.location || "");
+          setLinkedin(data.linkedin || "");
+          setGithub(data.github || "");
+          setPortfolio(data.portfolio || "");
 
           const currentSkills = data.skills || [];
           setSkillsInput(
-            Array.isArray(currentSkills)
-              ? currentSkills.join(", ")
-              : currentSkills,
+            Array.isArray(currentSkills) ? currentSkills.join(", ") : (currentSkills as string)
           );
         }
       } catch (err: unknown) {
-        console.error("Profile Fetch Error:", err);
+        if (isMounted) {
+          const msg =
+            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+            "Failed to load profile details.";
+          setMessage({ type: "error", text: msg });
+        }
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -107,91 +78,13 @@ export const CandidateProfile: React.FC = () => {
       }
     };
 
-    fetchProfile();
+    loadProfile();
 
     return () => {
       isMounted = false;
     };
   }, [refreshKey]);
 
-
-  // Add Experience via dedicated endpoint /experience
-  const handleAddExperience = async () => {
-    if (!newExp.company || !newExp.title) {
-      alert("Company and Title are required");
-      return;
-    }
-    try {
-      await api.post("/candidates/experience", newExp);
-      setNewExp({
-        company: "",
-        title: "",
-        startDate: "",
-        endDate: "",
-        description: "",
-      });
-      refetchProfile();
-    } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "Failed to add experience";
-      alert(msg);
-    }
-  };
-
-  // Delete Experience via /experience/:id
-  const handleDeleteExperience = async (id?: string) => {
-    if (!id) return;
-    try {
-      await api.delete(`/candidates/experience/${id}`);
-      refetchProfile();
-    } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "Failed to delete experience";
-      alert(msg);
-    }
-  };
-
-  // Add Education via dedicated endpoint /education
-  const handleAddEducation = async () => {
-    if (!newEdu.institution || !newEdu.degree) {
-      alert("Institution and Degree are required");
-      return;
-    }
-    try {
-      await api.post("/candidates/education", newEdu);
-      setNewEdu({
-        institution: "",
-        degree: "",
-        fieldOfStudy: "",
-        startYear: "",
-        endYear: "",
-      });
-      refetchProfile();
-    } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "Failed to add education";
-      alert(msg);
-    }
-  };
-
-  // Delete Education via /education/:id
-  const handleDeleteEducation = async (id?: string) => {
-    if (!id) return;
-    try {
-      await api.delete(`/candidates/education/${id}`);
-      refetchProfile();
-    } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "Failed to delete education";
-      alert(msg);
-    }
-  };
-
-  // Save Main Profile Details (Bio, Phone, Skills)
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -203,167 +96,254 @@ export const CandidateProfile: React.FC = () => {
         .map((s) => s.trim())
         .filter(Boolean);
 
-      const profilePayload = {
-        phone: profile.phone || "",
-        bio: profile.bio || "",
+      await candidateService.updateProfile({
+        phone,
+        bio,
+        location,
         skills: skillsArray,
-      };
+        linkedin,
+        github,
+        portfolio,
+      });
 
-      // Calls PATCH /candidates/profile
-      await api.patch("/candidates/profile", profilePayload);
-
-      // Upload Resume if selected
       if (resumeFile) {
-        const formData = new FormData();
-        formData.append("resume", resumeFile);
-        await api.post("/candidates/resume", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await candidateService.uploadResume(resumeFile);
+        setResumeFile(null);
       }
 
       setMessage({
         type: "success",
-        text: "Profile details updated successfully!",
+        text: "Profile details and resume updated successfully!",
       });
-      setResumeFile(null);
-      refetchProfile();
+      refetch();
     } catch (err: unknown) {
-      console.error("Profile Update Error Details:", err);
       const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "Failed to update profile details.";
-      setMessage({
-        type: "error",
-        text: msg,
-      });
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        "Failed to update profile.";
+      setMessage({ type: "error", text: msg });
     } finally {
       setSaving(false);
     }
   };
 
+  const handleAddExperience = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newExp.company || !newExp.title || !newExp.startDate) {
+      setMessage({ type: "error", text: "Company, Title, and Start Date are required for experience." });
+      return;
+    }
 
+    try {
+      setAddingExp(true);
+      await candidateService.addExperience(newExp);
+      setNewExp({
+        company: "",
+        title: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      });
+      setMessage({ type: "success", text: "Experience added successfully!" });
+      refetch();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        "Failed to add experience.";
+      setMessage({ type: "error", text: msg });
+    } finally {
+      setAddingExp(false);
+    }
+  };
+
+  const handleDeleteExperience = async (id?: string) => {
+    if (!id) return;
+    try {
+      await candidateService.deleteExperience(id);
+      setMessage({ type: "success", text: "Experience record removed." });
+      refetch();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        "Failed to delete experience.";
+      setMessage({ type: "error", text: msg });
+    }
+  };
+
+  const handleAddEducation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEdu.institution || !newEdu.degree) {
+      setMessage({ type: "error", text: "Institution and Degree are required." });
+      return;
+    }
+
+    try {
+      setAddingEdu(true);
+      await candidateService.addEducation(newEdu);
+      setNewEdu({
+        institution: "",
+        degree: "",
+        fieldOfStudy: "",
+        startYear: "",
+        endYear: "",
+      });
+      setMessage({ type: "success", text: "Education added successfully!" });
+      refetch();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        "Failed to add education.";
+      setMessage({ type: "error", text: msg });
+    } finally {
+      setAddingEdu(false);
+    }
+  };
+
+  const handleDeleteEducation = async (id?: string) => {
+    if (!id) return;
+    try {
+      await candidateService.deleteEducation(id);
+      setMessage({ type: "success", text: "Education record removed." });
+      refetch();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        "Failed to delete education.";
+      setMessage({ type: "error", text: msg });
+    }
+  };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12 text-gray-500 font-medium">
-        Loading profile details...
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <Skeleton className="h-10 w-1/3" />
+        <div className="bg-white rounded-2xl border border-gray-200/80 p-6 space-y-4">
+          <Skeleton className="h-6 w-1/4" />
+          <div className="grid grid-cols-2 gap-4">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
       </div>
     );
   }
 
+  const user = profile?.user;
+  const fullName = user?.fullName || "Candidate";
+  const email = user?.email || "";
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">My Profile</h2>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          Candidate Profile
+        </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Manage your personal details, work experience, education, and resume.
+          Complete your profile to stand out to verified tech recruiters.
         </p>
       </div>
 
       {message && (
         <div
-          className={`mb-6 p-4 rounded-lg text-sm font-medium ${
+          className={`mb-6 p-4 rounded-xl text-sm font-medium border transition-all ${
             message.type === "success"
-              ? "bg-green-50 border border-green-200 text-green-700"
-              : "bg-red-50 border border-red-200 text-red-700"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+              : "bg-red-50 border-red-200 text-red-700"
           }`}
         >
           {message.text}
         </div>
       )}
 
-      {/* Main Profile Form */}
+      {/* Main Info Form */}
       <form
         onSubmit={handleSaveProfile}
-        className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-8"
+        className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 space-y-6 mb-8"
       >
-        <div>
-          <h3 className="text-md font-semibold text-gray-800 mb-4 border-b pb-2">
-            Basic Details
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={profile.fullname}
-                disabled
-                className="w-full px-4 py-2.5 border border-gray-200 bg-gray-100 text-gray-600 rounded-lg text-sm cursor-not-allowed font-medium"
-              />
-            </div>
+        <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
+          Personal Information
+        </h2>
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={profile.email}
-                disabled
-                className="w-full px-4 py-2.5 border border-gray-200 bg-gray-100 text-gray-600 rounded-lg text-sm cursor-not-allowed font-medium"
-              />
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label="Full Name"
+            value={fullName}
+            disabled
+            helperText="Name linked to your account"
+          />
+          <Input
+            label="Email Address"
+            type="email"
+            value={email}
+            disabled
+            helperText="Primary email for job notifications"
+          />
+          <Input
+            label="Phone Number"
+            placeholder="+91 98765 43210"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <Input
+            label="Location"
+            placeholder="Bengaluru, India / Remote"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+        </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase mb-2">
-                Phone Number
-              </label>
-              <input
-                type="text"
-                placeholder="+91 9876543210"
-                value={profile.phone}
-                onChange={(e) =>
-                  setProfile({ ...profile, phone: e.target.value })
-                }
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-              />
-            </div>
+        <Input
+          label="Skills (Comma Separated)"
+          placeholder="React, TypeScript, Node.js, Next.js, Tailwind CSS"
+          value={skillsInput}
+          onChange={(e) => setSkillsInput(e.target.value)}
+          helperText="Add your strongest technical and soft skills"
+        />
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase mb-2">
-                Skills (comma separated)
-              </label>
-              <input
-                type="text"
-                placeholder="React, Node.js, MongoDB"
-                value={skillsInput}
-                onChange={(e) => setSkillsInput(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-              />
-            </div>
-          </div>
+        <Textarea
+          label="Professional Bio"
+          placeholder="Brief summary of your expertise, achievements, and career goals..."
+          rows={3}
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+        />
 
-          <div className="mt-6">
-            <label className="block text-xs font-semibold text-gray-700 uppercase mb-2">
-              Bio / Professional Summary
-            </label>
-            <textarea
-              rows={3}
-              placeholder="Brief summary about yourself..."
-              value={profile.bio}
-              onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Input
+            label="LinkedIn Profile"
+            placeholder="https://linkedin.com/in/username"
+            value={linkedin}
+            onChange={(e) => setLinkedin(e.target.value)}
+          />
+          <Input
+            label="GitHub Profile"
+            placeholder="https://github.com/username"
+            value={github}
+            onChange={(e) => setGithub(e.target.value)}
+          />
+          <Input
+            label="Portfolio Website"
+            placeholder="https://yourportfolio.dev"
+            value={portfolio}
+            onChange={(e) => setPortfolio(e.target.value)}
+          />
         </div>
 
         {/* Resume Section */}
-        <div className="border-t border-gray-200 pt-6">
-          <label className="block text-xs font-semibold text-gray-700 uppercase mb-2">
+        <div className="border-t border-gray-100 pt-6">
+          <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
             Resume / CV Document (PDF)
           </label>
-          {profile.resume && (
-            <div className="mb-3 flex items-center justify-between p-3 bg-indigo-50 rounded-lg border border-indigo-100 text-sm">
-              <span className="text-indigo-900 font-medium truncate max-w-md">
+          {profile?.resume && (
+            <div className="mb-3 flex items-center justify-between p-3.5 bg-indigo-50/70 rounded-xl border border-indigo-100 text-sm">
+              <span className="text-indigo-950 font-medium truncate max-w-md flex items-center gap-2">
                 📄 {profile.resume.split("/").pop()}
               </span>
               <a
                 href={profile.resume}
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs bg-white border border-indigo-200 text-indigo-600 font-semibold px-3 py-1 rounded hover:bg-indigo-50"
+                className="text-xs bg-white border border-indigo-200 text-indigo-600 font-bold px-3 py-1.5 rounded-lg hover:bg-indigo-50 shadow-2xs"
               >
                 View Resume
               </a>
@@ -375,186 +355,198 @@ export const CandidateProfile: React.FC = () => {
             onChange={(e) =>
               setResumeFile(e.target.files ? e.target.files[0] : null)
             }
-            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
           />
         </div>
 
         <div className="flex justify-end pt-2">
-          <button
+          <Button
             type="submit"
-            disabled={saving}
-            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
+            variant="primary"
+            isLoading={saving}
           >
-            {saving ? "Saving Changes..." : "Save Basic Details"}
-          </button>
+            Save Profile Details
+          </Button>
         </div>
       </form>
 
       {/* Experience Section */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mt-6 space-y-4">
-        <h3 className="text-md font-semibold text-gray-800 border-b pb-2">
+      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 space-y-6 mb-8">
+        <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
           Work Experience
-        </h3>
-        {profile.experience.map((exp) => (
-          <div
-            key={exp._id}
-            className="p-4 border border-gray-100 rounded-lg bg-gray-50 flex justify-between items-center"
-          >
-            <div>
-              <p className="font-bold text-gray-800 text-sm">
-                {exp.title} -{" "}
-                <span className="text-indigo-600">{exp.company}</span>
-              </p>
-              <p className="text-xs text-gray-500">
-                {exp.startDate?.split("T")[0]} to{" "}
-                {exp.endDate?.split("T")[0] || "Present"}
-              </p>
-              {exp.description && (
-                <p className="text-xs text-gray-600 mt-1">{exp.description}</p>
-              )}
-            </div>
-            <button
-              onClick={() => handleDeleteExperience(exp._id)}
-              className="text-xs text-red-500 hover:text-red-700 font-semibold px-2 py-1"
-            >
-              Delete
-            </button>
+        </h2>
+
+        {profile?.experience && profile.experience.length > 0 ? (
+          <div className="space-y-3">
+            {profile.experience.map((exp) => (
+              <div
+                key={exp._id}
+                className="p-4 rounded-xl border border-gray-200/70 bg-gray-50/50 flex justify-between items-start"
+              >
+                <div>
+                  <h3 className="font-bold text-gray-900 text-sm">
+                    {exp.title} &bull; <span className="text-indigo-600">{exp.company}</span>
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {exp.startDate?.split("T")[0]} &mdash; {exp.endDate?.split("T")[0] || "Present"}
+                  </p>
+                  {exp.description && (
+                    <p className="text-xs text-gray-600 mt-2 leading-relaxed">{exp.description}</p>
+                  )}
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                  onClick={() => handleDeleteExperience(exp._id)}
+                >
+                  Delete
+                </Button>
+              </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          <p className="text-xs text-gray-500 italic">No work experience added yet.</p>
+        )}
 
         {/* Add Experience Form */}
-        <div className="pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-3">
-          <input
-            type="text"
-            placeholder="Company Name"
-            value={newExp.company}
-            onChange={(e) => setNewExp({ ...newExp, company: e.target.value })}
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <input
-            type="text"
-            placeholder="Role / Title"
-            value={newExp.title}
-            onChange={(e) => setNewExp({ ...newExp, title: e.target.value })}
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <input
-            type="date"
-            value={newExp.startDate}
-            onChange={(e) =>
-              setNewExp({ ...newExp, startDate: e.target.value })
-            }
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <input
-            type="date"
-            value={newExp.endDate}
-            onChange={(e) => setNewExp({ ...newExp, endDate: e.target.value })}
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <textarea
-            placeholder="Description / Responsibilities"
-            value={newExp.description}
-            onChange={(e) =>
-              setNewExp({ ...newExp, description: e.target.value })
-            }
-            className="md:col-span-2 px-3 py-2 border rounded-lg text-sm resize-none"
-            rows={2}
-          />
-          <div className="md:col-span-2 text-right">
-            <button
-              type="button"
-              onClick={handleAddExperience}
-              className="bg-indigo-50 text-indigo-600 font-semibold px-4 py-2 rounded-lg text-xs hover:bg-indigo-100"
-            >
-              + Add Experience
-            </button>
+        <form onSubmit={handleAddExperience} className="border-t border-gray-100 pt-5 space-y-3">
+          <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+            + Add Work Experience
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Input
+              placeholder="Company Name"
+              value={newExp.company}
+              onChange={(e) => setNewExp({ ...newExp, company: e.target.value })}
+              required
+            />
+            <Input
+              placeholder="Job Title / Role"
+              value={newExp.title}
+              onChange={(e) => setNewExp({ ...newExp, title: e.target.value })}
+              required
+            />
+            <Input
+              type="date"
+              label="Start Date"
+              value={newExp.startDate}
+              onChange={(e) => setNewExp({ ...newExp, startDate: e.target.value })}
+              required
+            />
+            <Input
+              type="date"
+              label="End Date (Leave blank if currently working)"
+              value={newExp.endDate || ""}
+              onChange={(e) => setNewExp({ ...newExp, endDate: e.target.value })}
+            />
           </div>
-        </div>
+          <Textarea
+            placeholder="Key achievements and responsibilities..."
+            rows={2}
+            value={newExp.description || ""}
+            onChange={(e) => setNewExp({ ...newExp, description: e.target.value })}
+          />
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              size="sm"
+              variant="secondary"
+              isLoading={addingExp}
+            >
+              Add Experience
+            </Button>
+          </div>
+        </form>
       </div>
 
       {/* Education Section */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mt-6 space-y-4">
-        <h3 className="text-md font-semibold text-gray-800 border-b pb-2">
+      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 space-y-6">
+        <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
           Education
-        </h3>
-        {profile.education.map((edu) => (
-          <div
-            key={edu._id}
-            className="p-4 border border-gray-100 rounded-lg bg-gray-50 flex justify-between items-center"
-          >
-            <div>
-              <p className="font-bold text-gray-800 text-sm">
-                {edu.degree} -{" "}
-                <span className="text-indigo-600">{edu.institution}</span>
-              </p>
-              <p className="text-xs text-gray-500">
-                {edu.fieldOfStudy} ({edu.startYear} - {edu.endYear})
-              </p>
-            </div>
-            <button
-              onClick={() => handleDeleteEducation(edu._id)}
-              className="text-xs text-red-500 hover:text-red-700 font-semibold px-2 py-1"
-            >
-              Delete
-            </button>
+        </h2>
+
+        {profile?.education && profile.education.length > 0 ? (
+          <div className="space-y-3">
+            {profile.education.map((edu) => (
+              <div
+                key={edu._id}
+                className="p-4 rounded-xl border border-gray-200/70 bg-gray-50/50 flex justify-between items-start"
+              >
+                <div>
+                  <h3 className="font-bold text-gray-900 text-sm">
+                    {edu.degree} &bull; <span className="text-indigo-600">{edu.institution}</span>
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {edu.fieldOfStudy ? `${edu.fieldOfStudy} • ` : ""}
+                    {edu.startYear || ""} &mdash; {edu.endYear || "Present"}
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                  onClick={() => handleDeleteEducation(edu._id)}
+                >
+                  Delete
+                </Button>
+              </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          <p className="text-xs text-gray-500 italic">No education details added yet.</p>
+        )}
 
         {/* Add Education Form */}
-        <div className="pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input
-            type="text"
-            placeholder="Institution"
-            value={newEdu.institution}
-            onChange={(e) =>
-              setNewEdu({ ...newEdu, institution: e.target.value })
-            }
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <input
-            type="text"
-            placeholder="Degree (e.g., B.Tech)"
-            value={newEdu.degree}
-            onChange={(e) => setNewEdu({ ...newEdu, degree: e.target.value })}
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <input
-            type="text"
-            placeholder="Field of Study (e.g., CSE)"
-            value={newEdu.fieldOfStudy}
-            onChange={(e) =>
-              setNewEdu({ ...newEdu, fieldOfStudy: e.target.value })
-            }
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <input
-            type="number"
-            placeholder="Start Year"
-            value={newEdu.startYear}
-            onChange={(e) =>
-              setNewEdu({ ...newEdu, startYear: e.target.value })
-            }
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <input
-            type="number"
-            placeholder="End Year"
-            value={newEdu.endYear}
-            onChange={(e) => setNewEdu({ ...newEdu, endYear: e.target.value })}
-            className="px-3 py-2 border rounded-lg text-sm"
-          />
-          <div className="md:col-span-3 text-right">
-            <button
-              type="button"
-              onClick={handleAddEducation}
-              className="bg-indigo-50 text-indigo-600 font-semibold px-4 py-2 rounded-lg text-xs hover:bg-indigo-100"
-            >
-              + Add Education
-            </button>
+        <form onSubmit={handleAddEducation} className="border-t border-gray-100 pt-5 space-y-3">
+          <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+            + Add Education
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Input
+              placeholder="Institution / University"
+              value={newEdu.institution}
+              onChange={(e) => setNewEdu({ ...newEdu, institution: e.target.value })}
+              required
+            />
+            <Input
+              placeholder="Degree (e.g. B.Tech, M.S.)"
+              value={newEdu.degree}
+              onChange={(e) => setNewEdu({ ...newEdu, degree: e.target.value })}
+              required
+            />
+            <Input
+              placeholder="Field of Study (e.g. Computer Science)"
+              value={newEdu.fieldOfStudy || ""}
+              onChange={(e) => setNewEdu({ ...newEdu, fieldOfStudy: e.target.value })}
+            />
+            <Input
+              type="number"
+              placeholder="Start Year"
+              value={newEdu.startYear || ""}
+              onChange={(e) => setNewEdu({ ...newEdu, startYear: e.target.value })}
+            />
+            <Input
+              type="number"
+              placeholder="End Year"
+              value={newEdu.endYear || ""}
+              onChange={(e) => setNewEdu({ ...newEdu, endYear: e.target.value })}
+            />
           </div>
-        </div>
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              size="sm"
+              variant="secondary"
+              isLoading={addingEdu}
+            >
+              Add Education
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
+
+export default CandidateProfile;
