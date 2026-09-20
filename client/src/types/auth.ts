@@ -7,8 +7,29 @@ export interface User {
   email: string;
   role: UserRole;
   avatar?: string;
-  createdAt: string;
+  avatarPublicId?: string;
+  createdAt?: string;
   updatedAt?: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password?: string;
+  username?: string;
+}
+
+export interface RegisterPayload {
+  fullName: string;
+  username: string;
+  email: string;
+  password?: string;
+  role: UserRole;
+}
+
+export interface AuthResponseData {
+  user: User;
+  accessToken: string;
+  refreshToken?: string;
 }
 
 export interface AuthContextType {
