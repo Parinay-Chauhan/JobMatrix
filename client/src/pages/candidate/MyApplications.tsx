@@ -1,39 +1,30 @@
 import React, { useEffect, useState } from "react";
-import api from "../../api/axios";
-
-interface Application {
-  _id: string;
-  job: {
-    _id: string;
-    title: string;
-    company?: string;
-    location?: string;
-    jobType?: string;
-    salary?: number;
-  };
-  status: string;
-  createdAt: string;
-}
+import { Link } from "react-router-dom";
+import type { Application } from "../../types";
+import { applicationService } from "../../services";
+import { StatusBadge, Skeleton, EmptyState, Button } from "../../components/common";
 
 export const MyApplications: React.FC = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchApplications = async () => {
       try {
-        const res = await api.get("/applications/get");
-
-        const apps =
-          res.data?.data?.applications || res.data?.data || res.data || [];
-
+        const apps = await applicationService.getMyApplications();
         if (isMounted) {
-          setApplications(Array.isArray(apps) ? apps : []);
+          setApplications(apps);
         }
       } catch (err: unknown) {
-        console.error("Error fetching applications:", err);
+        if (isMounted) {
+          const errorMsg =
+            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+            "Failed to load your submitted applications.";
+          setError(errorMsg);
+        }
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -48,87 +39,88 @@ export const MyApplications: React.FC = () => {
     };
   }, []);
 
-
-
-  const getStatusBadge = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "accepted":
-      case "shortlisted":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "rejected":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "reviewed":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      default:
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-    }
-  };
-
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="text-gray-500 font-medium">
-          Loading your applications...
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">My Applications</h2>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          My Applications
+        </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Track the current status of all the jobs you have applied for.
+          Track real-time updates and decisions on your submitted job applications.
         </p>
       </div>
 
-      {applications.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-800">
-            You haven't applied to any jobs yet.
-          </h3>
+      {error && (
+        <div className="mb-6 p-4 rounded-xl text-sm font-medium border bg-red-50 border-red-200 text-red-700">
+          {error}
         </div>
+      )}
+
+      {loading ? (
+        <div className="space-y-4">
+          <div className="p-6 bg-white rounded-2xl border border-gray-200/80 space-y-3">
+            <Skeleton className="h-6 w-1/3" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+          <div className="p-6 bg-white rounded-2xl border border-gray-200/80 space-y-3">
+            <Skeleton className="h-6 w-1/4" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+          <div className="p-6 bg-white rounded-2xl border border-gray-200/80 space-y-3">
+            <Skeleton className="h-6 w-1/3" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+        </div>
+      ) : applications.length === 0 ? (
+        <EmptyState
+          title="No applications yet"
+          description="You haven't applied to any job postings yet. Explore open roles and jumpstart your career."
+          action={
+            <Link to="/candidate/jobs">
+              <Button variant="primary">Explore Open Jobs</Button>
+            </Link>
+          }
+        />
       ) : (
         <div className="space-y-4">
           {applications.map((app) => {
-            const job = app.job || {};
+            const job = typeof app.job === "object" ? app.job : null;
+            const title = job?.title || "Job Title Unavailable";
+            const location = job?.location || "Remote / Not Specified";
+            const jobType = job?.jobType || "Full-time";
+            const companyName =
+              (typeof job?.recruiter === "object" ? job?.recruiter?.companyName : undefined) ||
+              job?.companyName ||
+              "Company";
+
             return (
               <div
                 key={app._id}
-                className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+                className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-xs hover:border-indigo-200 hover:shadow-md transition-all duration-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
               >
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">
-                    {job.title || "Job Title Unavailable"}
+                    {title}
                   </h3>
-                  <div className="flex flex-wrap gap-2 text-xs text-gray-500 mt-2">
-                    {job.location && (
-                      <span className="bg-gray-100 px-2 py-1 rounded">
-                        📍 {job.location}
-                      </span>
-                    )}
-                    {job.jobType && (
-                      <span className="bg-gray-100 px-2 py-1 rounded">
-                        💼 {job.jobType}
-                      </span>
-                    )}
-                    <span className="bg-gray-100 px-2 py-1 rounded">
-                      📅 Applied on:{" "}
-                      {new Date(app.createdAt).toLocaleDateString()}
+                  <p className="text-xs font-semibold text-indigo-600 mt-0.5">
+                    {companyName}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-500 mt-3">
+                    <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5">
+                      📍 {location}
+                    </span>
+                    <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5">
+                      💼 {jobType}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-gray-400">
+                      📅 Applied {new Date(app.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
 
-                <div>
-                  <span
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border capitalize ${getStatusBadge(
-                      app.status,
-                    )}`}
-                  >
-                    {app.status || "Pending"}
-                  </span>
+                <div className="shrink-0 self-end sm:self-center">
+                  <StatusBadge status={app.status} size="md" />
                 </div>
               </div>
             );
@@ -138,3 +130,5 @@ export const MyApplications: React.FC = () => {
     </div>
   );
 };
+
+export default MyApplications;
