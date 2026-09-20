@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../api/axios";
+import { authService } from "../services";
+import { Button, Input, Select } from "../components/common";
+import type { UserRole } from "../types";
 
 export const Register: React.FC = () => {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"candidate" | "recruiter">("candidate");
+  const [role, setRole] = useState<UserRole>("candidate");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +21,7 @@ export const Register: React.FC = () => {
     setLoading(true);
 
     try {
-      await api.post("/users/register", {
+      await authService.register({
         fullName,
         username,
         email,
@@ -30,112 +32,116 @@ export const Register: React.FC = () => {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "Registration failed";
+          ?.message || "Registration failed. Please check your details.";
       setError(msg);
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
-          Create Account
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50/80 px-4 py-12">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8 space-y-6">
+        <div className="text-center space-y-2">
+          <Link
+            to="/"
+            className="inline-block text-2xl font-black text-indigo-600 tracking-tight"
+          >
+            JobPortal
+          </Link>
+          <h2 className="text-2xl font-extrabold text-gray-900">Create Account</h2>
+          <p className="text-xs text-gray-500">
+            Join JobPortal to explore or publish opportunities
+          </p>
+        </div>
 
         {error && (
-          <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-600">
-            {error}
+          <div className="rounded-xl bg-red-50 border border-red-200 p-3.5 text-xs text-red-700 font-medium flex items-center gap-2">
+            <svg
+              className="w-4 h-4 shrink-0 text-red-500"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-            <input
-              type="text"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
+          <Input
+            label="Full Name"
+            type="text"
+            required
+            placeholder="John Doe"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Username
-            </label>
-            <input
-              type="text"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value.toLowerCase().trim())}
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
+          <Input
+            label="Username"
+            type="text"
+            required
+            placeholder="johndoe"
+            value={username}
+            onChange={(e) => setUsername(e.target.value.toLowerCase().trim())}
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
+          <Input
+            label="Email Address"
+            type="email"
+            required
+            placeholder="john@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
+          <Input
+            label="Password"
+            type="password"
+            required
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              I am a
-            </label>
-            <select
-              value={role}
-              onChange={(e) =>
-                setRole(e.target.value as "candidate" | "recruiter")
-              }
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:outline-none"
-            >
-              <option value="candidate">Candidate (Job Seeker)</option>
-              <option value="recruiter">Recruiter (Employer)</option>
-            </select>
-          </div>
+          <Select
+            label="I am joining as"
+            value={role}
+            onChange={(e) => setRole(e.target.value as UserRole)}
+            options={[
+              { value: "candidate", label: "Candidate (Looking for jobs)" },
+              { value: "recruiter", label: "Recruiter (Hiring talent)" },
+            ]}
+          />
 
-          <button
+          <Button
             type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-indigo-600 py-2 text-white hover:bg-indigo-700 disabled:bg-gray-400"
+            variant="primary"
+            size="md"
+            isLoading={loading}
+            className="w-full mt-2"
           >
-            {loading ? "Registering..." : "Register"}
-          </button>
+            Create Account
+          </Button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="text-center text-xs text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-indigo-600 hover:underline">
-            Login
+          <Link
+            to="/login"
+            className="font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+          >
+            Sign in
           </Link>
         </p>
       </div>
     </div>
   );
 };
+
+export default Register;
