@@ -1,57 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import api from "../../api/axios";
-
-interface Applicant {
-  _id: string;
-  applicant?: {
-    _id: string;
-    fullName?: string;
-    fullname?: string;
-    name?: string;
-    email?: string;
-  };
-  candidate?: {
-    _id: string;
-    fullName?: string;
-    fullname?: string;
-    name?: string;
-    email?: string;
-  };
-  status: string;
-  createdAt: string;
-}
+import type { Application, ApplicationStatus } from "../../types";
+import { applicationService } from "../../services";
+import { StatusBadge, Button, EmptyState, Skeleton } from "../../components/common";
 
 export const JobApplicants: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
-  const [applicants, setApplicants] = useState<Applicant[]>([]);
+  const [applicants, setApplicants] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchApplicants = async () => {
+      if (!jobId) return;
+
       try {
-        const response = await api.get(`/applications/${jobId}/applicants`);
-
-        const data =
-          response.data?.data?.applications ||
-          response.data?.applications ||
-          response.data?.data?.applicants ||
-          response.data?.data ||
-          (Array.isArray(response.data) ? response.data : []);
-
+        const data = await applicationService.getJobApplicants(jobId);
         if (isMounted) {
           setApplicants(data);
         }
       } catch (err: unknown) {
-        console.error("Fetch Applicants Error:", err);
         if (isMounted) {
           const msg =
-            (err as { response?: { data?: { message?: string } } })?.response
-              ?.data?.message || "Failed to load applicants.";
+            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+            "Failed to load applicants.";
           setError(msg);
         }
       } finally {
@@ -61,9 +36,7 @@ export const JobApplicants: React.FC = () => {
       }
     };
 
-    if (jobId) {
-      fetchApplicants();
-    }
+    fetchApplicants();
 
     return () => {
       isMounted = false;
@@ -72,150 +45,156 @@ export const JobApplicants: React.FC = () => {
 
   const handleStatusChange = async (
     applicationId: string,
-    newStatus: string,
+    newStatus: ApplicationStatus
   ) => {
     try {
       setUpdatingId(applicationId);
 
-      await api.patch(`/applications/status/${applicationId}`, {
-        status: newStatus,
-      });
+      await applicationService.updateApplicationStatus(applicationId, newStatus);
 
-      // Local state Instant Update
       setApplicants((prev) =>
         prev.map((app) =>
-          app._id === applicationId ? { ...app, status: newStatus } : app,
-        ),
+          app._id === applicationId ? { ...app, status: newStatus } : app
+        )
       );
     } catch (err: unknown) {
-      console.error("Status Update Failed:", err);
       const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "Failed to update status";
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        "Failed to update application status.";
       setError(msg);
     } finally {
       setUpdatingId(null);
     }
   };
 
-
-
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <div className="text-gray-500 font-medium">Loading applicants...</div>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <Skeleton className="h-8 w-1/4" />
+        <div className="bg-white rounded-2xl border border-gray-200/80 p-6 space-y-4">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
-      <div className="flex items-center space-x-4 mb-6">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Back Link & Header */}
+      <div className="mb-6">
         <Link
           to="/recruiter/jobs"
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+          className="text-xs font-bold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1 mb-2"
         >
-          &larr; Back to Manage Jobs
+          &larr; Back to Posted Jobs
         </Link>
-        <h2 className="text-2xl font-bold text-gray-900">Job Applicants</h2>
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          Applicant Pipeline
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Review candidates who applied, inspect resumes, and update recruitment status.
+        </p>
       </div>
 
       {error && (
-        <div className="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+        <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm font-medium">
           {error}
         </div>
       )}
 
       {applicants.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-800 mb-1">
-            No applications received yet
-          </h3>
-          <p className="text-gray-500 text-sm">
-            Candidates who apply for this job posting will appear here.
-          </p>
-        </div>
+        <EmptyState
+          title="No applications yet"
+          description="Candidates who apply for this job listing will appear here in real-time."
+          action={
+            <Link to="/recruiter/jobs">
+              <Button variant="secondary">Back to Manage Jobs</Button>
+            </Link>
+          }
+        />
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="px-6 py-4">Applicant</th>
-                <th className="px-6 py-4">Applied Date</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 text-sm">
-              {applicants.map((app) => {
-                const userObj = app.applicant || app.candidate;
-                const candidateName =
-                  userObj?.fullName ||
-                  userObj?.fullname ||
-                  userObj?.name ||
-                  "Candidate";
-                const candidateEmail = userObj?.email || "";
-                const isUpdating = updatingId === app._id;
+        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50/80 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-4">Candidate</th>
+                  <th className="px-6 py-4">Applied Date</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4 text-right">Review Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 text-sm">
+                {applicants.map((app) => {
+                  const candidate =
+                    typeof app.applicant === "object" ? app.applicant : undefined;
+                  const candidateName = candidate?.fullName || "Candidate";
+                  const candidateEmail = candidate?.email || "";
+                  const isUpdating = updatingId === app._id;
 
-                return (
-                  <tr
-                    key={app._id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-gray-900">
-                        {candidateName}
-                      </div>
-                      {candidateEmail && (
-                        <div className="text-xs text-gray-500">
-                          {candidateEmail}
+                  return (
+                    <tr
+                      key={app._id}
+                      className="hover:bg-gray-50/60 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="font-bold text-gray-900">
+                          {candidateName}
                         </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-gray-600">
-                      {new Date(app.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold capitalize ${
-                          app.status?.toLowerCase() === "accepted" ||
-                          app.status?.toLowerCase() === "shortlisted"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : app.status?.toLowerCase() === "rejected"
-                              ? "bg-red-50 text-red-700 border border-red-200"
-                              : "bg-blue-50 text-blue-700 border border-blue-200"
-                        }`}
-                      >
-                        {app.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      <button
-                        onClick={() => handleStatusChange(app._id, "accepted")}
-                        disabled={
-                          isUpdating || app.status?.toLowerCase() === "accepted"
-                        }
-                        className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-md font-medium transition-colors"
-                      >
-                        Shortlist
-                      </button>
-                      <button
-                        onClick={() => handleStatusChange(app._id, "rejected")}
-                        disabled={
-                          isUpdating || app.status?.toLowerCase() === "rejected"
-                        }
-                        className="text-xs bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-md font-medium transition-colors"
-                      >
-                        Reject
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                        {candidateEmail && (
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {candidateEmail}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-gray-500 text-xs">
+                        {app.createdAt
+                          ? new Date(app.createdAt).toLocaleDateString()
+                          : "Recently"}
+                      </td>
+                      <td className="px-6 py-4">
+                        <StatusBadge status={app.status} />
+                      </td>
+                      <td className="px-6 py-4 text-right space-x-2">
+                        <Button
+                          size="sm"
+                          variant="primary"
+                          disabled={
+                            isUpdating ||
+                            app.status?.toLowerCase() === "accepted" ||
+                            app.status?.toLowerCase() === "shortlisted"
+                          }
+                          isLoading={isUpdating}
+                          onClick={() => handleStatusChange(app._id, "accepted")}
+                          className="bg-emerald-600 hover:bg-emerald-700"
+                        >
+                          Shortlist
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          disabled={
+                            isUpdating ||
+                            app.status?.toLowerCase() === "rejected"
+                          }
+                          isLoading={isUpdating}
+                          onClick={() => handleStatusChange(app._id, "rejected")}
+                        >
+                          Reject
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
   );
 };
+
+export default JobApplicants;
