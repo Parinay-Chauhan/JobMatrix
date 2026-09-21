@@ -22,6 +22,7 @@ import {
   Skeleton,
   ConfirmDialog,
 } from "../../components/common";
+import { useAuth } from "../../context/AuthContext";
 
 interface ProfileBasicFormProps {
   profile: CandidateProfileType;
@@ -191,6 +192,7 @@ const ProfileBasicForm: React.FC<ProfileBasicFormProps> = ({
 };
 
 export const CandidateProfile: React.FC = () => {
+  const { user } = useAuth();
   // TanStack Query for profile data
   const { data: profile, isLoading: loading } = useCandidateProfileQuery();
 
@@ -201,6 +203,15 @@ export const CandidateProfile: React.FC = () => {
   const addEducationMutation = useAddEducationMutation();
   const deleteEducationMutation = useDeleteEducationMutation();
   const uploadResumeMutation = useUploadResumeMutation();
+
+  // Fallback profile if brand new account
+  const effectiveProfile: CandidateProfileType = profile || {
+    _id: "new-profile",
+    user: (user || { _id: "", fullName: "Candidate", email: "", role: "candidate" }) as any,
+    skills: [],
+    experience: [],
+    education: [],
+  };
 
   // Dialog State
   const [deleteExpId, setDeleteExpId] = useState<string | null>(null);
@@ -330,7 +341,7 @@ export const CandidateProfile: React.FC = () => {
     }
   };
 
-  if (loading || !profile) {
+  if (loading && !profile) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <Skeleton className="h-10 w-1/3" />
@@ -362,8 +373,8 @@ export const CandidateProfile: React.FC = () => {
 
       {/* Main Info Form (keyed by profile ID for proper React state initialization) */}
       <ProfileBasicForm
-        key={profile._id || "profile-form"}
-        profile={profile}
+        key={effectiveProfile._id || "profile-form"}
+        profile={effectiveProfile}
         onSave={handleSaveProfile}
         isSaving={isSaving}
       />
@@ -374,9 +385,9 @@ export const CandidateProfile: React.FC = () => {
           Work Experience
         </h2>
 
-        {profile.experience && profile.experience.length > 0 ? (
+        {effectiveProfile.experience && effectiveProfile.experience.length > 0 ? (
           <div className="space-y-3">
-            {profile.experience.map((exp) => (
+            {effectiveProfile.experience.map((exp) => (
               <div
                 key={exp._id}
                 className="p-4 rounded-xl border border-gray-200/70 bg-gray-50/50 flex justify-between items-start"
@@ -482,9 +493,9 @@ export const CandidateProfile: React.FC = () => {
           Education
         </h2>
 
-        {profile.education && profile.education.length > 0 ? (
+        {effectiveProfile.education && effectiveProfile.education.length > 0 ? (
           <div className="space-y-3">
-            {profile.education.map((edu) => (
+            {effectiveProfile.education.map((edu) => (
               <div
                 key={edu._id}
                 className="p-4 rounded-xl border border-gray-200/70 bg-gray-50/50 flex justify-between items-start"

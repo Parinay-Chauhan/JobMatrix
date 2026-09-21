@@ -86,12 +86,22 @@ const createCandidateProfile = asyncHandler(async (req, res) => {
 });
 
 const getCandidateProfile = asyncHandler(async (req, res) => {
-  const candidateProfile = await Candidate.findOne({
+  let candidateProfile = await Candidate.findOne({
     user: req.user._id,
   }).populate("user", ["fullName", "email"]);
 
   if (!candidateProfile) {
-    throw new ApiError(404, "Candidate profile not found");
+    // Auto-initialize candidate profile for the user
+    candidateProfile = await Candidate.create({
+      user: req.user._id,
+      skills: [],
+      experience: [],
+      education: [],
+    });
+    candidateProfile = await Candidate.findById(candidateProfile._id).populate(
+      "user",
+      ["fullName", "email"],
+    );
   }
 
   return res
@@ -112,12 +122,17 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid User");
   }
 
-  const existedcandidate = await Candidate.findOne({
+  let existedcandidate = await Candidate.findOne({
     user: req.user._id,
   });
 
   if (!existedcandidate) {
-    throw new ApiError(404, "Candidate not found");
+    existedcandidate = await Candidate.create({
+      user: req.user._id,
+      skills: [],
+      experience: [],
+      education: [],
+    });
   }
 
   const {
@@ -162,10 +177,10 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
     },
     {
       new: true,
-      upsert: true, // Candidate profile create bhi kar dega agar exist nahi karti
+      upsert: true,
       runValidators: true,
     },
-  ).populate("user", ["fullName", "email"]); // User Details Include karne ke liye
+  ).populate("user", ["fullName", "email"]);
 
   return res
     .status(200)
@@ -176,16 +191,20 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
         "Candidate profile updated successfully",
       ),
     );
-
 });
 
 const addExperience = asyncHandler(async (req, res) => {
-  const candidate = await Candidate.findOne({
+  let candidate = await Candidate.findOne({
     user: req.user._id,
   });
 
   if (!candidate) {
-    throw new ApiError(404, "Candidate not found");
+    candidate = await Candidate.create({
+      user: req.user._id,
+      skills: [],
+      experience: [],
+      education: [],
+    });
   }
 
   const { title, company, location, startDate, endDate, description } =
@@ -294,12 +313,17 @@ const deleteExperience = asyncHandler(async (req, res) => {
 });
 
 const addEducation = asyncHandler(async (req, res) => {
-  const candidate = await Candidate.findOne({
+  let candidate = await Candidate.findOne({
     user: req.user._id,
   });
 
   if (!candidate) {
-    throw new ApiError(404, "Candidate not found");
+    candidate = await Candidate.create({
+      user: req.user._id,
+      skills: [],
+      experience: [],
+      education: [],
+    });
   }
 
   const { institution, degree, fieldOfStudy, startYear, endYear } = req.body;
@@ -412,10 +436,14 @@ const uploadAndUpdateResume = asyncHandler(async (req, res) => {
   }
 
   // 2. Fetch candidate profile
-  // Change CandidateProfile.findOne to Candidate.findOne
-  const profile = await Candidate.findOne({ user: req.user._id });
+  let profile = await Candidate.findOne({ user: req.user._id });
   if (!profile) {
-    throw new ApiError(404, "Candidate profile not found");
+    profile = await Candidate.create({
+      user: req.user._id,
+      skills: [],
+      experience: [],
+      education: [],
+    });
   }
 
   // 3. Store old resume credentials for safe post-cleanup
