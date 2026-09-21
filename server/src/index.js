@@ -1,8 +1,17 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import http from "http";
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
 import { initializeSocket } from "./socket.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables from cwd and server directory
+dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 // 1. Express app ko http server me wrap karo
 const server = http.createServer(app);

@@ -10,3 +10,4 @@ export * from "./ErrorState";
 export * from "./Modal";
 export * from "./ConfirmDialog";
 export * from "./Pagination";
+export * from "./PageLoader";

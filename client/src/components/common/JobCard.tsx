@@ -11,7 +11,7 @@ export interface JobCardProps {
   showDetails?: boolean;
 }
 
-export const JobCard: React.FC<JobCardProps> = ({
+export const JobCard: React.FC<JobCardProps> = React.memo(({
   job,
   actionText = "Apply Now",
   isApplied = false,
@@ -101,6 +101,6 @@ export const JobCard: React.FC<JobCardProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default JobCard;

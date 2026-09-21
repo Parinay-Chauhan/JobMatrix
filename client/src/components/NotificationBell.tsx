@@ -37,8 +37,8 @@ export const NotificationBell: React.FC = () => {
 
       {/* Notifications Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
-          <div className="p-3 border-b border-gray-100 flex justify-between items-center font-semibold text-gray-700">
+        <div className="absolute right-0 mt-2 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-white border border-gray-200/90 rounded-2xl shadow-xl z-50 max-h-96 overflow-y-auto">
+          <div className="p-3.5 border-b border-gray-100 flex justify-between items-center font-bold text-gray-800 text-xs uppercase tracking-wider">
             <span>Notifications</span>
             {unreadCount > 0 ? (
               <button

@@ -96,83 +96,170 @@ export const JobApplicants: React.FC = () => {
           }
         />
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-50/80 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  <th className="px-6 py-4">Candidate</th>
-                  <th className="px-6 py-4">Applied Date</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Review Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-sm">
-                {applicants.map((app) => {
-                  const candidate =
-                    typeof app.applicant === "object" ? app.applicant : undefined;
-                  const candidateName = candidate?.fullName || "Candidate";
-                  const candidateEmail = candidate?.email || "";
-                  const isUpdatingThisApp =
-                    updateStatusMutation.isPending &&
-                    updateStatusMutation.variables?.applicationId === app._id;
+        <div className="space-y-4">
+          {/* Mobile View: Dedicated Applicant Cards (md:hidden) */}
+          <div className="grid grid-cols-1 gap-4 md:hidden">
+            {applicants.map((app) => {
+              const candidate =
+                typeof app.applicant === "object" ? app.applicant : undefined;
+              const candidateName = candidate?.fullName || "Candidate";
+              const candidateEmail = candidate?.email || "";
+              const initials = candidateName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .substring(0, 2)
+                .toUpperCase();
+              const isUpdatingThisApp =
+                updateStatusMutation.isPending &&
+                updateStatusMutation.variables?.applicationId === app._id;
+              const isAccepted =
+                app.status?.toLowerCase() === "accepted" ||
+                app.status?.toLowerCase() === "shortlisted";
+              const isRejected = app.status?.toLowerCase() === "rejected";
 
-                  return (
-                    <tr
-                      key={app._id}
-                      className="hover:bg-gray-50/60 transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-gray-900">
+              return (
+                <div
+                  key={app._id}
+                  className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
+                        {initials || "CA"}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-base">
                           {candidateName}
-                        </div>
+                        </h3>
                         {candidateEmail && (
-                          <div className="text-xs text-gray-500 mt-0.5">
+                          <a
+                            href={`mailto:${candidateEmail}`}
+                            className="text-xs text-indigo-600 hover:underline mt-0.5 block truncate max-w-[200px]"
+                          >
                             {candidateEmail}
-                          </div>
+                          </a>
                         )}
-                      </td>
-                      <td className="px-6 py-4 text-gray-500 text-xs">
-                        {app.createdAt
-                          ? new Date(app.createdAt).toLocaleDateString()
-                          : "Recently"}
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusBadge status={app.status} />
-                      </td>
-                      <td className="px-6 py-4 text-right space-x-2">
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          disabled={
-                            isUpdatingThisApp ||
-                            app.status?.toLowerCase() === "accepted" ||
-                            app.status?.toLowerCase() === "shortlisted"
-                          }
-                          isLoading={isUpdatingThisApp}
-                          onClick={() => handleStatusChange(app._id, "accepted")}
-                          className="bg-emerald-600 hover:bg-emerald-700"
-                        >
-                          Shortlist
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="danger"
-                          disabled={
-                            isUpdatingThisApp ||
-                            app.status?.toLowerCase() === "rejected"
-                          }
-                          isLoading={isUpdatingThisApp}
-                          onClick={() => setRejectingAppId(app._id)}
-                        >
-                          Reject
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </div>
+                    </div>
+                    <StatusBadge status={app.status} size="sm" />
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
+                    <span>
+                      📅 Applied:{" "}
+                      {app.createdAt
+                        ? new Date(app.createdAt).toLocaleDateString()
+                        : "Recently"}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      disabled={isUpdatingThisApp || isAccepted}
+                      isLoading={isUpdatingThisApp}
+                      onClick={() => handleStatusChange(app._id, "accepted")}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 justify-center"
+                    >
+                      {isAccepted ? "Shortlisted" : "Shortlist"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      disabled={isUpdatingThisApp || isRejected}
+                      isLoading={isUpdatingThisApp}
+                      onClick={() => setRejectingAppId(app._id)}
+                      className="w-full justify-center"
+                    >
+                      {isRejected ? "Rejected" : "Reject"}
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop/Tablet View: Table Layout (hidden md:block) */}
+          <div className="hidden md:block bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50/80 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-4">Candidate</th>
+                    <th className="px-6 py-4">Applied Date</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4 text-right">Review Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-sm">
+                  {applicants.map((app) => {
+                    const candidate =
+                      typeof app.applicant === "object" ? app.applicant : undefined;
+                    const candidateName = candidate?.fullName || "Candidate";
+                    const candidateEmail = candidate?.email || "";
+                    const isUpdatingThisApp =
+                      updateStatusMutation.isPending &&
+                      updateStatusMutation.variables?.applicationId === app._id;
+
+                    return (
+                      <tr
+                        key={app._id}
+                        className="hover:bg-gray-50/60 transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="font-bold text-gray-900">
+                            {candidateName}
+                          </div>
+                          {candidateEmail && (
+                            <div className="text-xs text-gray-500 mt-0.5">
+                              {candidateEmail}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-gray-500 text-xs">
+                          {app.createdAt
+                            ? new Date(app.createdAt).toLocaleDateString()
+                            : "Recently"}
+                        </td>
+                        <td className="px-6 py-4">
+                          <StatusBadge status={app.status} />
+                        </td>
+                        <td className="px-6 py-4 text-right space-x-2">
+                          <Button
+                            size="sm"
+                            variant="primary"
+                            disabled={
+                              isUpdatingThisApp ||
+                              app.status?.toLowerCase() === "accepted" ||
+                              app.status?.toLowerCase() === "shortlisted"
+                            }
+                            isLoading={isUpdatingThisApp}
+                            onClick={() => handleStatusChange(app._id, "accepted")}
+                            className="bg-emerald-600 hover:bg-emerald-700"
+                          >
+                            Shortlist
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="danger"
+                            disabled={
+                              isUpdatingThisApp ||
+                              app.status?.toLowerCase() === "rejected"
+                            }
+                            isLoading={isUpdatingThisApp}
+                            onClick={() => setRejectingAppId(app._id)}
+                          >
+                            Reject
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

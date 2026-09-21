@@ -1,6 +1,12 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -36,6 +42,25 @@ app.use("/api/v1/recruiters", recruiterRouter);
 app.use("/api/v1/jobs", jobRouter);
 app.use("/api/v1/applications", applicationRouter);
 app.use("/api/v1/notifications", notificationRouter);
+
+// ----------------- Serve Frontend Static Assets & SPA Fallback -----------------
+const clientDistPath = path.resolve(__dirname, "../../client/dist");
+
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+
+  app.use((req, res, next) => {
+    // If request starts with /api/, pass to next middleware (let 404 / ErrorHandler handle it)
+    if (req.originalUrl.startsWith("/api/")) {
+      return next();
+    }
+    // For all other GET requests (SPA client-side routing), serve index.html
+    if (req.method === "GET") {
+      return res.sendFile(path.join(clientDistPath, "index.html"));
+    }
+    next();
+  });
+}
 
 // Global Error Handler Middleware
 app.use(ErrorHandler);

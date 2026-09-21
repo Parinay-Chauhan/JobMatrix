@@ -1,21 +1,23 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
-import { Button } from "../components/common";
-import { Login } from "../pages/Login";
-import { Register } from "../pages/Register";
+import { Button, PageLoader } from "../components/common";
 import { CandidateLayout } from "../layouts/CandidateLayout";
 import { RecruiterLayout } from "../layouts/RecruiterLayout";
-import { PostJob } from "../pages/recruiter/PostJob";
-import { ManageJobs } from "../pages/recruiter/ManageJobs";
-import { JobApplicants } from "../pages/recruiter/JobApplicants";
-import { RecruiterDashboard } from "../pages/recruiter/RecruiterDashboard";
-import { FindJobs } from "../pages/candidate/FindJobs";
-import { MyApplications } from "../pages/candidate/MyApplications";
-import { CandidateProfile } from "../pages/candidate/CandidateProfile";
-import { Home } from "../pages/Home";
-import { NotFound } from "../pages/NotFound";
+
+// Route-level code-splitting with React.lazy
+const Home = lazy(() => import("../pages/Home"));
+const Login = lazy(() => import("../pages/Login"));
+const Register = lazy(() => import("../pages/Register"));
+const FindJobs = lazy(() => import("../pages/candidate/FindJobs"));
+const MyApplications = lazy(() => import("../pages/candidate/MyApplications"));
+const CandidateProfile = lazy(() => import("../pages/candidate/CandidateProfile"));
+const RecruiterDashboard = lazy(() => import("../pages/recruiter/RecruiterDashboard"));
+const PostJob = lazy(() => import("../pages/recruiter/PostJob"));
+const ManageJobs = lazy(() => import("../pages/recruiter/ManageJobs"));
+const JobApplicants = lazy(() => import("../pages/recruiter/JobApplicants"));
+const NotFound = lazy(() => import("../pages/NotFound"));
 
 const Unauthorized: React.FC = () => {
   const { user } = useAuth();
@@ -73,39 +75,41 @@ const Unauthorized: React.FC = () => {
 
 export const AppRoutes: React.FC = () => {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/unauthorized" element={<Unauthorized />} />
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* Protected Candidate Routes */}
-      <Route element={<ProtectedRoute allowedRoles={["candidate"]} />}>
-        <Route element={<CandidateLayout />}>
-          <Route path="/candidate/dashboard" element={<FindJobs />} />
-          <Route path="/candidate/find-jobs" element={<FindJobs />} />
-          <Route path="/candidate/applications" element={<MyApplications />} />
-          <Route path="/candidate/profile" element={<CandidateProfile />} />
+        {/* Protected Candidate Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["candidate"]} />}>
+          <Route element={<CandidateLayout />}>
+            <Route path="/candidate/dashboard" element={<FindJobs />} />
+            <Route path="/candidate/find-jobs" element={<FindJobs />} />
+            <Route path="/candidate/applications" element={<MyApplications />} />
+            <Route path="/candidate/profile" element={<CandidateProfile />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* Protected Recruiter Routes */}
-      <Route element={<ProtectedRoute allowedRoles={["recruiter"]} />}>
-        <Route element={<RecruiterLayout />}>
-          <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
-          <Route path="/recruiter/jobs/new" element={<PostJob />} />
-          <Route path="/recruiter/jobs" element={<ManageJobs />} />
-          <Route
-            path="/recruiter/jobs/:jobId/applicants"
-            element={<JobApplicants />}
-          />
+        {/* Protected Recruiter Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["recruiter"]} />}>
+          <Route element={<RecruiterLayout />}>
+            <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+            <Route path="/recruiter/jobs/new" element={<PostJob />} />
+            <Route path="/recruiter/jobs" element={<ManageJobs />} />
+            <Route
+              path="/recruiter/jobs/:jobId/applicants"
+              element={<JobApplicants />}
+            />
+          </Route>
         </Route>
-      </Route>
 
-      {/* 404 Fallback */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* 404 Fallback */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 

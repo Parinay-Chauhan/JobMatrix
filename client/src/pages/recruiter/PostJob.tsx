@@ -198,11 +198,12 @@ export const PostJob: React.FC = () => {
           helperText="Enter each prerequisite skill or experience on a new line"
         />
 
-        <div className="flex justify-end items-center gap-3 pt-4 border-t border-gray-100">
+        <div className="flex flex-col-reverse sm:flex-row justify-end items-stretch sm:items-center gap-3 pt-4 border-t border-gray-100">
           <Button
             type="button"
             variant="outline"
             onClick={() => navigate(-1)}
+            className="justify-center"
           >
             Cancel
           </Button>
@@ -211,6 +212,7 @@ export const PostJob: React.FC = () => {
             variant="primary"
             isLoading={postJobMutation.isPending}
             disabled={postJobMutation.isPending}
+            className="justify-center"
           >
             Publish Job Listing
           </Button>

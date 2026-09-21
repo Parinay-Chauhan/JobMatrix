@@ -26,7 +26,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const token = localStorage.getItem("accessToken") || "";
     const socketUrl =
-      (import.meta.env.VITE_SOCKET_URL as string) || "http://localhost:8000";
+      (import.meta.env.VITE_SOCKET_URL as string) ||
+      (typeof window !== "undefined" ? window.location.origin : "http://localhost:8000");
 
     const socketInstance = io(socketUrl, {
       withCredentials: true,

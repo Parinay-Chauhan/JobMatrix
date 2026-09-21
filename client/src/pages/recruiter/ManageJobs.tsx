@@ -111,65 +111,119 @@ export const ManageJobs: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-50/80 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                      <th className="px-6 py-4">Job Role</th>
-                      <th className="px-6 py-4">Type & Mode</th>
-                      <th className="px-6 py-4">Location</th>
-                      <th className="px-6 py-4">Positions</th>
-                      <th className="px-6 py-4">Posted Date</th>
-                      <th className="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 text-sm">
-                    {paginatedJobs.map((job) => (
-                      <tr
-                        key={job._id}
-                        className="hover:bg-gray-50/60 transition-colors"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="font-bold text-gray-900">
-                            {job.title}
-                          </div>
-                          <div className="text-xs text-indigo-600 font-medium mt-0.5">
-                            {job.category || "General"}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 space-x-1.5">
-                          <span className="inline-block bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-xs font-semibold">
-                            {job.jobType || "Full-time"}
-                          </span>
-                          {job.workMode && (
-                            <span className="inline-block bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md text-xs font-semibold">
-                              {job.workMode}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-gray-600 text-xs font-medium">
-                          📍 {job.location || "Remote"}
-                        </td>
-                        <td className="px-6 py-4 text-gray-600 text-xs font-semibold">
-                          {job.positions || 1} open
-                        </td>
-                        <td className="px-6 py-4 text-gray-400 text-xs">
-                          {job.createdAt
-                            ? new Date(job.createdAt).toLocaleDateString()
-                            : "Recent"}
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <Link to={`/recruiter/jobs/${job._id}/applicants`}>
-                            <Button variant="secondary" size="sm">
-                              Applicants &rarr;
-                            </Button>
-                          </Link>
-                        </td>
+            <div className="space-y-4">
+              {/* Mobile View: Job Cards (md:hidden) */}
+              <div className="grid grid-cols-1 gap-4 md:hidden">
+                {paginatedJobs.map((job) => (
+                  <div
+                    key={job._id}
+                    className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-3"
+                  >
+                    <div className="flex justify-between items-start gap-2">
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-base">
+                          {job.title}
+                        </h3>
+                        <span className="text-xs font-semibold text-indigo-600">
+                          {job.category || "General"}
+                        </span>
+                      </div>
+                      <span className="inline-block bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-xs font-semibold shrink-0">
+                        {job.jobType || "Full-time"}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 pt-1">
+                      <span className="inline-flex items-center gap-1 bg-gray-50 px-2 py-0.5 rounded-md border border-gray-100">
+                        📍 {job.location || "Remote"}
+                      </span>
+                      {job.workMode && (
+                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md border border-emerald-100 font-medium">
+                          🏢 {job.workMode}
+                        </span>
+                      )}
+                      <span className="inline-flex items-center gap-1 bg-gray-50 px-2 py-0.5 rounded-md border border-gray-100 font-semibold text-gray-700">
+                        👥 {job.positions || 1} open
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <span className="text-xs text-gray-400">
+                        {job.createdAt
+                          ? new Date(job.createdAt).toLocaleDateString()
+                          : "Recent"}
+                      </span>
+                      <Link to={`/recruiter/jobs/${job._id}/applicants`}>
+                        <Button variant="secondary" size="sm">
+                          Applicants &rarr;
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop View: Table Layout (hidden md:block) */}
+              <div className="hidden md:block bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/80 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                        <th className="px-6 py-4">Job Role</th>
+                        <th className="px-6 py-4">Type & Mode</th>
+                        <th className="px-6 py-4">Location</th>
+                        <th className="px-6 py-4">Positions</th>
+                        <th className="px-6 py-4">Posted Date</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 text-sm">
+                      {paginatedJobs.map((job) => (
+                        <tr
+                          key={job._id}
+                          className="hover:bg-gray-50/60 transition-colors"
+                        >
+                          <td className="px-6 py-4">
+                            <div className="font-bold text-gray-900">
+                              {job.title}
+                            </div>
+                            <div className="text-xs text-indigo-600 font-medium mt-0.5">
+                              {job.category || "General"}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 space-x-1.5">
+                            <span className="inline-block bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-xs font-semibold">
+                              {job.jobType || "Full-time"}
+                            </span>
+                            {job.workMode && (
+                              <span className="inline-block bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md text-xs font-semibold">
+                                {job.workMode}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-gray-600 text-xs font-medium">
+                            📍 {job.location || "Remote"}
+                          </td>
+                          <td className="px-6 py-4 text-gray-600 text-xs font-semibold">
+                            {job.positions || 1} open
+                          </td>
+                          <td className="px-6 py-4 text-gray-400 text-xs">
+                            {job.createdAt
+                              ? new Date(job.createdAt).toLocaleDateString()
+                              : "Recent"}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <Link to={`/recruiter/jobs/${job._id}/applicants`}>
+                              <Button variant="secondary" size="sm">
+                                Applicants &rarr;
+                              </Button>
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
