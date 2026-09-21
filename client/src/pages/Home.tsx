@@ -1,40 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { jobService } from "../services";
+import { useJobsQuery } from "../hooks/queries";
 import { JobCard, JobCardSkeleton, EmptyState, Button } from "../components/common";
-import type { Job } from "../types";
 
 export const Home: React.FC = () => {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTitle, setSearchTitle] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchPublicJobs = async () => {
-      try {
-        const jobList = await jobService.getAllJobs();
-        if (isMounted) {
-          setJobs(jobList);
-        }
-      } catch (err) {
-        console.error("Failed to load public jobs:", err);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchPublicJobs();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  // Declarative TanStack Query for public jobs
+  const { data: jobs = [], isLoading: loading } = useJobsQuery();
 
   const filteredJobs = jobs.filter((job) => {
     const matchesTitle = job.title
