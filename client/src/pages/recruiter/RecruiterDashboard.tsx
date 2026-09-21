@@ -1,37 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import type { Job } from "../../types";
-import { jobService } from "../../services";
+import { useRecruiterJobsQuery } from "../../hooks/queries";
 import { Button, Skeleton, EmptyState, StatusBadge } from "../../components/common";
 
 export const RecruiterDashboard: React.FC = () => {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchDashboardData = async () => {
-      try {
-        const fetchedJobs = await jobService.getMyPostedJobs();
-        if (isMounted) {
-          setJobs(fetchedJobs);
-        }
-      } catch (error: unknown) {
-        console.error("Error loading dashboard data:", error);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchDashboardData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const { data: jobs = [], isLoading: loading } = useRecruiterJobsQuery();
 
   if (loading) {
     return (
