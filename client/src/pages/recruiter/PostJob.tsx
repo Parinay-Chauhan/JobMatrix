@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { jobService } from "../../services";
+import { toast } from "sonner";
+import { usePostJobMutation } from "../../hooks/queries";
 import { Input, Select, Textarea, Button } from "../../components/common";
 
 export const PostJob: React.FC = () => {
@@ -17,9 +18,8 @@ export const PostJob: React.FC = () => {
     requirements: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const postJobMutation = usePostJobMutation();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -29,36 +29,42 @@ export const PostJob: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
 
-    try {
-      const payload = {
-        title: formData.title,
-        description: formData.description,
-        location: formData.location,
-        jobType: formData.jobType,
-        workMode: formData.workMode,
-        category: formData.category,
-        experienceLevel: formData.experienceLevel,
-        salary: formData.salary ? Number(formData.salary) : undefined,
-        positions: Number(formData.positions),
-        requirements: formData.requirements
-          .split("\n")
-          .map((r) => r.trim())
-          .filter(Boolean),
-      };
-
-      await jobService.postJob(payload);
-      navigate("/recruiter/jobs");
-    } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
-        "Failed to create job posting.";
-      setError(msg);
-    } finally {
-      setLoading(false);
+    if (!formData.title.trim() || !formData.description.trim() || !formData.location.trim()) {
+      toast.error("Validation Error", { description: "Title, description, and location are required." });
+      return;
     }
+
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      location: formData.location,
+      jobType: formData.jobType,
+      workMode: formData.workMode,
+      category: formData.category,
+      experienceLevel: formData.experienceLevel,
+      salary: formData.salary ? Number(formData.salary) : undefined,
+      positions: Number(formData.positions) || 1,
+      requirements: formData.requirements
+        .split("\n")
+        .map((r) => r.trim())
+        .filter(Boolean),
+    };
+
+    postJobMutation.mutate(payload, {
+      onSuccess: () => {
+        toast.success("Job Published Successfully!", {
+          description: "Your listing is now active and receiving applicant submissions.",
+        });
+        navigate("/recruiter/jobs");
+      },
+      onError: (err: unknown) => {
+        const msg =
+          (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+          "Failed to create job posting.";
+        toast.error("Job Creation Failed", { description: msg });
+      },
+    });
   };
 
   return (
@@ -72,12 +78,6 @@ export const PostJob: React.FC = () => {
           Create an opportunity listing to reach thousands of qualified tech professionals.
         </p>
       </div>
-
-      {error && (
-        <div className="mb-6 bg-red-50 text-red-700 p-4 rounded-xl text-sm font-medium border border-red-200">
-          {error}
-        </div>
-      )}
 
       <form
         onSubmit={handleSubmit}
@@ -152,6 +152,7 @@ export const PostJob: React.FC = () => {
           <Input
             label="Location"
             name="location"
+            required
             placeholder="e.g. Bengaluru / Remote"
             value={formData.location}
             onChange={handleChange}
@@ -161,6 +162,7 @@ export const PostJob: React.FC = () => {
             label="Salary (INR / Annual)"
             type="number"
             name="salary"
+            required
             placeholder="e.g. 1500000"
             value={formData.salary}
             onChange={handleChange}
@@ -207,7 +209,8 @@ export const PostJob: React.FC = () => {
           <Button
             type="submit"
             variant="primary"
-            isLoading={loading}
+            isLoading={postJobMutation.isPending}
+            disabled={postJobMutation.isPending}
           >
             Publish Job Listing
           </Button>
