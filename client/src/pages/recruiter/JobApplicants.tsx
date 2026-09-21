@@ -1,70 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import type { Application, ApplicationStatus } from "../../types";
-import { applicationService } from "../../services";
-import { StatusBadge, Button, EmptyState, Skeleton } from "../../components/common";
+import { toast } from "sonner";
+import type { ApplicationStatus } from "../../types";
+import { useJobApplicantsQuery, useUpdateApplicationStatusMutation } from "../../hooks/queries";
+import {
+  StatusBadge,
+  Button,
+  EmptyState,
+  Skeleton,
+  ConfirmDialog,
+} from "../../components/common";
 
 export const JobApplicants: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
-  const [applicants, setApplicants] = useState<Application[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
+  // Reject Confirmation Dialog State
+  const [rejectingAppId, setRejectingAppId] = useState<string | null>(null);
 
-    const fetchApplicants = async () => {
-      if (!jobId) return;
+  // TanStack Query for Job Applicants
+  const { data: applicants = [], isLoading: loading } = useJobApplicantsQuery(jobId || "");
 
-      try {
-        const data = await applicationService.getJobApplicants(jobId);
-        if (isMounted) {
-          setApplicants(data);
-        }
-      } catch (err: unknown) {
-        if (isMounted) {
-          const msg =
-            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
-            "Failed to load applicants.";
-          setError(msg);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
+  // Update Status Mutation
+  const updateStatusMutation = useUpdateApplicationStatusMutation();
 
-    fetchApplicants();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [jobId]);
-
-  const handleStatusChange = async (
+  const handleStatusChange = (
     applicationId: string,
     newStatus: ApplicationStatus
   ) => {
-    try {
-      setUpdatingId(applicationId);
+    updateStatusMutation.mutate(
+      { applicationId, status: newStatus, jobId },
+      {
+        onSuccess: () => {
+          toast.success(
+            `Candidate ${newStatus === "accepted" ? "Shortlisted" : "Rejected"}`,
+            {
+              description: `Application status updated to ${newStatus.toUpperCase()}.`,
+            }
+          );
+        },
+        onError: (err: unknown) => {
+          const msg =
+            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+            "Failed to update application status.";
+          toast.error("Status Update Failed", { description: msg });
+        },
+      }
+    );
+  };
 
-      await applicationService.updateApplicationStatus(applicationId, newStatus);
-
-      setApplicants((prev) =>
-        prev.map((app) =>
-          app._id === applicationId ? { ...app, status: newStatus } : app
-        )
-      );
-    } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
-        "Failed to update application status.";
-      setError(msg);
-    } finally {
-      setUpdatingId(null);
-    }
+  const confirmReject = () => {
+    if (!rejectingAppId) return;
+    handleStatusChange(rejectingAppId, "rejected");
+    setRejectingAppId(null);
   };
 
   if (loading) {
@@ -98,12 +85,6 @@ export const JobApplicants: React.FC = () => {
         </p>
       </div>
 
-      {error && (
-        <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm font-medium">
-          {error}
-        </div>
-      )}
-
       {applicants.length === 0 ? (
         <EmptyState
           title="No applications yet"
@@ -132,7 +113,9 @@ export const JobApplicants: React.FC = () => {
                     typeof app.applicant === "object" ? app.applicant : undefined;
                   const candidateName = candidate?.fullName || "Candidate";
                   const candidateEmail = candidate?.email || "";
-                  const isUpdating = updatingId === app._id;
+                  const isUpdatingThisApp =
+                    updateStatusMutation.isPending &&
+                    updateStatusMutation.variables?.applicationId === app._id;
 
                   return (
                     <tr
@@ -162,11 +145,11 @@ export const JobApplicants: React.FC = () => {
                           size="sm"
                           variant="primary"
                           disabled={
-                            isUpdating ||
+                            isUpdatingThisApp ||
                             app.status?.toLowerCase() === "accepted" ||
                             app.status?.toLowerCase() === "shortlisted"
                           }
-                          isLoading={isUpdating}
+                          isLoading={isUpdatingThisApp}
                           onClick={() => handleStatusChange(app._id, "accepted")}
                           className="bg-emerald-600 hover:bg-emerald-700"
                         >
@@ -176,11 +159,11 @@ export const JobApplicants: React.FC = () => {
                           size="sm"
                           variant="danger"
                           disabled={
-                            isUpdating ||
+                            isUpdatingThisApp ||
                             app.status?.toLowerCase() === "rejected"
                           }
-                          isLoading={isUpdating}
-                          onClick={() => handleStatusChange(app._id, "rejected")}
+                          isLoading={isUpdatingThisApp}
+                          onClick={() => setRejectingAppId(app._id)}
                         >
                           Reject
                         </Button>
@@ -193,6 +176,18 @@ export const JobApplicants: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Reject Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={Boolean(rejectingAppId)}
+        title="Reject Applicant"
+        description="Are you sure you want to reject this candidate? Their application status will be marked as Rejected."
+        confirmText="Reject Application"
+        variant="danger"
+        isLoading={updateStatusMutation.isPending}
+        onConfirm={confirmReject}
+        onCancel={() => setRejectingAppId(null)}
+      />
     </div>
   );
 };
