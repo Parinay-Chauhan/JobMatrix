@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 import { authService } from "../services";
 import { Button, Input, Select } from "../components/common";
 import type { UserRole } from "../types";
@@ -28,12 +29,18 @@ export const Register: React.FC = () => {
         password,
         role,
       });
+      toast.success("Account created successfully!", {
+        description: "Please sign in with your new credentials.",
+      });
       navigate("/login");
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message || "Registration failed. Please check your details.";
       setError(msg);
+      toast.error("Registration Failed", {
+        description: msg,
+      });
     } finally {
       setLoading(false);
     }
