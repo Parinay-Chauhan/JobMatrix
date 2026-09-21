@@ -20,14 +20,55 @@ export const useJobApplicantsQuery = (jobId: string) => {
   });
 };
 
-// 3. Candidate Apply for a Job Mutation
+// 3. Candidate Apply for a Job Mutation with Optimistic UI Update
 export const useApplyJobMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (jobId: string) => applicationService.applyForJob(jobId),
-    onSuccess: () => {
-      // Invalidate candidate's application list and jobs list
+    onMutate: async (jobId: string) => {
+      // 1. Cancel any ongoing application queries so they don't overwrite optimistic update
+      await queryClient.cancelQueries({ queryKey: queryKeys.applications.mine() });
+
+      // 2. Snapshot current state for error rollback
+      const previousApplications = queryClient.getQueryData<Application[]>(
+        queryKeys.applications.mine()
+      );
+
+      // 3. Instantly add optimistic application to cache
+      queryClient.setQueryData<Application[]>(
+        queryKeys.applications.mine(),
+        (old = []) => {
+          const alreadyExists = old.some(
+            (app) => (typeof app.job === "object" ? app.job?._id : app.job) === jobId
+          );
+          if (alreadyExists) return old;
+
+          const optimisticApplication: Application = {
+            _id: `temp-${Date.now()}`,
+            job: jobId,
+            applicant: "",
+            status: "pending",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          return [optimisticApplication, ...old];
+        }
+      );
+
+      return { previousApplications };
+    },
+    onError: (_err, _jobId, context) => {
+      // Rollback to previous state if API call fails
+      if (context?.previousApplications) {
+        queryClient.setQueryData(
+          queryKeys.applications.mine(),
+          context.previousApplications
+        );
+      }
+    },
+    onSettled: () => {
+      // Background re-sync with server state
       queryClient.invalidateQueries({ queryKey: queryKeys.applications.mine() });
       queryClient.invalidateQueries({ queryKey: queryKeys.jobs.all });
     },

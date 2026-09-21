@@ -167,7 +167,7 @@ export const FindJobs: React.FC = () => {
             {paginatedJobs.map((job) => {
               const isApplied = appliedJobIds.includes(job._id);
               const isApplyingThisJob =
-                applyMutation.isPending && applyMutation.variables === job._id;
+                !isApplied && applyMutation.isPending && applyMutation.variables === job._id;
 
               return (
                 <JobCard
