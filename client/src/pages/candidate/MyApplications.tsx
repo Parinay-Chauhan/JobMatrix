@@ -1,43 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import type { Application } from "../../types";
-import { applicationService } from "../../services";
-import { StatusBadge, Skeleton, EmptyState, Button } from "../../components/common";
+import { useMyApplicationsQuery } from "../../hooks/queries";
+import { StatusBadge, Skeleton, EmptyState, Button, Pagination } from "../../components/common";
+
+const PAGE_SIZE = 6;
 
 export const MyApplications: React.FC = () => {
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: applications = [], isLoading: loading, error } = useMyApplicationsQuery();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    let isMounted = true;
+  const errorMessage = error
+    ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+      "Failed to load your submitted applications."
+    : null;
 
-    const fetchApplications = async () => {
-      try {
-        const apps = await applicationService.getMyApplications();
-        if (isMounted) {
-          setApplications(apps);
-        }
-      } catch (err: unknown) {
-        if (isMounted) {
-          const errorMsg =
-            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
-            "Failed to load your submitted applications.";
-          setError(errorMsg);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchApplications();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const totalPages = Math.ceil(applications.length / PAGE_SIZE) || 1;
+  const paginatedApps = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return applications.slice(start, start + PAGE_SIZE);
+  }, [applications, currentPage]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -47,13 +28,13 @@ export const MyApplications: React.FC = () => {
           My Applications
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Track real-time updates and decisions on your submitted job applications.
+          Track real-time updates and decisions on your submitted job applications ({applications.length} total).
         </p>
       </div>
 
-      {error && (
+      {errorMessage && (
         <div className="mb-6 p-4 rounded-xl text-sm font-medium border bg-red-50 border-red-200 text-red-700">
-          {error}
+          {errorMessage}
         </div>
       )}
 
@@ -77,14 +58,14 @@ export const MyApplications: React.FC = () => {
           title="No applications yet"
           description="You haven't applied to any job postings yet. Explore open roles and jumpstart your career."
           action={
-            <Link to="/candidate/jobs">
+            <Link to="/candidate/dashboard">
               <Button variant="primary">Explore Open Jobs</Button>
             </Link>
           }
         />
       ) : (
         <div className="space-y-4">
-          {applications.map((app) => {
+          {paginatedApps.map((app) => {
             const job = typeof app.job === "object" ? app.job : null;
             const title = job?.title || "Job Title Unavailable";
             const location = job?.location || "Remote / Not Specified";
@@ -125,6 +106,16 @@ export const MyApplications: React.FC = () => {
               </div>
             );
           })}
+
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={applications.length}
+              pageSize={PAGE_SIZE}
+            />
+          )}
         </div>
       )}
     </div>
