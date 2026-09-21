@@ -93,12 +93,18 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const { username, email, password } = req.body;
 
-  if ((!username && !email) || !password) {
-    throw new ApiError(400, "Username/email and password are required");
+  const identifier = (email || username || "").trim();
+
+  if (!identifier || !password) {
+    throw new ApiError(400, "Email/Username and password are required");
   }
 
-  const query = username ? { username } : { email };
-  const user = await User.findOne(query);
+  const user = await User.findOne({
+    $or: [
+      { email: identifier.toLowerCase() },
+      { username: identifier },
+    ],
+  });
 
   if (!user) {
     throw new ApiError(401, "Invalid credentials");

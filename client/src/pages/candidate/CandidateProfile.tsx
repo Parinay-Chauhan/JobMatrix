@@ -74,9 +74,10 @@ const ProfileBasicForm: React.FC<ProfileBasicFormProps> = ({
     );
   };
 
-  const user = profile.user;
-  const fullName = user?.fullName || "Candidate";
-  const email = user?.email || "";
+  const { user: authUser } = useAuth();
+  const user = profile.user || authUser;
+  const fullName = user?.fullName || authUser?.fullName || "Candidate";
+  const email = user?.email || authUser?.email || "";
 
   return (
     <form

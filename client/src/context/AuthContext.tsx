@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { authService } from "../services";
+import { queryClient } from "../lib/queryClient";
 import type { User, AuthContextType } from "../types";
 
 const AuthContext = createContext<AuthContextType>({
@@ -25,6 +26,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       } catch {
         // Unauthenticated session - token cleanup
         localStorage.removeItem("accessToken");
+        queryClient.clear();
         setUser(null);
       } finally {
         setLoading(false);
@@ -37,6 +39,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   // Listen to 401 unauthorized events emitted from Axios interceptor
   useEffect(() => {
     const handleUnauthorized = () => {
+      queryClient.clear();
       setUser(null);
     };
 
@@ -46,15 +49,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     };
   }, []);
 
-  // Handle userData along with token storage
+  // Handle userData along with token storage & cache reset
   const login = (userData: User, token?: string) => {
     if (token) {
       localStorage.setItem("accessToken", token);
     }
+    // Evict all stale cache from previous sessions
+    queryClient.clear();
     setUser(userData);
   };
 
-  // Clear token on logout
+  // Clear token on logout & purge cache
   const logout = async () => {
     try {
       await authService.logout();
@@ -62,6 +67,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       console.error("Logout error:", error);
     } finally {
       localStorage.removeItem("accessToken");
+      queryClient.clear();
       setUser(null);
     }
   };
