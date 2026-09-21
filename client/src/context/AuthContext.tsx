@@ -34,6 +34,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     checkAuthStatus();
   }, []);
 
+  // Listen to 401 unauthorized events emitted from Axios interceptor
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      setUser(null);
+    };
+
+    window.addEventListener("auth:unauthorized", handleUnauthorized);
+    return () => {
+      window.removeEventListener("auth:unauthorized", handleUnauthorized);
+    };
+  }, []);
+
   // Handle userData along with token storage
   const login = (userData: User, token?: string) => {
     if (token) {
