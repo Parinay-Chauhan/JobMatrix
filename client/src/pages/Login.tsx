@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 import { authService } from "../services";
 import { useAuth } from "../context/AuthContext";
 import { Button, Input } from "../components/common";
@@ -25,6 +26,9 @@ export const Login: React.FC = () => {
       const accessToken = response.data.accessToken;
 
       login(userData, accessToken);
+      toast.success(`Welcome back, ${userData.fullName || userData.username}!`, {
+        description: `Logged in as ${userData.role}.`,
+      });
 
       if (userData.role === "recruiter") {
         navigate("/recruiter/dashboard");
@@ -36,6 +40,9 @@ export const Login: React.FC = () => {
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message || "Login failed. Please check credentials.";
       setError(msg);
+      toast.error("Authentication Error", {
+        description: msg,
+      });
     } finally {
       setLoading(false);
     }
