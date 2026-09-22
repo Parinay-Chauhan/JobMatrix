@@ -4,6 +4,11 @@ A modern, production-ready, full-stack Job Portal built with the **MERN** stack 
 
 ---
 
+## Live Demo
+
+Try the deployed application: [https://project-job-portal-ytq3.onrender.com](https://project-job-portal-ytq3.onrender.com)
+
+
 ## 🚀 Key Features
 
 ### 👨‍💼 Candidate Experience
