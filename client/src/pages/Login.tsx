@@ -56,7 +56,7 @@ export const Login: React.FC = () => {
             to="/"
             className="inline-block text-2xl font-black text-indigo-600 tracking-tight"
           >
-            JobPortal
+            JobMatrix
           </Link>
           <h2 className="text-2xl font-extrabold text-gray-900">Welcome back</h2>
           <p className="text-xs text-gray-500">

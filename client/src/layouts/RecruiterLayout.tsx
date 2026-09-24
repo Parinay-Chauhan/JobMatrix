@@ -50,7 +50,7 @@ export const RecruiterLayout: React.FC = () => {
                 to="/recruiter/dashboard"
                 className="text-xl font-extrabold text-indigo-600 flex items-center gap-2 tracking-tight"
               >
-                JobPortal{" "}
+                JobMatrix{" "}
                 <span className="text-[11px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold border border-indigo-100">
                   Employer
                 </span>

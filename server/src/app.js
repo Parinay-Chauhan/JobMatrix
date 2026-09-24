@@ -39,7 +39,7 @@ const healthCheckHandler = (req, res) => {
   res.status(200).json({
     success: true,
     status: "ok",
-    message: "Job Portal Server is active and healthy",
+    message: "JobMatrix Server is active and healthy",
     timestamp: new Date().toISOString(),
     uptime: `${Math.floor(process.uptime())}s`,
     environment: process.env.NODE_ENV || "development",
