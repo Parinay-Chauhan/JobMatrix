@@ -1,9 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../context/NotificationContext";
+import { useAuth } from "../context/AuthContext";
+import type { NotificationItem } from "../types";
 
 export const NotificationBell: React.FC = () => {
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotifications();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +37,34 @@ export const NotificationBell: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
+
+  const handleNotificationClick = (item: NotificationItem) => {
+    if (!item.isRead) {
+      markAsRead(item._id);
+    }
+    setIsOpen(false);
+
+    // Route navigation based on notification type and role
+    if (item.type === "NEW_APPLICATION") {
+      const jobId =
+        typeof item.relatedJob === "object"
+          ? item.relatedJob?._id
+          : item.relatedJob;
+      if (jobId) {
+        navigate(`/recruiter/jobs/${jobId}/applicants`);
+      } else {
+        navigate("/recruiter/jobs");
+      }
+    } else if (item.type === "APPLICATION_STATUS_UPDATED") {
+      navigate("/candidate/applications");
+    } else {
+      if (user?.role === "recruiter") {
+        navigate("/recruiter/jobs");
+      } else if (user?.role === "candidate") {
+        navigate("/candidate/applications");
+      }
+    }
+  };
 
   return (
     <div ref={containerRef} className="relative inline-block">
@@ -123,19 +156,19 @@ export const NotificationBell: React.FC = () => {
                 return (
                   <div
                     key={item._id}
-                    onClick={() => {
-                      if (isUnread) markAsRead(item._id);
-                    }}
-                    className={`p-3.5 sm:p-4 text-xs sm:text-sm cursor-pointer transition-colors flex items-start gap-3 active:bg-gray-100 ${
+                    onClick={() => handleNotificationClick(item)}
+                    className={`p-3.5 sm:p-4 text-xs sm:text-sm cursor-pointer transition-all flex items-start gap-3 active:bg-gray-100 group ${
                       isUnread
-                        ? "bg-indigo-50/50 hover:bg-indigo-50/80 border-l-4 border-indigo-600"
+                        ? "bg-indigo-50/50 hover:bg-indigo-50/90 border-l-4 border-indigo-600"
                         : "bg-white hover:bg-gray-50 text-gray-600"
                     }`}
                   >
                     {/* Unread dot */}
                     <span
                       className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${
-                        isUnread ? "bg-indigo-600 ring-2 ring-indigo-200" : "bg-transparent"
+                        isUnread
+                          ? "bg-indigo-600 ring-2 ring-indigo-200"
+                          : "bg-transparent"
                       }`}
                     />
 
@@ -149,13 +182,22 @@ export const NotificationBell: React.FC = () => {
                       >
                         {item.message}
                       </p>
-                      <span className="text-[10px] sm:text-xs text-gray-400 mt-1.5 flex items-center gap-1">
-                        🕒 {new Date(item.createdAt).toLocaleDateString()}{" "}
-                        {new Date(item.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
+                      <div className="flex items-center justify-between mt-1.5 gap-2">
+                        <span className="text-[10px] sm:text-xs text-gray-400 flex items-center gap-1">
+                          🕒 {new Date(item.createdAt).toLocaleDateString()}{" "}
+                          {new Date(item.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                        <span className="text-[10px] font-bold text-indigo-600 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                          {item.type === "NEW_APPLICATION"
+                            ? "View Applicants →"
+                            : item.type === "APPLICATION_STATUS_UPDATED"
+                            ? "View Status →"
+                            : "View →"}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
