@@ -4,6 +4,10 @@ export interface RecruiterProfile {
   _id?: string;
   user?: User;
   companyName: string;
+  designation?: string;
+  experience?: string;
+  phone?: string;
+  bio?: string;
   companyWebsite?: string;
   companyDescription?: string;
   companyLogo?: string;

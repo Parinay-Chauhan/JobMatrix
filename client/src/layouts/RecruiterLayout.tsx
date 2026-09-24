@@ -77,9 +77,9 @@ export const RecruiterLayout: React.FC = () => {
               {/* Recruiter Profile Avatar Link */}
               <div className="flex items-center border-l pl-2 sm:pl-3 border-gray-200">
                 <Link
-                  to="/recruiter/dashboard"
+                  to="/recruiter/profile"
                   className="p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 hover:ring-offset-2 transition-all group cursor-pointer"
-                  title={`Recruiter: ${user?.fullName || "Employer"}`}
+                  title={`Recruiter Profile: ${user?.fullName || "Employer"}`}
                 >
                   <div className="h-9 w-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:bg-indigo-700 group-hover:scale-105 transition-all">
                     {userInitials}
@@ -144,6 +144,13 @@ export const RecruiterLayout: React.FC = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               Manage Jobs
+            </NavLink>
+            <NavLink
+              to="/recruiter/profile"
+              className={mobileNavLinkClass}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Company Profile
             </NavLink>
             <button
               type="button"
