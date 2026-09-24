@@ -50,7 +50,7 @@ export const CandidateLayout: React.FC = () => {
                 to="/candidate/dashboard"
                 className="text-xl font-extrabold text-indigo-600 tracking-tight flex items-center gap-2"
               >
-                JobPortal
+                JobMatrix
               </Link>
             </div>
 

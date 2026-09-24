@@ -1,6 +1,6 @@
-# 💼 Job Portal — Enterprise Full-Stack Web Application
+# 💼 JobMatrix — Enterprise Full-Stack Web Application
 
-A modern, production-ready, full-stack Job Portal built with the **MERN** stack (MongoDB, Express, React, Node.js) and **TypeScript**. Designed for high performance, enterprise security, and seamless deployment as a unified single-service on platforms like **Render**.
+A modern, production-ready, full-stack hiring platform and job portal built with the **MERN** stack (MongoDB, Express, React, Node.js) and **TypeScript**. Designed for high performance, enterprise security, and seamless deployment as a unified single-service on platforms like **Render**.
 
 ---
 
