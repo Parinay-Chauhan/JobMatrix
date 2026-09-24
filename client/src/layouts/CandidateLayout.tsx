@@ -44,14 +44,19 @@ export const CandidateLayout: React.FC = () => {
       <header className="bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            {/* Logo & Main Nav Links */}
-            <div className="flex items-center space-x-6 lg:space-x-8">
+            {/* Left Brand Logo */}
+            <div className="flex items-center">
               <Link
                 to="/candidate/dashboard"
                 className="text-xl font-extrabold text-indigo-600 tracking-tight flex items-center gap-2"
               >
                 JobPortal
               </Link>
+            </div>
+
+            {/* Right Side Nav Links & User Controls */}
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              {/* Desktop Nav Links */}
               <nav className="hidden md:flex items-center space-x-1">
                 <NavLink to="/candidate/find-jobs" className={navLinkClass}>
                   Find Jobs
@@ -60,15 +65,13 @@ export const CandidateLayout: React.FC = () => {
                   My Applications
                 </NavLink>
               </nav>
-            </div>
 
-            {/* Right Action Icons & User Info */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              {/* Real-time Notification Bell */}
-              <NotificationBell />
+              {/* Notification Bell & User Avatar */}
+              <div className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-gray-200">
+                {/* Real-time Notification Bell */}
+                <NotificationBell />
 
-              {/* User Profile Avatar Link */}
-              <div className="flex items-center border-l pl-2 sm:pl-3 border-gray-200">
+                {/* User Profile Avatar Link */}
                 <Link
                   to="/candidate/profile"
                   className="p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 hover:ring-offset-2 transition-all group cursor-pointer"
