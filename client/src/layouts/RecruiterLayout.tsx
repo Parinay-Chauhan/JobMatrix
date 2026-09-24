@@ -74,20 +74,26 @@ export const RecruiterLayout: React.FC = () => {
             <div className="flex items-center space-x-3 sm:space-x-4">
               <NotificationBell />
 
-              <div className="flex items-center space-x-3 border-l pl-3 sm:pl-4 border-gray-200">
-                <div className="hidden sm:flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+              {/* Recruiter Profile Avatar Link & Logout */}
+              <div className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-gray-200">
+                <Link
+                  to="/recruiter/dashboard"
+                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-gray-100/90 active:scale-95 transition-all group cursor-pointer border border-transparent hover:border-gray-200/80 hover:shadow-2xs"
+                  title="Employer Dashboard"
+                >
+                  <div className="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:bg-indigo-700 group-hover:scale-105 transition-all">
                     {userInitials}
                   </div>
-                  <div className="text-left">
-                    <p className="text-xs font-bold text-gray-800 line-clamp-1 max-w-[120px]">
+                  <div className="hidden sm:flex flex-col text-left">
+                    <p className="text-xs font-bold text-gray-800 group-hover:text-indigo-600 line-clamp-1 max-w-[120px] transition-colors">
                       {user?.fullName}
                     </p>
                     <p className="text-[10px] font-semibold text-indigo-600 uppercase tracking-wider">
                       Recruiter
                     </p>
                   </div>
-                </div>
+                </Link>
+
                 <button
                   onClick={handleLogout}
                   className="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 px-3 py-1.5 rounded-xl text-xs font-bold transition-all hover:shadow-2xs cursor-pointer"

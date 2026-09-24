@@ -59,27 +59,34 @@ export const CandidateLayout: React.FC = () => {
                 <NavLink to="/candidate/applications" className={navLinkClass}>
                   My Applications
                 </NavLink>
-                <NavLink to="/candidate/profile" className={navLinkClass}>
-                  Profile
-                </NavLink>
               </nav>
             </div>
 
             {/* Right Action Icons & User Info */}
-            <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               {/* Real-time Notification Bell */}
               <NotificationBell />
 
-              {/* User Greeting & Logout */}
-              <div className="flex items-center space-x-3 border-l pl-3 sm:pl-4 border-gray-200">
-                <div className="hidden sm:flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+              {/* User Profile Avatar Link & Logout */}
+              <div className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-gray-200">
+                <Link
+                  to="/candidate/profile"
+                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-gray-100/90 active:scale-95 transition-all group cursor-pointer border border-transparent hover:border-gray-200/80 hover:shadow-2xs"
+                  title="View & Edit Profile"
+                >
+                  <div className="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:bg-indigo-700 group-hover:scale-105 transition-all">
                     {userInitials}
                   </div>
-                  <span className="text-sm font-semibold text-gray-800 line-clamp-1 max-w-[120px]">
-                    {user?.fullName}
-                  </span>
-                </div>
+                  <div className="hidden sm:flex flex-col text-left">
+                    <span className="text-xs font-bold text-gray-800 group-hover:text-indigo-600 line-clamp-1 max-w-[120px] transition-colors">
+                      {user?.fullName}
+                    </span>
+                    <span className="text-[10px] font-semibold text-gray-400 group-hover:text-indigo-500 transition-colors">
+                      Profile
+                    </span>
+                  </div>
+                </Link>
+
                 <button
                   onClick={handleLogout}
                   className="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 px-3 py-1.5 rounded-xl text-xs font-bold transition-all hover:shadow-2xs cursor-pointer"
