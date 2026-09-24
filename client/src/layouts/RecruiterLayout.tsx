@@ -8,12 +8,27 @@ import { NotificationBell } from "../components/NotificationBell";
 export const RecruiterLayout: React.FC = () => {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
+  const headerWrapperRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const navLinksRef = useRef<HTMLElement>(null);
   const userSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 25) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -74,9 +89,9 @@ export const RecruiterLayout: React.FC = () => {
   };
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `px-3.5 py-2 rounded-xl text-sm font-semibold transition-all inline-block ${
+    `px-3.5 py-1.5 rounded-full text-sm font-semibold transition-all inline-block ${
       isActive
-        ? "bg-indigo-50 text-indigo-700 shadow-2xs"
+        ? "bg-indigo-600 text-white shadow-xs"
         : "text-gray-600 hover:text-indigo-600 hover:bg-gray-100/60"
     }`;
 
@@ -98,30 +113,53 @@ export const RecruiterLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Recruiter Top Navigation Bar - Transparent Glassmorphism */}
-      <header
-        ref={headerRef}
-        className="sticky top-0 z-40 bg-white/75 backdrop-blur-xl border-b border-gray-200/60 shadow-2xs transition-all"
+      {/* Recruiter Top Navigation Bar - Dynamic Floating Glassmorphic Pill */}
+      <div
+        ref={headerWrapperRef}
+        className="sticky top-0 z-50 pointer-events-none flex justify-center w-full px-3 sm:px-6"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
+        <header
+          ref={headerRef}
+          className={`pointer-events-auto flex flex-col justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isScrolled
+              ? "mt-3 w-[92%] max-w-4xl rounded-full bg-white/85 backdrop-blur-xl border border-gray-200/80 shadow-lg shadow-indigo-950/5 ring-1 ring-black/5 px-4 sm:px-6 py-2"
+              : "mt-0 w-full max-w-7xl rounded-none bg-white border-b border-gray-200/80 shadow-2xs px-4 sm:px-8 py-3.5"
+          }`}
+        >
+          <div className="flex items-center justify-between w-full">
             {/* Left Brand Logo */}
-            <div ref={logoRef} className="flex items-center">
+            <div ref={logoRef} className="flex items-center space-x-2 shrink-0">
               <Link
                 to="/recruiter/dashboard"
-                className="text-xl font-extrabold text-indigo-600 flex items-center gap-2 tracking-tight hover:opacity-90 transition-opacity"
+                className="flex items-center space-x-2 group"
               >
-                JobMatrix{" "}
-                <span className="text-[11px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold border border-indigo-100">
-                  Employer
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-sm shadow-indigo-200 group-hover:scale-105 transition-transform">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+                  </svg>
+                </div>
+                <span
+                  className={`font-black tracking-tight text-gray-900 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center gap-1.5 ${
+                    isScrolled ? "text-lg" : "text-xl sm:text-2xl"
+                  }`}
+                >
+                  Job<span className="text-indigo-600">Matrix</span>
+                  <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-bold border border-indigo-100 hidden sm:inline-block">
+                    Employer
+                  </span>
                 </span>
               </Link>
             </div>
 
             {/* Right Side Nav Links & User Controls */}
-            <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               {/* Desktop Nav */}
-              <nav ref={navLinksRef} className="hidden md:flex items-center space-x-1">
+              <nav
+                ref={navLinksRef}
+                className={`hidden md:flex items-center transition-all ${
+                  isScrolled ? "space-x-1" : "space-x-2"
+                }`}
+              >
                 <NavLink
                   to="/recruiter/dashboard"
                   className={navLinkClass}
@@ -163,7 +201,7 @@ export const RecruiterLayout: React.FC = () => {
                   className="p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 hover:ring-offset-2 transition-all group cursor-pointer inline-block"
                   title={`Recruiter Profile: ${user?.fullName || "Employer"}`}
                 >
-                  <div className="h-9 w-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:bg-indigo-700 transition-colors">
+                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:opacity-90 transition-opacity">
                     {userInitials}
                   </div>
                 </Link>
@@ -173,7 +211,7 @@ export const RecruiterLayout: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors"
+                className="md:hidden p-1.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors"
                 aria-label="Toggle menu"
               >
                 <svg
@@ -201,55 +239,55 @@ export const RecruiterLayout: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Collapsible Mobile Menu Drawer */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200/80 bg-white px-4 pt-3 pb-4 space-y-2 animate-in slide-in-from-top-2 duration-200">
-            <NavLink
-              to="/recruiter/dashboard"
-              className={mobileNavLinkClass}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/recruiter/jobs/new"
-              className={mobileNavLinkClass}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Post a Job
-            </NavLink>
-            <NavLink
-              to="/recruiter/jobs"
-              className={mobileNavLinkClass}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Manage Jobs
-            </NavLink>
-            <NavLink
-              to="/recruiter/profile"
-              className={mobileNavLinkClass}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Company Profile
-            </NavLink>
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                handleLogout();
-              }}
-              className="w-full text-left px-4 py-2.5 rounded-xl text-base font-semibold text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 cursor-pointer"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              <span>Logout</span>
-            </button>
-          </div>
-        )}
-      </header>
+          {/* Collapsible Mobile Menu Drawer */}
+          {mobileMenuOpen && (
+            <div className="md:hidden border-t border-gray-200/80 mt-2 pt-3 pb-2 space-y-1.5 animate-in slide-in-from-top-2 duration-200">
+              <NavLink
+                to="/recruiter/dashboard"
+                className={mobileNavLinkClass}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/recruiter/jobs/new"
+                className={mobileNavLinkClass}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Post a Job
+              </NavLink>
+              <NavLink
+                to="/recruiter/jobs"
+                className={mobileNavLinkClass}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Manage Jobs
+              </NavLink>
+              <NavLink
+                to="/recruiter/profile"
+                className={mobileNavLinkClass}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Company Profile
+              </NavLink>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                className="w-full text-left px-4 py-2 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Logout</span>
+              </button>
+            </div>
+          )}
+        </header>
+      </div>
 
       {/* Main Content View Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
