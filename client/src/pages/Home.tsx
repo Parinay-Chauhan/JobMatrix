@@ -7,39 +7,54 @@ import { JobCard, JobCardSkeleton, EmptyState, Button } from "../components/comm
 export const Home: React.FC = () => {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
+  const headerWrapperRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const navActionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 25) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header slide-down animation
+      // Header entrance animation
       gsap.from(headerRef.current, {
         y: -40,
         opacity: 0,
-        duration: 0.9,
+        duration: 0.8,
         ease: "power3.out",
       });
 
       // Logo bounce entrance
       gsap.from(logoRef.current, {
-        scale: 0.8,
+        scale: 0.85,
         opacity: 0,
-        duration: 0.8,
-        delay: 0.2,
-        ease: "back.out(1.8)",
+        duration: 0.7,
+        delay: 0.15,
+        ease: "back.out(1.7)",
       });
 
       // Actions staggered entrance
       if (navActionsRef.current?.children) {
         gsap.from(navActionsRef.current.children, {
-          y: -15,
+          y: -12,
           opacity: 0,
-          duration: 0.6,
-          stagger: 0.12,
-          delay: 0.3,
+          duration: 0.5,
+          stagger: 0.1,
+          delay: 0.25,
           ease: "power2.out",
         });
       }
@@ -50,8 +65,8 @@ export const Home: React.FC = () => {
 
   const handleButtonHover = (e: React.MouseEvent<HTMLElement>, enter: boolean) => {
     gsap.to(e.currentTarget, {
-      scale: enter ? 1.06 : 1,
-      duration: 0.25,
+      scale: enter ? 1.05 : 1,
+      duration: 0.2,
       ease: "power2.out",
     });
   };
@@ -71,47 +86,65 @@ export const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      {/* Navigation Header - Transparent Glassmorphism */}
-      <header
-        ref={headerRef}
-        className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-gray-200/50 shadow-2xs transition-all"
+      {/* Dynamic Floating Pill Header */}
+      <div
+        ref={headerWrapperRef}
+        className="sticky top-0 z-50 flex justify-center w-full"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div ref={logoRef} className="flex items-center space-x-2">
-            <Link
-              to="/"
-              className="text-2xl font-black text-indigo-600 tracking-tight hover:opacity-90 transition-opacity"
-            >
-              JobMatrix
+        <header
+          ref={headerRef}
+          className={`flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isScrolled
+              ? "mt-2.5 w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-white/95 backdrop-blur-2xl border border-gray-200 shadow-xl shadow-indigo-950/10"
+              : "mt-3 w-[92%] max-w-5xl px-6 py-3.5 rounded-2xl sm:rounded-full bg-white/90 backdrop-blur-xl border border-gray-200/80 shadow-md shadow-slate-900/5"
+          }`}
+        >
+          {/* Logo Section */}
+          <div ref={logoRef} className="flex items-center space-x-2 shrink-0">
+            <Link to="/" className="flex items-center space-x-2 group">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+                </svg>
+              </div>
+              <span className="font-black tracking-tight text-gray-900 text-xl sm:text-2xl">
+                Job<span className="text-indigo-600">Matrix</span>
+              </span>
             </Link>
           </div>
 
-          <div ref={navActionsRef} className="flex items-center space-x-3">
-            <Link
-              to="/login"
-              onMouseEnter={(e) => handleButtonHover(e, true)}
-              onMouseLeave={(e) => handleButtonHover(e, false)}
-              className="text-sm font-semibold text-gray-700 hover:text-indigo-600 transition-colors px-3 py-2 rounded-xl hover:bg-gray-100/60 inline-block"
-            >
-              Sign In
+          {/* Navigation Center Links */}
+          <nav className="hidden md:flex items-center space-x-7">
+            <a href="#jobs" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">
+              Browse Jobs
+            </a>
+            <Link to="/login" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">
+              For Candidates
             </Link>
-            <div
-              onMouseEnter={(e) => handleButtonHover(e, true)}
-              onMouseLeave={(e) => handleButtonHover(e, false)}
-              className="inline-block"
+            <Link to="/login" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">
+              For Recruiters
+            </Link>
+          </nav>
+
+          {/* Action Button: Get Started */}
+          <div ref={navActionsRef} className="flex items-center shrink-0">
+            <a
+              href="/register"
+              onMouseEnter={(e) => handleButtonHover(e as unknown as React.MouseEvent<HTMLElement>, true)}
+              onMouseLeave={(e) => handleButtonHover(e as unknown as React.MouseEvent<HTMLElement>, false)}
+              className="inline-flex items-center justify-center font-semibold text-sm text-white px-5 py-2.5 rounded-full whitespace-nowrap transition-opacity duration-200 hover:opacity-80"
+              style={{
+                background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                boxShadow: "0 4px 16px rgba(99, 102, 241, 0.5)",
+                color: "#ffffff",
+                textDecoration: "none",
+              }}
             >
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => navigate("/register")}
-                className="shadow-sm shadow-indigo-100"
-              >
-                Get Started
-              </Button>
-            </div>
+              Get Started
+            </a>
           </div>
-        </div>
-      </header>
+        </header>
+      </div>
 
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-blue-700 text-white py-16 px-4">
