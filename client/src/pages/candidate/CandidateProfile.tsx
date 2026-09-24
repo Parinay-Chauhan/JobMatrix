@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type {
   CandidateProfile as CandidateProfileType,
@@ -193,7 +194,15 @@ const ProfileBasicForm: React.FC<ProfileBasicFormProps> = ({
 };
 
 export const CandidateProfile: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logged out successfully");
+    navigate("/login");
+  };
+
   // TanStack Query for profile data
   const { data: profile, isLoading: loading } = useCandidateProfileQuery();
 
@@ -589,6 +598,27 @@ export const CandidateProfile: React.FC = () => {
             </Button>
           </div>
         </form>
+      </div>
+
+      {/* Account Session & Sign Out Section */}
+      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8 mb-8">
+        <div>
+          <h2 className="text-base font-bold text-gray-900">Account Session</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Sign out of your candidate account ({user?.email}) on this device.
+          </p>
+        </div>
+        <Button
+          type="button"
+          variant="danger"
+          onClick={handleLogout}
+          className="sm:w-auto w-full flex items-center justify-center gap-2 font-bold cursor-pointer"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span>Sign Out / Logout</span>
+        </Button>
       </div>
 
       {/* Delete Experience Confirmation Dialog */}

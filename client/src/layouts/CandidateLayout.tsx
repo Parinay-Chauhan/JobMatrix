@@ -67,8 +67,8 @@ export const CandidateLayout: React.FC = () => {
               {/* Real-time Notification Bell */}
               <NotificationBell />
 
-              {/* User Profile Avatar Link & Logout */}
-              <div className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-gray-200">
+              {/* User Profile Avatar Link */}
+              <div className="flex items-center border-l pl-2 sm:pl-3 border-gray-200">
                 <Link
                   to="/candidate/profile"
                   className="p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 hover:ring-offset-2 transition-all group cursor-pointer"
@@ -78,13 +78,6 @@ export const CandidateLayout: React.FC = () => {
                     {userInitials}
                   </div>
                 </Link>
-
-                <button
-                  onClick={handleLogout}
-                  className="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 px-3 py-1.5 rounded-xl text-xs font-bold transition-all hover:shadow-2xs cursor-pointer"
-                >
-                  Logout
-                </button>
               </div>
 
               {/* Hamburger Button for Mobile */}
@@ -145,6 +138,19 @@ export const CandidateLayout: React.FC = () => {
             >
               Profile
             </NavLink>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleLogout();
+              }}
+              className="w-full text-left px-4 py-2.5 rounded-xl text-base font-semibold text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span>Logout</span>
+            </button>
           </div>
         )}
       </header>

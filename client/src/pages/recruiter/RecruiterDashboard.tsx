@@ -1,9 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useAuth } from "../../context/AuthContext";
 import { useRecruiterJobsQuery } from "../../hooks/queries";
 import { Button, Skeleton, EmptyState, StatusBadge } from "../../components/common";
 
 export const RecruiterDashboard: React.FC = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logged out successfully");
+    navigate("/login");
+  };
+
   const { data: jobs = [], isLoading: loading } = useRecruiterJobsQuery();
 
   if (loading) {
@@ -129,6 +140,27 @@ export const RecruiterDashboard: React.FC = () => {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Account Session & Sign Out Section */}
+      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8 mb-8">
+        <div>
+          <h2 className="text-base font-bold text-gray-900">Employer Account Session</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Signed in as <span className="font-semibold text-gray-800">{user?.fullName || "Recruiter"}</span> ({user?.email})
+          </p>
+        </div>
+        <Button
+          type="button"
+          variant="danger"
+          onClick={handleLogout}
+          className="sm:w-auto w-full flex items-center justify-center gap-2 font-bold cursor-pointer"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span>Sign Out / Logout</span>
+        </Button>
       </div>
     </div>
   );
