@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "clean:tests": "node cleanup-tests.js"
   },
   "keywords": [],
   "author": "",
