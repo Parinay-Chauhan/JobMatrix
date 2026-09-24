@@ -81,6 +81,10 @@ const getRecruiterDashboardStats = asyncHandler(async (req, res) => {
 const createRecruiterProfile = asyncHandler(async (req, res) => {
   const {
     companyName,
+    designation,
+    experience,
+    phone,
+    bio,
     companyWebsite,
     companyDescription,
     location,
@@ -94,6 +98,10 @@ const createRecruiterProfile = asyncHandler(async (req, res) => {
   const profileFields = {
     user: req.user._id,
     companyName: companyName.trim(),
+    designation: designation?.trim() || "",
+    experience: experience?.trim() || "",
+    phone: phone?.trim() || "",
+    bio: bio?.trim() || "",
     companyWebsite: companyWebsite?.trim() || "",
     companyDescription: companyDescription?.trim() || "",
     location: location?.trim() || "",
@@ -108,7 +116,7 @@ const createRecruiterProfile = asyncHandler(async (req, res) => {
       { user: req.user._id },
       { $set: profileFields },
       { new: true, runValidators: true },
-    );
+    ).populate("user", "fullName email username role");
     return res
       .status(200)
       .json(
@@ -118,6 +126,7 @@ const createRecruiterProfile = asyncHandler(async (req, res) => {
 
   // Create new profile
   profile = await RecruiterProfile.create(profileFields);
+  profile = await profile.populate("user", "fullName email username role");
 
   return res
     .status(201)
@@ -128,12 +137,25 @@ const createRecruiterProfile = asyncHandler(async (req, res) => {
 
 // 2. Get Logged-in Recruiter Profile
 const getRecruiterProfile = asyncHandler(async (req, res) => {
-  const profile = await RecruiterProfile.findOne({
+  let profile = await RecruiterProfile.findOne({
     user: req.user._id,
   }).populate("user", "fullName email username role");
 
   if (!profile) {
-    throw new ApiError(404, "Recruiter profile not found");
+    // Auto-create initial blank profile for fresh recruiter account
+    profile = await RecruiterProfile.create({
+      user: req.user._id,
+      companyName: req.user.fullName ? `${req.user.fullName}'s Company` : "My Company",
+      designation: "Recruiter / Hiring Manager",
+      experience: "",
+      phone: "",
+      bio: "",
+      companyWebsite: "",
+      companyDescription: "",
+      location: "",
+      industry: "Software & Technology",
+    });
+    profile = await profile.populate("user", "fullName email username role");
   }
 
   return res
@@ -143,10 +165,14 @@ const getRecruiterProfile = asyncHandler(async (req, res) => {
     );
 });
 
-// 3. Update Recruiter Profile (Optional)
+// 3. Update Recruiter Profile
 const updateRecruiterProfile = asyncHandler(async (req, res) => {
   const {
     companyName,
+    designation,
+    experience,
+    phone,
+    bio,
     companyWebsite,
     companyDescription,
     location,
@@ -164,6 +190,10 @@ const updateRecruiterProfile = asyncHandler(async (req, res) => {
   }
 
   // 2. Only add fields that are explicitly provided in request body
+  if (designation !== undefined) profileFields.designation = designation.trim();
+  if (experience !== undefined) profileFields.experience = experience.trim();
+  if (phone !== undefined) profileFields.phone = phone.trim();
+  if (bio !== undefined) profileFields.bio = bio.trim();
   if (companyWebsite !== undefined)
     profileFields.companyWebsite = companyWebsite.trim();
   if (companyDescription !== undefined)
@@ -171,15 +201,20 @@ const updateRecruiterProfile = asyncHandler(async (req, res) => {
   if (location !== undefined) profileFields.location = location.trim();
   if (industry !== undefined) profileFields.industry = industry.trim();
 
-  // 3. Update in MongoDB
-  const profile = await RecruiterProfile.findOneAndUpdate(
+  // 3. Update or create in MongoDB
+  let profile = await RecruiterProfile.findOneAndUpdate(
     { user: req.user._id },
     { $set: profileFields },
     { new: true, runValidators: true },
-  );
+  ).populate("user", "fullName email username role");
 
   if (!profile) {
-    throw new ApiError(404, "Recruiter profile not found");
+    profile = await RecruiterProfile.create({
+      user: req.user._id,
+      companyName: profileFields.companyName || "My Company",
+      ...profileFields,
+    });
+    profile = await profile.populate("user", "fullName email username role");
   }
 
   return res

@@ -13,6 +13,26 @@ const recruiterProfileSchema = new Schema(
       required: [true, "Company name is required"],
       trim: true,
     },
+    designation: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    experience: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    phone: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    bio: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     companyWebsite: {
       type: String,
       trim: true,

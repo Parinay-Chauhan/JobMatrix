@@ -13,6 +13,7 @@ const Register = lazy(() => import("../pages/Register"));
 const FindJobs = lazy(() => import("../pages/candidate/FindJobs"));
 const MyApplications = lazy(() => import("../pages/candidate/MyApplications"));
 const CandidateProfile = lazy(() => import("../pages/candidate/CandidateProfile"));
+const RecruiterProfile = lazy(() => import("../pages/recruiter/RecruiterProfile"));
 const RecruiterDashboard = lazy(() => import("../pages/recruiter/RecruiterDashboard"));
 const PostJob = lazy(() => import("../pages/recruiter/PostJob"));
 const ManageJobs = lazy(() => import("../pages/recruiter/ManageJobs"));
@@ -97,6 +98,7 @@ export const AppRoutes: React.FC = () => {
         <Route element={<ProtectedRoute allowedRoles={["recruiter"]} />}>
           <Route element={<RecruiterLayout />}>
             <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+            <Route path="/recruiter/profile" element={<RecruiterProfile />} />
             <Route path="/recruiter/jobs/new" element={<PostJob />} />
             <Route path="/recruiter/jobs" element={<ManageJobs />} />
             <Route
