@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import gsap from "gsap";
 import { useJobsQuery } from "../hooks/queries";
 import { JobCard, JobCardSkeleton, EmptyState, Button } from "../components/common";
 
@@ -7,6 +8,53 @@ export const Home: React.FC = () => {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const navigate = useNavigate();
+
+  const headerRef = useRef<HTMLElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const navActionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header slide-down animation
+      gsap.from(headerRef.current, {
+        y: -40,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+      });
+
+      // Logo bounce entrance
+      gsap.from(logoRef.current, {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.2,
+        ease: "back.out(1.8)",
+      });
+
+      // Actions staggered entrance
+      if (navActionsRef.current?.children) {
+        gsap.from(navActionsRef.current.children, {
+          y: -15,
+          opacity: 0,
+          duration: 0.6,
+          stagger: 0.12,
+          delay: 0.3,
+          ease: "power2.out",
+        });
+      }
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  const handleButtonHover = (e: React.MouseEvent<HTMLElement>, enter: boolean) => {
+    gsap.to(e.currentTarget, {
+      scale: enter ? 1.06 : 1,
+      duration: 0.25,
+      ease: "power2.out",
+    });
+  };
 
   // Declarative TanStack Query for public jobs
   const { data: jobs = [], isLoading: loading } = useJobsQuery();
@@ -23,29 +71,44 @@ export const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      {/* Navigation Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40 backdrop-blur-md bg-white/90">
+      {/* Navigation Header - Transparent Glassmorphism */}
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-gray-200/50 shadow-2xs transition-all"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl font-black text-indigo-600 tracking-tight">
+          <div ref={logoRef} className="flex items-center space-x-2">
+            <Link
+              to="/"
+              className="text-2xl font-black text-indigo-600 tracking-tight hover:opacity-90 transition-opacity"
+            >
               JobMatrix
-            </span>
+            </Link>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div ref={navActionsRef} className="flex items-center space-x-3">
             <Link
               to="/login"
-              className="text-sm font-semibold text-gray-700 hover:text-indigo-600 transition-colors px-3 py-2"
+              onMouseEnter={(e) => handleButtonHover(e, true)}
+              onMouseLeave={(e) => handleButtonHover(e, false)}
+              className="text-sm font-semibold text-gray-700 hover:text-indigo-600 transition-colors px-3 py-2 rounded-xl hover:bg-gray-100/60 inline-block"
             >
               Sign In
             </Link>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => navigate("/register")}
+            <div
+              onMouseEnter={(e) => handleButtonHover(e, true)}
+              onMouseLeave={(e) => handleButtonHover(e, false)}
+              className="inline-block"
             >
-              Get Started
-            </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => navigate("/register")}
+                className="shadow-sm shadow-indigo-100"
+              >
+                Get Started
+              </Button>
+            </div>
           </div>
         </div>
       </header>

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import gsap from "gsap";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext";
 import { NotificationBell } from "../components/NotificationBell";
@@ -9,6 +10,63 @@ export const CandidateLayout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
+  const headerRef = useRef<HTMLElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const navLinksRef = useRef<HTMLElement>(null);
+  const userSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header entrance animation
+      gsap.from(headerRef.current, {
+        y: -35,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      // Logo bounce entrance
+      gsap.from(logoRef.current, {
+        scale: 0.85,
+        opacity: 0,
+        duration: 0.7,
+        delay: 0.15,
+        ease: "back.out(1.7)",
+      });
+
+      // Nav Links stagger
+      if (navLinksRef.current?.children) {
+        gsap.from(navLinksRef.current.children, {
+          y: -12,
+          opacity: 0,
+          duration: 0.5,
+          stagger: 0.1,
+          delay: 0.25,
+          ease: "power2.out",
+        });
+      }
+
+      // User Section pop-in
+      gsap.from(userSectionRef.current, {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.6,
+        delay: 0.35,
+        ease: "back.out(1.5)",
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  const handleNavHover = (e: React.MouseEvent<HTMLElement>, enter: boolean) => {
+    gsap.to(e.currentTarget, {
+      scale: enter ? 1.05 : 1,
+      duration: 0.2,
+      ease: "power2.out",
+    });
+  };
+
   const handleLogout = async () => {
     await logout();
     toast.success("Logged out successfully");
@@ -16,10 +74,10 @@ export const CandidateLayout: React.FC = () => {
   };
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+    `px-3.5 py-2 rounded-xl text-sm font-semibold transition-all inline-block ${
       isActive
         ? "bg-indigo-50 text-indigo-700 shadow-2xs"
-        : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
+        : "text-gray-600 hover:text-indigo-600 hover:bg-gray-100/60"
     }`;
 
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -40,15 +98,18 @@ export const CandidateLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Navbar Header */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-40">
+      {/* Navbar Header - Transparent Glassmorphism */}
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-40 bg-white/75 backdrop-blur-xl border-b border-gray-200/60 shadow-2xs transition-all"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Left Brand Logo */}
-            <div className="flex items-center">
+            <div ref={logoRef} className="flex items-center">
               <Link
                 to="/candidate/dashboard"
-                className="text-xl font-extrabold text-indigo-600 tracking-tight flex items-center gap-2"
+                className="text-xl font-extrabold text-indigo-600 tracking-tight flex items-center gap-2 hover:opacity-90 transition-opacity"
               >
                 JobMatrix
               </Link>
@@ -57,27 +118,42 @@ export const CandidateLayout: React.FC = () => {
             {/* Right Side Nav Links & User Controls */}
             <div className="flex items-center space-x-3 sm:space-x-4">
               {/* Desktop Nav Links */}
-              <nav className="hidden md:flex items-center space-x-1">
-                <NavLink to="/candidate/find-jobs" className={navLinkClass}>
+              <nav ref={navLinksRef} className="hidden md:flex items-center space-x-1">
+                <NavLink
+                  to="/candidate/find-jobs"
+                  className={navLinkClass}
+                  onMouseEnter={(e) => handleNavHover(e, true)}
+                  onMouseLeave={(e) => handleNavHover(e, false)}
+                >
                   Find Jobs
                 </NavLink>
-                <NavLink to="/candidate/applications" className={navLinkClass}>
+                <NavLink
+                  to="/candidate/applications"
+                  className={navLinkClass}
+                  onMouseEnter={(e) => handleNavHover(e, true)}
+                  onMouseLeave={(e) => handleNavHover(e, false)}
+                >
                   My Applications
                 </NavLink>
               </nav>
 
               {/* Notification Bell & User Avatar */}
-              <div className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-gray-200">
+              <div
+                ref={userSectionRef}
+                className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-gray-200"
+              >
                 {/* Real-time Notification Bell */}
                 <NotificationBell />
 
                 {/* User Profile Avatar Link */}
                 <Link
                   to="/candidate/profile"
-                  className="p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 hover:ring-offset-2 transition-all group cursor-pointer"
+                  onMouseEnter={(e) => handleNavHover(e, true)}
+                  onMouseLeave={(e) => handleNavHover(e, false)}
+                  className="p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 hover:ring-offset-2 transition-all group cursor-pointer inline-block"
                   title={`Profile: ${user?.fullName || "Candidate"}`}
                 >
-                  <div className="h-9 w-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:bg-indigo-700 group-hover:scale-105 transition-all">
+                  <div className="h-9 w-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:bg-indigo-700 transition-colors">
                     {userInitials}
                   </div>
                 </Link>
