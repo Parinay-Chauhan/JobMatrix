@@ -95,52 +95,58 @@ export const Login: React.FC = () => {
       </div>
 
       {/* Left Panel — Branding */}
-      <div ref={leftPanelRef} className="hidden lg:flex flex-col justify-between w-1/2 relative z-10 p-12 pl-16 pr-8 items-end">
-        <div className="w-full max-w-md">
+      <div ref={leftPanelRef} className="hidden lg:flex flex-col justify-between w-1/2 relative z-10 p-12 pl-16 pr-10 items-end">
+        <div className="w-full max-w-lg">
           <div ref={brandingRef}>
-            <Link to="/" className="inline-flex items-center gap-2 group">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30">
-                <span className="text-white text-sm font-black">JM</span>
+            <Link to="/" className="inline-flex items-center gap-3 group">
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                <span className="text-white text-base font-black">JM</span>
               </div>
-              <span className="text-xl font-black text-white tracking-tight group-hover:text-indigo-300 transition-colors">
+              <span className="text-2xl font-black text-white tracking-tight group-hover:text-indigo-300 transition-colors">
                 JobMatrix
               </span>
             </Link>
           </div>
         </div>
 
-        <div className="w-full max-w-md space-y-6">
-          <h1 ref={headingRef} className="text-4xl font-black text-white leading-tight">
+        <div className="w-full max-w-lg space-y-7">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+            Top Career Platform
+          </div>
+
+          <h1 ref={headingRef} className="text-5xl xl:text-6xl font-black text-white leading-[1.12] tracking-tight">
             Your career journey{" "}
             <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
               starts here
             </span>
           </h1>
-          <p ref={subtextRef} className="text-slate-400 text-sm leading-relaxed">
-            Connect with top companies, discover opportunities that match your skills, and take the next step in your professional growth.
+
+          <p ref={subtextRef} className="text-slate-300 text-base sm:text-lg leading-relaxed font-normal">
+            Connect with top companies, discover opportunities that match your skills, and take the next leap in your professional career.
           </p>
 
           {/* Trust indicators */}
-          <div ref={statsRef} className="flex items-center gap-6 pt-4">
+          <div ref={statsRef} className="flex items-center gap-8 pt-4">
             <div>
-              <p className="text-2xl font-extrabold text-white">10k+</p>
-              <p className="text-xs text-slate-500 font-medium">Active Jobs</p>
+              <p className="text-3xl font-black text-white tracking-tight">10k+</p>
+              <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-0.5">Active Jobs</p>
             </div>
-            <div className="w-px h-10 bg-slate-800" />
+            <div className="w-px h-12 bg-slate-800" />
             <div>
-              <p className="text-2xl font-extrabold text-white">500+</p>
-              <p className="text-xs text-slate-500 font-medium">Companies</p>
+              <p className="text-3xl font-black text-white tracking-tight">500+</p>
+              <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-0.5">Companies</p>
             </div>
-            <div className="w-px h-10 bg-slate-800" />
+            <div className="w-px h-12 bg-slate-800" />
             <div>
-              <p className="text-2xl font-extrabold text-white">50k+</p>
-              <p className="text-xs text-slate-500 font-medium">Candidates</p>
+              <p className="text-3xl font-black text-white tracking-tight">50k+</p>
+              <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-0.5">Candidates</p>
             </div>
           </div>
         </div>
 
-        <div className="w-full max-w-md">
-          <p className="text-[11px] text-slate-600">
+        <div className="w-full max-w-lg">
+          <p className="text-xs text-slate-600">
             &copy; {new Date().getFullYear()} JobMatrix. All rights reserved.
           </p>
         </div>
