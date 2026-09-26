@@ -85,9 +85,9 @@ export const Register: React.FC = () => {
     <div className="min-h-screen flex bg-slate-950 relative overflow-hidden">
       {/* Background decorative ambient lights */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-emerald-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-teal-600/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl" />
       </div>
 
       {/* Left Panel — Branding & Highlights */}
@@ -96,21 +96,21 @@ export const Register: React.FC = () => {
           <div ref={brandingRef}>
             <Link to="/" className="inline-flex items-center group">
               <span className="text-3xl font-black tracking-tight text-white group-hover:opacity-90 transition-opacity">
-                Job<span className="bg-gradient-to-r from-indigo-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">Matrix</span>
+                Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
               </span>
             </Link>
           </div>
         </div>
 
         <div className="w-full max-w-lg space-y-7">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             Verified Opportunities
           </div>
 
           <h1 ref={headingRef} className="text-5xl xl:text-6xl font-black text-white leading-[1.12] tracking-tight">
             Join the future of{" "}
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
               career growth
             </span>
           </h1>
@@ -122,7 +122,7 @@ export const Register: React.FC = () => {
           {/* Benefits list */}
           <div ref={perksRef} className="space-y-4 pt-2">
             <div className="flex items-center gap-3.5 text-slate-300 text-sm">
-              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0 text-indigo-400">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                 </svg>
@@ -131,7 +131,7 @@ export const Register: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3.5 text-slate-300 text-sm">
-              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0 text-indigo-400">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -140,7 +140,7 @@ export const Register: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3.5 text-slate-300 text-sm">
-              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0 text-indigo-400">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
@@ -164,7 +164,7 @@ export const Register: React.FC = () => {
           <div className="lg:hidden mb-8 text-center">
             <Link to="/" className="inline-flex items-center group">
               <span className="text-2xl font-black tracking-tight text-white group-hover:opacity-90 transition-opacity">
-                Job<span className="bg-gradient-to-r from-indigo-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">Matrix</span>
+                Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
               </span>
             </Link>
           </div>
@@ -207,7 +207,7 @@ export const Register: React.FC = () => {
                     onClick={() => setRole("candidate")}
                     className={`py-2 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
                       role === "candidate"
-                        ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/25"
+                        ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/25"
                         : "text-slate-400 hover:text-white hover:bg-slate-700/40"
                     }`}
                   >
@@ -221,7 +221,7 @@ export const Register: React.FC = () => {
                     onClick={() => setRole("recruiter")}
                     className={`py-2 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
                       role === "recruiter"
-                        ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/25"
+                        ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/25"
                         : "text-slate-400 hover:text-white hover:bg-slate-700/40"
                     }`}
                   >
@@ -251,7 +251,7 @@ export const Register: React.FC = () => {
                       placeholder="John Doe"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-9 pr-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/60 transition-all hover:border-slate-600"
+                      className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-9 pr-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
                     />
                   </div>
                 </div>
@@ -270,7 +270,7 @@ export const Register: React.FC = () => {
                       placeholder="johndoe"
                       value={username}
                       onChange={(e) => setUsername(e.target.value.toLowerCase().trim())}
-                      className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-8 pr-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/60 transition-all hover:border-slate-600"
+                      className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-8 pr-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
                     />
                   </div>
                 </div>
@@ -293,7 +293,7 @@ export const Register: React.FC = () => {
                     placeholder="john@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/60 transition-all hover:border-slate-600"
+                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
                   />
                 </div>
               </div>
@@ -315,7 +315,7 @@ export const Register: React.FC = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-11 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/60 transition-all hover:border-slate-600"
+                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-11 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
                   />
                   <button
                     type="button"
@@ -324,7 +324,7 @@ export const Register: React.FC = () => {
                   >
                     {showPassword ? (
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                       </svg>
                     ) : (
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -340,8 +340,8 @@ export const Register: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-2 py-3 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/25"
-                style={{ background: "linear-gradient(135deg, #6366f1 0%, #7c3aed 50%, #6366f1 100%)" }}
+                className="w-full mt-2 py-3 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/25"
+                style={{ background: "linear-gradient(135deg, #10b981 0%, #0d9488 50%, #059669 100%)" }}
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -369,7 +369,7 @@ export const Register: React.FC = () => {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+                className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
               >
                 Sign in
               </Link>
