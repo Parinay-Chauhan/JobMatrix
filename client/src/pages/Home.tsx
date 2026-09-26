@@ -121,12 +121,30 @@ export const Home: React.FC = () => {
   const { data: jobs = [], isLoading: loading } = useJobsQuery();
 
   const filteredJobs = jobs.filter((job) => {
-    const matchesTitle = job.title
-      ?.toLowerCase()
-      .includes(searchTitle.toLowerCase());
-    const matchesLocation = job.location
-      ?.toLowerCase()
-      .includes(searchLocation.toLowerCase());
+    const query = searchTitle.toLowerCase().trim();
+    const locQuery = searchLocation.toLowerCase().trim();
+
+    let matchesTitle = true;
+    if (query) {
+      matchesTitle =
+        Boolean(job.title?.toLowerCase().includes(query)) ||
+        Boolean(job.description?.toLowerCase().includes(query)) ||
+        Boolean(job.jobType?.toLowerCase().includes(query)) ||
+        Boolean(job.workMode?.toLowerCase().includes(query)) ||
+        Boolean(job.category?.toLowerCase().includes(query)) ||
+        Boolean(job.experienceLevel?.toLowerCase().includes(query)) ||
+        Boolean(job.requirements?.some((r) => r.toLowerCase().includes(query))) ||
+        (typeof job.recruiter === "object" &&
+          Boolean(job.recruiter?.companyName?.toLowerCase().includes(query)));
+    }
+
+    let matchesLocation = true;
+    if (locQuery) {
+      matchesLocation =
+        Boolean(job.location?.toLowerCase().includes(locQuery)) ||
+        Boolean(job.workMode?.toLowerCase().includes(locQuery));
+    }
+
     return matchesTitle && matchesLocation;
   });
 
