@@ -14,6 +14,12 @@ export const Home: React.FC = () => {
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const navActionsRef = useRef<HTMLDivElement>(null);
+  const getStartedButtonRef = useRef<HTMLAnchorElement>(null);
+  const heroBadgeRef = useRef<HTMLDivElement>(null);
+  const heroTitleRef = useRef<HTMLHeadingElement>(null);
+  const heroSubtitleRef = useRef<HTMLParagraphElement>(null);
+  const heroSearchRef = useRef<HTMLDivElement>(null);
+  const heroTagsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,12 +63,74 @@ export const Home: React.FC = () => {
           ease: "back.out(1.5)",
         });
       }
+
+      // Hero Elements Staggered Timeline Animation
+      const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      if (heroBadgeRef.current) {
+        heroTl.from(heroBadgeRef.current, {
+          y: -20,
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.1,
+        });
+      }
+
+      if (heroTitleRef.current) {
+        heroTl.from(
+          heroTitleRef.current,
+          {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+          },
+          "-=0.3"
+        );
+      }
+
+      if (heroSubtitleRef.current) {
+        heroTl.from(
+          heroSubtitleRef.current,
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.7,
+          },
+          "-=0.4"
+        );
+      }
+
+      if (heroSearchRef.current) {
+        heroTl.from(
+          heroSearchRef.current,
+          {
+            y: 25,
+            opacity: 0,
+            scale: 0.97,
+            duration: 0.8,
+            ease: "back.out(1.3)",
+          },
+          "-=0.35"
+        );
+      }
+
+      if (heroTagsRef.current?.children) {
+        heroTl.from(
+          heroTagsRef.current.children,
+          {
+            y: 12,
+            opacity: 0,
+            duration: 0.4,
+            stagger: 0.05,
+            ease: "power2.out",
+          },
+          "-=0.3"
+        );
+      }
     });
 
     return () => ctx.revert();
   }, []);
-
-
 
   // Declarative TanStack Query for public jobs
   const { data: jobs = [], isLoading: loading } = useJobsQuery();
@@ -76,6 +144,8 @@ export const Home: React.FC = () => {
       .includes(searchLocation.toLowerCase());
     return matchesTitle && matchesLocation;
   });
+
+  const popularTags = ["Remote", "Full Stack", "React", "Frontend", "Backend", "Product Manager", "Node.js"];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
@@ -122,12 +192,37 @@ export const Home: React.FC = () => {
           {/* Action Button: Get Started */}
           <div ref={navActionsRef} className="flex items-center shrink-0">
             <Link
+              ref={getStartedButtonRef}
               to="/register"
-              className="inline-flex items-center justify-center font-bold text-sm text-white px-5 py-2.5 rounded-full whitespace-nowrap shadow-md shadow-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all duration-200"
+              className="inline-flex items-center justify-center font-bold text-sm text-white px-5 py-2.5 rounded-full whitespace-nowrap active:scale-95 shadow-md shadow-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-200"
               style={{
                 background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
                 color: "#ffffff",
                 display: "inline-flex",
+              }}
+              onMouseEnter={() => {
+                gsap.to(getStartedButtonRef.current, {
+                  scale: 1.05,
+                  boxShadow: "0 0 40px rgba(124, 58, 237, 0.7)", // Bright glow
+                  duration: 0.3,
+                  ease: "power2.out",
+                });
+                gsap.to(getStartedButtonRef.current, {
+                  scale: 1.03,
+                  yoyo: true,
+                  repeat: 1,
+                  duration: 0.15,
+                  ease: "power1.inOut",
+                  delay: 0.3, // Start pulse after initial expansion
+                });
+              }}
+              onMouseLeave={() => {
+                gsap.to(getStartedButtonRef.current, {
+                  scale: 1,
+                  boxShadow: "0 0 0 rgba(0,0,0,0)", // Remove glow
+                  duration: 0.2,
+                  ease: "power2.out",
+                });
               }}
             >
               Get Started
@@ -136,22 +231,47 @@ export const Home: React.FC = () => {
         </header>
       </div>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-blue-700 text-white py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
-            Find Your Dream Job or Hire Top Talent
+      {/* Hero Section - Production-Grade SaaS Dark Slate & Indigo Gradient */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white py-20 sm:py-24 px-4 sm:px-6">
+        {/* Ambient Glows & Grid Pattern */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-indigo-500/20 via-purple-500/20 to-pink-500/10 blur-[130px] pointer-events-none rounded-full" />
+        <div className="absolute -bottom-20 right-10 w-96 h-96 bg-blue-600/10 blur-[100px] pointer-events-none rounded-full" />
+        <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-50" />
+
+        <div className="relative max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 z-10">
+          {/* Top Pill Badge */}
+          <div ref={heroBadgeRef} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-400/25 text-indigo-300 text-xs font-semibold backdrop-blur-md shadow-sm">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Over 10,000+ Verified Job Opportunities</span>
+          </div>
+
+          {/* Main Hero Headline */}
+          <h1
+            ref={heroTitleRef}
+            className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.12] text-white"
+          >
+            Find Your Dream Job or{" "}
+            <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
+              Hire Top Talent
+            </span>
           </h1>
-          <p className="text-indigo-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Discover thousands of career opportunities across tech, design, and
-            management, or post job listings to connect with top candidates.
+
+          {/* Subtitle */}
+          <p
+            ref={heroSubtitleRef}
+            className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
+          >
+            Connect directly with high-growth companies and exceptional talent. Fast, modern, and transparent career matching powered by JobMatrix.
           </p>
 
-          {/* Search Box */}
-          <div className="bg-white p-2.5 rounded-2xl shadow-xl flex flex-col md:flex-row items-center gap-2.5 text-gray-800 max-w-3xl mx-auto border border-white/20">
-            <div className="flex-1 w-full flex items-center px-3 py-2.5 bg-gray-50 rounded-xl">
+          {/* Floating Glassmorphic Search Box */}
+          <div
+            ref={heroSearchRef}
+            className="bg-white/95 backdrop-blur-xl p-2.5 sm:p-3 rounded-2xl shadow-2xl shadow-indigo-950/60 flex flex-col md:flex-row items-center gap-2.5 text-gray-800 max-w-3xl mx-auto border border-white/40"
+          >
+            <div className="flex-1 w-full flex items-center px-3.5 py-2.5 bg-gray-50/90 rounded-xl border border-gray-200/60 focus-within:border-indigo-500 focus-within:bg-white transition-all">
               <svg
-                className="w-5 h-5 text-gray-400 mr-2 shrink-0"
+                className="w-5 h-5 text-indigo-500 mr-2.5 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -165,16 +285,16 @@ export const Home: React.FC = () => {
               </svg>
               <input
                 type="text"
-                placeholder="Job title, keywords, or role"
+                placeholder="Job title, keywords, or role..."
                 value={searchTitle}
                 onChange={(e) => setSearchTitle(e.target.value)}
-                className="w-full bg-transparent focus:outline-none text-sm text-gray-800 placeholder:text-gray-400"
+                className="w-full bg-transparent focus:outline-none text-sm text-gray-900 placeholder:text-gray-400 font-medium"
               />
             </div>
 
-            <div className="flex-1 w-full flex items-center px-3 py-2.5 bg-gray-50 rounded-xl">
+            <div className="flex-1 w-full flex items-center px-3.5 py-2.5 bg-gray-50/90 rounded-xl border border-gray-200/60 focus-within:border-indigo-500 focus-within:bg-white transition-all">
               <svg
-                className="w-5 h-5 text-gray-400 mr-2 shrink-0"
+                className="w-5 h-5 text-indigo-500 mr-2.5 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -194,10 +314,10 @@ export const Home: React.FC = () => {
               </svg>
               <input
                 type="text"
-                placeholder="City, State, or Remote"
+                placeholder="City, State, or Remote..."
                 value={searchLocation}
                 onChange={(e) => setSearchLocation(e.target.value)}
-                className="w-full bg-transparent focus:outline-none text-sm text-gray-800 placeholder:text-gray-400"
+                className="w-full bg-transparent focus:outline-none text-sm text-gray-900 placeholder:text-gray-400 font-medium"
               />
             </div>
 
@@ -205,10 +325,25 @@ export const Home: React.FC = () => {
               variant="primary"
               size="md"
               onClick={() => {}}
-              className="w-full md:w-auto shrink-0"
+              className="w-full md:w-auto shrink-0 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-[1.02] active:scale-[0.98] transition-all px-6 py-2.5 font-bold"
             >
               Search Jobs
             </Button>
+          </div>
+
+          {/* Popular Search Tags */}
+          <div ref={heroTagsRef} className="flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 pt-1">
+            <span className="font-semibold text-slate-300 mr-1">Popular:</span>
+            {popularTags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => setSearchTitle(tag)}
+                className="px-3 py-1 rounded-full bg-slate-800/80 hover:bg-indigo-600/30 border border-slate-700/80 hover:border-indigo-400/50 text-slate-300 hover:text-white transition-all cursor-pointer backdrop-blur-sm"
+              >
+                {tag}
+              </button>
+            ))}
           </div>
         </div>
       </section>
@@ -266,7 +401,7 @@ export const Home: React.FC = () => {
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 py-6 text-center text-xs text-gray-500">
         &copy; {new Date().getFullYear()} JobMatrix. All rights reserved.
-      </footer>
+      </footer >
     </div>
   );
 };
