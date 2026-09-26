@@ -155,7 +155,7 @@ export const Home: React.FC = () => {
         <div className="absolute bottom-16 right-10 w-96 h-96 bg-blue-600/10 blur-[100px] pointer-events-none rounded-full" />
         <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-50" />
 
-        {/* Fixed Floating Header - Always visible on scroll */}
+        {/* Fixed Floating Header - Always visible on scroll with Frosted Glass Acrylic */}
         <div
           ref={headerWrapperRef}
           className="fixed top-0 left-0 right-0 z-50 flex justify-center w-full pt-4 sm:pt-5 pointer-events-none"
@@ -164,7 +164,7 @@ export const Home: React.FC = () => {
             ref={headerRef}
             className={`pointer-events-auto flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isScrolled
-                ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-900/90 backdrop-blur-2xl border border-slate-700/80 shadow-xl shadow-indigo-950/40 text-white"
+                ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-950/45 backdrop-blur-xl backdrop-saturate-150 border border-white/15 shadow-2xl shadow-black/60 ring-1 ring-white/5 text-white"
                 : "w-[92%] max-w-5xl px-6 py-3 bg-transparent border border-transparent text-white"
             }`}
           >
