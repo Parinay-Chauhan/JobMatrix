@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { authService } from "../services";
@@ -10,6 +11,13 @@ export const Login: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const leftPanelRef = useRef<HTMLDivElement>(null);
+  const brandingRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const subtextRef = useRef<HTMLParagraphElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const formCardRef = useRef<HTMLDivElement>(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -48,6 +56,35 @@ export const Login: React.FC = () => {
     }
   };
 
+  // GSAP entrance animations
+  useEffect(() => {
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    // Left panel elements slide in from left
+    if (brandingRef.current) {
+      gsap.set(brandingRef.current, { x: -60, opacity: 0 });
+      tl.to(brandingRef.current, { x: 0, opacity: 1, duration: 0.7 }, 0.1);
+    }
+    if (headingRef.current) {
+      gsap.set(headingRef.current, { x: -80, opacity: 0 });
+      tl.to(headingRef.current, { x: 0, opacity: 1, duration: 0.8 }, 0.25);
+    }
+    if (subtextRef.current) {
+      gsap.set(subtextRef.current, { x: -60, opacity: 0 });
+      tl.to(subtextRef.current, { x: 0, opacity: 1, duration: 0.7 }, 0.4);
+    }
+    if (statsRef.current) {
+      gsap.set(statsRef.current, { x: -50, opacity: 0 });
+      tl.to(statsRef.current, { x: 0, opacity: 1, duration: 0.6 }, 0.55);
+    }
+
+    // Form card fades in from right
+    if (formCardRef.current) {
+      gsap.set(formCardRef.current, { x: 40, opacity: 0 });
+      tl.to(formCardRef.current, { x: 0, opacity: 1, duration: 0.7 }, 0.3);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex bg-slate-950 relative overflow-hidden">
       {/* Background decorative elements */}
@@ -58,31 +95,33 @@ export const Login: React.FC = () => {
       </div>
 
       {/* Left Panel — Branding */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 relative z-10 p-12">
-        <div>
-          <Link to="/" className="inline-flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30">
-              <span className="text-white text-sm font-black">JM</span>
-            </div>
-            <span className="text-xl font-black text-white tracking-tight group-hover:text-indigo-300 transition-colors">
-              JobMatrix
-            </span>
-          </Link>
+      <div ref={leftPanelRef} className="hidden lg:flex flex-col justify-between w-1/2 relative z-10 p-12 pl-16 pr-8 items-end">
+        <div className="w-full max-w-md">
+          <div ref={brandingRef}>
+            <Link to="/" className="inline-flex items-center gap-2 group">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30">
+                <span className="text-white text-sm font-black">JM</span>
+              </div>
+              <span className="text-xl font-black text-white tracking-tight group-hover:text-indigo-300 transition-colors">
+                JobMatrix
+              </span>
+            </Link>
+          </div>
         </div>
 
-        <div className="space-y-6 max-w-md">
-          <h1 className="text-4xl font-black text-white leading-tight">
+        <div className="w-full max-w-md space-y-6">
+          <h1 ref={headingRef} className="text-4xl font-black text-white leading-tight">
             Your career journey{" "}
             <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
               starts here
             </span>
           </h1>
-          <p className="text-slate-400 text-sm leading-relaxed">
+          <p ref={subtextRef} className="text-slate-400 text-sm leading-relaxed">
             Connect with top companies, discover opportunities that match your skills, and take the next step in your professional growth.
           </p>
 
           {/* Trust indicators */}
-          <div className="flex items-center gap-6 pt-4">
+          <div ref={statsRef} className="flex items-center gap-6 pt-4">
             <div>
               <p className="text-2xl font-extrabold text-white">10k+</p>
               <p className="text-xs text-slate-500 font-medium">Active Jobs</p>
@@ -100,9 +139,11 @@ export const Login: React.FC = () => {
           </div>
         </div>
 
-        <p className="text-[11px] text-slate-600">
-          &copy; {new Date().getFullYear()} JobMatrix. All rights reserved.
-        </p>
+        <div className="w-full max-w-md">
+          <p className="text-[11px] text-slate-600">
+            &copy; {new Date().getFullYear()} JobMatrix. All rights reserved.
+          </p>
+        </div>
       </div>
 
       {/* Right Panel — Login Form */}
@@ -121,7 +162,7 @@ export const Login: React.FC = () => {
           </div>
 
           {/* Card */}
-          <div className="bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-800/80 p-8 shadow-2xl shadow-black/20">
+          <div ref={formCardRef} className="bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-800/80 p-8 shadow-2xl shadow-black/20">
             <div className="space-y-1 mb-7">
               <h2 className="text-2xl font-extrabold text-white">Welcome back</h2>
               <p className="text-sm text-slate-400">
