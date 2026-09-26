@@ -98,12 +98,9 @@ export const Login: React.FC = () => {
       <div ref={leftPanelRef} className="hidden lg:flex flex-col justify-between w-1/2 relative z-10 p-12 pl-16 pr-10 items-end">
         <div className="w-full max-w-lg">
           <div ref={brandingRef}>
-            <Link to="/" className="inline-flex items-center gap-3 group">
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-                <span className="text-white text-base font-black">JM</span>
-              </div>
-              <span className="text-2xl font-black text-white tracking-tight group-hover:text-indigo-300 transition-colors">
-                JobMatrix
+            <Link to="/" className="inline-flex items-center group">
+              <span className="text-3xl font-black tracking-tight text-white group-hover:opacity-90 transition-opacity">
+                Job<span className="bg-gradient-to-r from-indigo-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">Matrix</span>
               </span>
             </Link>
           </div>
@@ -157,12 +154,9 @@ export const Login: React.FC = () => {
         <div className="w-full max-w-[420px]">
           {/* Mobile logo */}
           <div className="lg:hidden mb-8 text-center">
-            <Link to="/" className="inline-flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30">
-                <span className="text-white text-sm font-black">JM</span>
-              </div>
-              <span className="text-xl font-black text-white tracking-tight">
-                JobMatrix
+            <Link to="/" className="inline-flex items-center group">
+              <span className="text-2xl font-black tracking-tight text-white group-hover:opacity-90 transition-opacity">
+                Job<span className="bg-gradient-to-r from-indigo-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">Matrix</span>
               </span>
             </Link>
           </div>
