@@ -169,14 +169,9 @@ export const Home: React.FC = () => {
             }`}
           >
             {/* Logo Section */}
-            <div ref={logoRef} className="flex items-center space-x-2 shrink-0">
-              <Link to="/" className="flex items-center space-x-2 group">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
-                  </svg>
-                </div>
-                <span className="font-black tracking-tight text-xl sm:text-2xl text-white">
+            <div ref={logoRef} className="flex items-center shrink-0">
+              <Link to="/" className="flex items-center group">
+                <span className="font-black tracking-tight text-xl sm:text-2xl text-white hover:opacity-90 transition-opacity">
                   Job<span className="text-indigo-400">Matrix</span>
                 </span>
               </Link>
