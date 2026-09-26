@@ -374,14 +374,15 @@ export const Home: React.FC = () => {
         </header>
       </div>
 
-      {/* Hero Section - Production-Grade SaaS Dark Slate & Indigo Gradient */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white py-20 sm:py-24 px-4 sm:px-6">
+      {/* Hero & Company Marquee Fullscreen Viewport Container */}
+      <div className="-mt-[76px] pt-[84px] min-h-screen flex flex-col justify-between relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-[#0B1120] text-white">
         {/* Ambient Glows & Grid Pattern */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-indigo-500/20 via-purple-500/20 to-pink-500/10 blur-[130px] pointer-events-none rounded-full" />
-        <div className="absolute -bottom-20 right-10 w-96 h-96 bg-blue-600/10 blur-[100px] pointer-events-none rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-indigo-500/20 via-purple-500/20 to-pink-500/10 blur-[140px] pointer-events-none rounded-full" />
+        <div className="absolute bottom-24 right-10 w-96 h-96 bg-blue-600/10 blur-[100px] pointer-events-none rounded-full" />
         <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-50" />
 
-        <div className="relative max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 z-10">
+        {/* Center Hero Content Section */}
+        <section className="relative z-10 flex-1 flex flex-col justify-center items-center py-8 sm:py-12 px-4 sm:px-6 max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 w-full">
           {/* Top Pill Badge */}
           <div ref={heroBadgeRef} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-400/25 text-indigo-300 text-xs font-semibold backdrop-blur-md shadow-sm">
             <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -410,7 +411,7 @@ export const Home: React.FC = () => {
           {/* Floating Glassmorphic Search Box */}
           <div
             ref={heroSearchRef}
-            className="bg-white/95 backdrop-blur-xl p-2.5 sm:p-3 rounded-2xl shadow-2xl shadow-indigo-950/60 flex flex-col md:flex-row items-center gap-2.5 text-gray-800 max-w-3xl mx-auto border border-white/40"
+            className="bg-white/95 backdrop-blur-xl p-2.5 sm:p-3 rounded-2xl shadow-2xl shadow-indigo-950/60 flex flex-col md:flex-row items-center gap-2.5 text-gray-800 max-w-3xl w-full mx-auto border border-white/40"
           >
             <div className="flex-1 w-full flex items-center px-3.5 py-2.5 bg-gray-50/90 rounded-xl border border-gray-200/60 focus-within:border-indigo-500 focus-within:bg-white transition-all">
               <svg
@@ -488,42 +489,42 @@ export const Home: React.FC = () => {
               </button>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Companies Logo Marquee Strip (Right to Left Continuous Motion) */}
-      <section className="relative overflow-hidden bg-[#0B1120] border-y border-slate-800/70 py-10 sm:py-12">
-        {/* Left & Right Gradient Overlays for Smooth Edge Fade */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/90 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-l from-[#0B1120] via-[#0B1120]/90 to-transparent z-10 pointer-events-none" />
+        {/* Bottom Companies Logo Marquee Strip */}
+        <section className="relative overflow-hidden bg-[#0B1120]/95 border-t border-slate-800/70 pt-5 pb-6 sm:pt-6 sm:pb-8 w-full z-10 shrink-0">
+          {/* Left & Right Gradient Overlays for Smooth Edge Fade */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/90 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-l from-[#0B1120] via-[#0B1120]/90 to-transparent z-10 pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 mb-8 sm:mb-10 text-center">
-          <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-indigo-400/90 flex items-center justify-center gap-3 sm:gap-4">
-            <span className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent to-indigo-500/50" />
-            <span>Top Companies Hiring & Where Our Candidates Work</span>
-            <span className="h-px w-8 sm:w-16 bg-gradient-to-l from-transparent to-indigo-500/50" />
-          </p>
-        </div>
-
-        {/* Marquee Infinite Scrolling Track (Clean Unboxed Logos) */}
-        <div className="flex overflow-hidden select-none">
-          <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0">
-            {marqueeCompanies.concat(marqueeCompanies).map((company, index) => (
-              <div
-                key={`${company.name}-${index}`}
-                className="flex items-center gap-3 opacity-75 hover:opacity-100 hover:scale-105 transition-all duration-300 cursor-pointer shrink-0 group select-none py-1"
-              >
-                <div className="w-6 h-6 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  {company.icon}
-                </div>
-                <span className="text-base sm:text-lg font-extrabold text-slate-200 group-hover:text-white tracking-tight transition-colors">
-                  {company.name}
-                </span>
-              </div>
-            ))}
+          <div className="max-w-7xl mx-auto px-4 mb-3 sm:mb-4 text-center">
+            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-indigo-400/90 flex items-center justify-center gap-3 sm:gap-4">
+              <span className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent to-indigo-500/50" />
+              <span>Top Companies Hiring & Where Our Candidates Work</span>
+              <span className="h-px w-8 sm:w-16 bg-gradient-to-l from-transparent to-indigo-500/50" />
+            </p>
           </div>
-        </div>
-      </section>
+
+          {/* Marquee Infinite Scrolling Track (Clean Unboxed Logos) */}
+          <div className="flex overflow-hidden select-none">
+            <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0">
+              {marqueeCompanies.concat(marqueeCompanies).map((company, index) => (
+                <div
+                  key={`${company.name}-${index}`}
+                  className="flex items-center gap-3 opacity-75 hover:opacity-100 hover:scale-105 transition-all duration-300 cursor-pointer shrink-0 group select-none py-1"
+                >
+                  <div className="w-6 h-6 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    {company.icon}
+                  </div>
+                  <span className="text-base sm:text-lg font-extrabold text-slate-200 group-hover:text-white tracking-tight transition-colors">
+                    {company.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
