@@ -450,22 +450,29 @@ export const Home: React.FC = () => {
         {/* Center Hero Content Section */}
         <section className="relative z-10 flex-1 flex flex-col justify-center items-center py-12 sm:py-16 px-4 sm:px-6 max-w-5xl mx-auto text-center w-full">
 
-          {/* Main Hero Headline — Apna / Naukri style bold count */}
+          {/* Top Pill Badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-400/25 text-indigo-300 text-xs font-semibold backdrop-blur-md shadow-sm mb-4">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Over 10,000+ Verified Job Opportunities</span>
+          </div>
+
+          {/* Main Hero Headline */}
           <h1
             ref={heroTitleRef}
-            className="text-4xl sm:text-5xl md:text-[3.75rem] font-black tracking-tight leading-[1.1] text-white mb-3"
+            className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.12] text-white"
           >
-            <span ref={heroBadgeRef} className="bg-gradient-to-r from-violet-400 via-indigo-300 to-purple-300 bg-clip-text text-transparent">
-              10,000+
-            </span>{" "}Jobs In India
+            Find Your Dream Job or{" "}
+            <span ref={heroBadgeRef} className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
+              Hire Top Talent
+            </span>
           </h1>
 
           {/* Subtitle */}
           <p
             ref={heroSubtitleRef}
-            className="text-slate-300/90 text-base sm:text-lg mb-8 font-semibold tracking-wide"
+            className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mt-4 mb-8"
           >
-            Get Hired by Top Companies
+            Connect directly with high-growth companies and exceptional talent. Fast, modern, and transparent career matching powered by JobMatrix.
           </p>
 
           {/* Apna-style Pill Search Bar */}
@@ -546,21 +553,6 @@ export const Home: React.FC = () => {
               >
                 Search
               </button>
-            </div>
-
-            {/* Quick filter chips below search bar */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-              <span className="text-slate-400 text-xs font-medium">Popular:</span>
-              {["Remote", "Full-time", "Fresher", "Part-time", "Work from Home"].map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => { setSearchTitle(tag); const el = document.getElementById("jobs"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
-                  className="px-3 py-1 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-slate-200 hover:text-white transition-all cursor-pointer backdrop-blur-sm"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
           </div>
         </section>
 
