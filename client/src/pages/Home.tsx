@@ -158,14 +158,14 @@ export const Home: React.FC = () => {
         {/* Dynamic Floating Pill Header */}
         <div
           ref={headerWrapperRef}
-          className="sticky top-0 z-50 flex justify-center w-full shrink-0 pt-3"
+          className="sticky top-0 z-50 flex justify-center w-full shrink-0 pt-5 sm:pt-6"
         >
           <header
             ref={headerRef}
             className={`flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isScrolled
-                ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-900/90 backdrop-blur-2xl border border-slate-700/80 shadow-xl shadow-indigo-950/20"
-                : "w-[92%] max-w-5xl px-6 py-3.5 rounded-2xl sm:rounded-full bg-white/90 backdrop-blur-xl border border-gray-200/80 shadow-md shadow-slate-900/5 text-gray-900"
+                ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-900/90 backdrop-blur-2xl border border-slate-700/80 shadow-xl shadow-indigo-950/20 text-white"
+                : "w-[92%] max-w-5xl px-6 py-3 bg-transparent border border-transparent text-white"
             }`}
           >
             {/* Logo Section */}
@@ -176,21 +176,21 @@ export const Home: React.FC = () => {
                     <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
                   </svg>
                 </div>
-                <span className={`font-black tracking-tight text-xl sm:text-2xl transition-colors ${isScrolled ? "text-white" : "text-gray-900"}`}>
-                  Job<span className="text-indigo-600">Matrix</span>
+                <span className="font-black tracking-tight text-xl sm:text-2xl text-white">
+                  Job<span className="text-indigo-400">Matrix</span>
                 </span>
               </Link>
             </div>
 
             {/* Navigation Center Links */}
-            <nav className="hidden md:flex items-center space-x-7">
-              <a href="#jobs" className={`text-sm font-medium transition-colors hover:text-indigo-500 ${isScrolled ? "text-slate-300" : "text-gray-600 hover:text-indigo-600"}`}>
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#jobs" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
                 Browse Jobs
               </a>
-              <Link to="/login" className={`text-sm font-medium transition-colors hover:text-indigo-500 ${isScrolled ? "text-slate-300" : "text-gray-600 hover:text-indigo-600"}`}>
+              <Link to="/login" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
                 For Candidates
               </Link>
-              <Link to="/login" className={`text-sm font-medium transition-colors hover:text-indigo-500 ${isScrolled ? "text-slate-300" : "text-gray-600 hover:text-indigo-600"}`}>
+              <Link to="/login" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
                 For Recruiters
               </Link>
             </nav>
