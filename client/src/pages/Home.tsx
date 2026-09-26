@@ -7,6 +7,7 @@ import { JobCard, JobCardSkeleton, EmptyState, Button } from "../components/comm
 export const Home: React.FC = () => {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
+  const [searchExperience, setSearchExperience] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
@@ -123,6 +124,7 @@ export const Home: React.FC = () => {
   const filteredJobs = jobs.filter((job) => {
     const query = searchTitle.toLowerCase().trim();
     const locQuery = searchLocation.toLowerCase().trim();
+    const expQuery = searchExperience.toLowerCase().trim();
 
     let matchesTitle = true;
     if (query) {
@@ -145,7 +147,12 @@ export const Home: React.FC = () => {
         Boolean(job.workMode?.toLowerCase().includes(locQuery));
     }
 
-    return matchesTitle && matchesLocation;
+    let matchesExperience = true;
+    if (expQuery) {
+      matchesExperience = Boolean(job.experienceLevel?.toLowerCase().includes(expQuery));
+    }
+
+    return matchesTitle && matchesLocation && matchesExperience;
   });
 
   const handlePopularSearch = (query: string) => {
@@ -441,100 +448,119 @@ export const Home: React.FC = () => {
         </div>
 
         {/* Center Hero Content Section */}
-        <section className="relative z-10 flex-1 flex flex-col justify-center items-center py-12 sm:py-16 px-4 sm:px-6 max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 w-full">
-          {/* Top Pill Badge */}
-          <div ref={heroBadgeRef} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-400/25 text-indigo-300 text-xs font-semibold backdrop-blur-md shadow-sm">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Over 10,000+ Verified Job Opportunities</span>
-          </div>
+        <section className="relative z-10 flex-1 flex flex-col justify-center items-center py-12 sm:py-16 px-4 sm:px-6 max-w-5xl mx-auto text-center w-full">
 
-          {/* Main Hero Headline */}
+          {/* Main Hero Headline — Apna / Naukri style bold count */}
           <h1
             ref={heroTitleRef}
-            className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.12] text-white"
+            className="text-4xl sm:text-5xl md:text-[3.75rem] font-black tracking-tight leading-[1.1] text-white mb-3"
           >
-            Find Your Dream Job or{" "}
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
-              Hire Top Talent
-            </span>
+            <span ref={heroBadgeRef} className="bg-gradient-to-r from-violet-400 via-indigo-300 to-purple-300 bg-clip-text text-transparent">
+              10,000+
+            </span>{" "}Jobs In India
           </h1>
 
           {/* Subtitle */}
           <p
             ref={heroSubtitleRef}
-            className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
+            className="text-slate-300/90 text-base sm:text-lg mb-8 font-semibold tracking-wide"
           >
-            Connect directly with high-growth companies and exceptional talent. Fast, modern, and transparent career matching powered by JobMatrix.
+            Get Hired by Top Companies
           </p>
 
-          {/* Floating Glassmorphic Search Box */}
+          {/* Apna-style Pill Search Bar */}
           <div
             ref={heroSearchRef}
-            className="bg-white/95 backdrop-blur-xl p-2.5 sm:p-3 rounded-2xl shadow-2xl shadow-indigo-950/60 flex flex-col md:flex-row items-center gap-2.5 text-gray-800 max-w-3xl w-full mx-auto border border-white/40"
+            className="w-full max-w-4xl mx-auto"
           >
-            <div className="flex-1 w-full flex items-center px-3.5 py-2.5 bg-gray-50/90 rounded-xl border border-gray-200/60 focus-within:border-indigo-500 focus-within:bg-white transition-all">
-              <svg
-                className="w-5 h-5 text-indigo-500 mr-2.5 shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            <div className="bg-white rounded-full shadow-2xl shadow-indigo-950/50 flex items-center overflow-hidden border border-white/60 pr-2">
+              {/* Skills / Title Field */}
+              <div className="flex-1 flex items-center gap-2.5 px-5 py-4 border-r border-gray-200/80 min-w-0">
+                <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search by Skills, Company or Job Title"
+                  value={searchTitle}
+                  onChange={(e) => setSearchTitle(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const el = document.getElementById("jobs");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="w-full bg-transparent focus:outline-none text-sm text-gray-800 placeholder:text-gray-400 font-medium min-w-0"
                 />
-              </svg>
-              <input
-                type="text"
-                placeholder="Job title, keywords, or role..."
-                value={searchTitle}
-                onChange={(e) => setSearchTitle(e.target.value)}
-                className="w-full bg-transparent focus:outline-none text-sm text-gray-900 placeholder:text-gray-400 font-medium"
-              />
+              </div>
+
+              {/* Location Field */}
+              <div className="flex-1 flex items-center gap-2.5 px-5 py-4 border-r border-gray-200/80 min-w-0">
+                <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Location"
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const el = document.getElementById("jobs");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="w-full bg-transparent focus:outline-none text-sm text-gray-800 placeholder:text-gray-400 font-medium min-w-0"
+                />
+              </div>
+
+              {/* Experience Dropdown */}
+              <div className="flex items-center gap-2 px-4 py-4 border-r border-gray-200/80 shrink-0">
+                <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <select
+                  value={searchExperience}
+                  onChange={(e) => setSearchExperience(e.target.value)}
+                  className="bg-transparent focus:outline-none text-sm text-gray-700 font-medium pr-1 cursor-pointer appearance-none"
+                >
+                  <option value="">Experience</option>
+                  <option value="entry">Entry Level (Fresher)</option>
+                  <option value="mid">Mid Level (1-5 yrs)</option>
+                  <option value="senior">Senior Level (5+ yrs)</option>
+                </select>
+                <svg className="w-4 h-4 text-gray-400 shrink-0 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+
+              {/* Search Button */}
+              <button
+                onClick={() => {
+                  const el = document.getElementById("jobs");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="ml-1 shrink-0 px-7 py-3.5 rounded-full text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-95 shadow-md shadow-violet-500/30"
+                style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}
+              >
+                Search
+              </button>
             </div>
 
-            <div className="flex-1 w-full flex items-center px-3.5 py-2.5 bg-gray-50/90 rounded-xl border border-gray-200/60 focus-within:border-indigo-500 focus-within:bg-white transition-all">
-              <svg
-                className="w-5 h-5 text-indigo-500 mr-2.5 shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="City, State, or Remote..."
-                value={searchLocation}
-                onChange={(e) => setSearchLocation(e.target.value)}
-                className="w-full bg-transparent focus:outline-none text-sm text-gray-900 placeholder:text-gray-400 font-medium"
-              />
+            {/* Quick filter chips below search bar */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+              <span className="text-slate-400 text-xs font-medium">Popular:</span>
+              {["Remote", "Full-time", "Fresher", "Part-time", "Work from Home"].map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => { setSearchTitle(tag); const el = document.getElementById("jobs"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
+                  className="px-3 py-1 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-slate-200 hover:text-white transition-all cursor-pointer backdrop-blur-sm"
+                >
+                  {tag}
+                </button>
+              ))}
             </div>
-
-            <Button
-              variant="primary"
-              size="md"
-              onClick={() => {
-                const jobsEl = document.getElementById("jobs");
-                if (jobsEl) jobsEl.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="w-full md:w-auto shrink-0 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-[1.02] active:scale-[0.98] transition-all px-6 py-2.5 font-bold"
-            >
-              Search Jobs
-            </Button>
           </div>
         </section>
 
