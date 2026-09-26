@@ -393,16 +393,28 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Navigation Center Links */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#jobs" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
-                Browse Jobs
+            <nav className="hidden md:flex items-center space-x-7">
+              <a
+                href="#jobs"
+                className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative py-1 hover:text-indigo-300"
+              >
+                Explore Jobs
               </a>
-              <Link to="/login" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
-                For Candidates
-              </Link>
-              <Link to="/login" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
-                For Recruiters
-              </Link>
+              <a
+                href="#companies"
+                className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative py-1 hover:text-indigo-300"
+              >
+                Top Companies
+              </a>
+              <a
+                href="#hire"
+                className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative py-1 flex items-center gap-1.5 group"
+              >
+                <span className="group-hover:text-indigo-300 transition-colors">Hire Talent</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 group-hover:bg-indigo-500/30 transition-colors">
+                  Hiring
+                </span>
+              </a>
             </nav>
 
             {/* Action Button: Get Started */}
@@ -558,7 +570,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Bottom Companies Logo Marquee Strip */}
-        <section className="relative overflow-hidden bg-slate-950/80 border-t border-slate-800/60 pt-4 pb-6 sm:pt-5 sm:pb-7 w-full z-10 shrink-0">
+        <section id="companies" className="relative overflow-hidden bg-slate-950/80 border-t border-slate-800/60 pt-4 pb-6 sm:pt-5 sm:pb-7 w-full z-10 shrink-0">
           {/* Left & Right Gradient Overlays for Smooth Edge Fade */}
           <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-l from-slate-950 via-slate-950/90 to-transparent z-10 pointer-events-none" />
@@ -882,7 +894,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Recruiter CTA Section — "Want to Hire?" */}
-      <section className="bg-gray-50 py-14 sm:py-16 px-4 sm:px-6 lg:px-8">
+      <section id="hire" className="bg-gray-50 py-14 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-emerald-50 border border-indigo-100/80 shadow-sm flex flex-col md:flex-row items-center min-h-[220px]">
 
