@@ -114,14 +114,13 @@ export const Home: React.FC = () => {
         );
       }
 
-      if (heroTagsRef.current?.children) {
+      if (heroTagsRef.current) {
         heroTl.from(
-          heroTagsRef.current.children,
+          heroTagsRef.current,
           {
-            y: 12,
+            y: 15,
             opacity: 0,
-            duration: 0.4,
-            stagger: 0.05,
+            duration: 0.5,
             ease: "power2.out",
           },
           "-=0.3"
@@ -332,14 +331,14 @@ export const Home: React.FC = () => {
           </div>
 
           {/* Popular Search Tags */}
-          <div ref={heroTagsRef} className="flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 pt-1">
+          <div ref={heroTagsRef} className="flex flex-wrap items-center justify-center gap-2 text-xs pt-1">
             <span className="font-semibold text-slate-300 mr-1">Popular:</span>
             {popularTags.map((tag) => (
               <button
                 key={tag}
                 type="button"
                 onClick={() => setSearchTitle(tag)}
-                className="px-3 py-1 rounded-full bg-slate-800/80 hover:bg-indigo-600/30 border border-slate-700/80 hover:border-indigo-400/50 text-slate-300 hover:text-white transition-all cursor-pointer backdrop-blur-sm"
+                className="px-3.5 py-1.5 rounded-full bg-slate-800/90 hover:bg-indigo-600/40 border border-slate-700/80 hover:border-indigo-400 text-slate-200 hover:text-white font-medium transition-all cursor-pointer backdrop-blur-sm shadow-xs active:scale-95"
               >
                 {tag}
               </button>
