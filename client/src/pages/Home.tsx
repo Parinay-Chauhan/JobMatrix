@@ -553,6 +553,7 @@ export const Home: React.FC = () => {
               >
                 Search
               </button>
+            </div>
           </div>
         </section>
 
