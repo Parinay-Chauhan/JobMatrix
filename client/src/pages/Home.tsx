@@ -19,7 +19,7 @@ export const Home: React.FC = () => {
   const heroTitleRef = useRef<HTMLHeadingElement>(null);
   const heroSubtitleRef = useRef<HTMLParagraphElement>(null);
   const heroSearchRef = useRef<HTMLDivElement>(null);
-  const heroTagsRef = useRef<HTMLDivElement>(null);
+  const popularSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,16 +114,16 @@ export const Home: React.FC = () => {
         );
       }
 
-      if (heroTagsRef.current) {
+      if (popularSectionRef.current) {
         heroTl.from(
-          heroTagsRef.current,
+          popularSectionRef.current,
           {
-            y: 15,
+            y: 30,
             opacity: 0,
-            duration: 0.5,
+            duration: 0.7,
             ease: "power2.out",
           },
-          "-=0.3"
+          "-=0.2"
         );
       }
     });
@@ -144,7 +144,97 @@ export const Home: React.FC = () => {
     return matchesTitle && matchesLocation;
   });
 
-  const popularTags = ["Remote", "Full Stack", "React", "Frontend", "Backend", "Product Manager", "Node.js"];
+  const handlePopularSearch = (query: string) => {
+    setSearchTitle(query);
+    const jobsSection = document.getElementById("jobs");
+    if (jobsSection) {
+      jobsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const popularSearches = [
+    {
+      id: "freshers",
+      rank: "#1",
+      title: "Jobs for Freshers",
+      query: "Fresher",
+      count: "1,200+ Jobs",
+      watermark: "Freshers",
+      gradient: "from-blue-500/25 to-indigo-500/25",
+      accent: "text-blue-400",
+      badgeBorder: "border-blue-500/40",
+      icon: (
+        <svg className="w-7 h-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 14l9-5-9-5-9 5 9 5z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+        </svg>
+      ),
+    },
+    {
+      id: "wfh",
+      rank: "#2",
+      title: "Work from home Jobs",
+      query: "Remote",
+      count: "3,400+ Jobs",
+      watermark: "Remote",
+      gradient: "from-emerald-500/25 to-teal-500/25",
+      accent: "text-emerald-400",
+      badgeBorder: "border-emerald-500/40",
+      icon: (
+        <svg className="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+    },
+    {
+      id: "part-time",
+      rank: "#3",
+      title: "Part time Jobs",
+      query: "Part-time",
+      count: "850+ Jobs",
+      watermark: "Part Time",
+      gradient: "from-amber-500/25 to-orange-500/25",
+      accent: "text-amber-400",
+      badgeBorder: "border-amber-500/40",
+      icon: (
+        <svg className="w-7 h-7 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+    },
+    {
+      id: "women",
+      rank: "#4",
+      title: "Jobs for Women",
+      query: "Women",
+      count: "1,800+ Jobs",
+      watermark: "Careers",
+      gradient: "from-pink-500/25 to-rose-500/25",
+      accent: "text-pink-400",
+      badgeBorder: "border-pink-500/40",
+      icon: (
+        <svg className="w-7 h-7 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      ),
+    },
+    {
+      id: "full-time",
+      rank: "#5",
+      title: "Full time Jobs",
+      query: "Full Time",
+      count: "5,600+ Jobs",
+      watermark: "Full Time",
+      gradient: "from-purple-500/25 to-indigo-500/25",
+      accent: "text-purple-400",
+      badgeBorder: "border-purple-500/40",
+      icon: (
+        <svg className="w-7 h-7 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+    },
+  ];
 
   const marqueeCompanies = [
     {
@@ -454,19 +544,70 @@ export const Home: React.FC = () => {
               Search Jobs
             </Button>
           </div>
+        </section>
 
-          {/* Popular Search Tags */}
-          <div ref={heroTagsRef} className="flex flex-wrap items-center justify-center gap-2 text-xs pt-1">
-            <span className="font-semibold text-slate-300 mr-1">Popular:</span>
-            {popularTags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => setSearchTitle(tag)}
-                className="px-3.5 py-1.5 rounded-full bg-slate-800/90 hover:bg-indigo-600/40 border border-slate-700/80 hover:border-indigo-400 text-slate-200 hover:text-white font-medium transition-all cursor-pointer backdrop-blur-sm shadow-xs active:scale-95"
+        {/* Popular Searches Section (Matching reference style: Header block + 5 Trending Cards) */}
+        <section
+          ref={popularSectionRef}
+          className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 items-stretch">
+            {/* 1st Position: Section Title & Subtitle (Left top spot in 3-col grid, exactly like reference) */}
+            <div className="flex flex-col justify-center p-5 sm:p-7 rounded-2xl bg-gradient-to-br from-indigo-950/50 via-slate-900/60 to-slate-950/40 border border-indigo-500/20 backdrop-blur-md shadow-xl">
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-[1.15]">
+                Popular Searches on{" "}
+                <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
+                  JobMatrix
+                </span>
+              </h2>
+              <p className="text-sm text-slate-300/90 mt-3.5 max-w-xs leading-relaxed font-medium">
+                Explore trending job roles, curated categories, and verified immediate hiring.
+              </p>
+            </div>
+
+            {/* Trending Cards #1 to #5 */}
+            {popularSearches.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => handlePopularSearch(item.query)}
+                className="group relative bg-slate-900/85 hover:bg-slate-800/95 border border-slate-800/90 hover:border-indigo-500/50 rounded-2xl p-5 sm:p-6 transition-all duration-300 shadow-xl hover:shadow-indigo-500/15 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between min-h-[175px] overflow-hidden backdrop-blur-md select-none"
               >
-                {tag}
-              </button>
+                {/* Subtle Background Watermark Text */}
+                <span className="absolute right-3 -bottom-2 text-3xl sm:text-4xl font-black text-slate-800/35 select-none pointer-events-none group-hover:text-indigo-500/10 transition-colors uppercase tracking-tight">
+                  {item.watermark}
+                </span>
+
+                {/* Top Row: Rank Badge, Title & Graphic Icon */}
+                <div className="flex items-start justify-between relative z-10">
+                  <div className="pr-2">
+                    <span
+                      className={`inline-block text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-slate-950/80 ${item.accent} border ${item.badgeBorder}`}
+                    >
+                      TRENDING AT {item.rank}
+                    </span>
+                    <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-indigo-200 transition-colors mt-2.5 tracking-tight leading-snug">
+                      {item.title}
+                    </h3>
+                  </div>
+
+                  <div
+                    className={`p-3 rounded-2xl bg-gradient-to-br ${item.gradient} border border-white/10 shrink-0 shadow-lg group-hover:scale-110 transition-transform`}
+                  >
+                    {item.icon}
+                  </div>
+                </div>
+
+                {/* Bottom Row: View all link & job count */}
+                <div className="flex items-center justify-between mt-5 pt-3.5 border-t border-slate-800/70 relative z-10">
+                  <span className="text-xs font-bold text-indigo-400 group-hover:text-indigo-300 flex items-center gap-1.5 transition-all">
+                    <span>View all</span>
+                    <span className="group-hover:translate-x-1.5 transition-transform">&rarr;</span>
+                  </span>
+                  <span className="text-xs font-semibold text-slate-400">
+                    {item.count}
+                  </span>
+                </div>
+              </div>
             ))}
           </div>
         </section>
