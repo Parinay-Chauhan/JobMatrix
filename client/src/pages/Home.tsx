@@ -492,38 +492,33 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Companies Logo Marquee Strip (Right to Left Continuous Motion) */}
-      <section className="relative overflow-hidden bg-slate-950 border-y border-slate-800/80 py-6 sm:py-7">
+      <section className="relative overflow-hidden bg-[#0B1120] border-y border-slate-800/70 py-10 sm:py-12">
         {/* Left & Right Gradient Overlays for Smooth Edge Fade */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-slate-950 via-slate-950/90 to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/90 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-l from-[#0B1120] via-[#0B1120]/90 to-transparent z-10 pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 mb-4 text-center">
-          <p className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-indigo-400 flex items-center justify-center gap-2 sm:gap-3">
-            <span className="h-px w-6 sm:w-10 bg-indigo-500/40" />
+        <div className="max-w-7xl mx-auto px-4 mb-8 sm:mb-10 text-center">
+          <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-indigo-400/90 flex items-center justify-center gap-3 sm:gap-4">
+            <span className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent to-indigo-500/50" />
             <span>Top Companies Hiring & Where Our Candidates Work</span>
-            <span className="h-px w-6 sm:w-10 bg-indigo-500/40" />
+            <span className="h-px w-8 sm:w-16 bg-gradient-to-l from-transparent to-indigo-500/50" />
           </p>
         </div>
 
-        {/* Marquee Infinite Scrolling Track */}
+        {/* Marquee Infinite Scrolling Track (Clean Unboxed Logos) */}
         <div className="flex overflow-hidden select-none">
-          <div className="animate-marquee flex items-center gap-4 sm:gap-6 shrink-0">
+          <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0">
             {marqueeCompanies.concat(marqueeCompanies).map((company, index) => (
               <div
                 key={`${company.name}-${index}`}
-                className="flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-850 border border-slate-800 hover:border-indigo-500/50 transition-all duration-300 group cursor-default shrink-0 shadow-xs"
+                className="flex items-center gap-3 opacity-75 hover:opacity-100 hover:scale-105 transition-all duration-300 cursor-pointer shrink-0 group select-none py-1"
               >
-                <div className="w-7 h-7 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform">
+                <div className="w-6 h-6 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                   {company.icon}
                 </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-xs sm:text-sm font-bold text-slate-200 group-hover:text-white transition-colors leading-tight">
-                    {company.name}
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-medium">
-                    {company.tag}
-                  </span>
-                </div>
+                <span className="text-base sm:text-lg font-extrabold text-slate-200 group-hover:text-white tracking-tight transition-colors">
+                  {company.name}
+                </span>
               </div>
             ))}
           </div>
