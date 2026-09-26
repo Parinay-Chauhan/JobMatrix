@@ -146,6 +146,150 @@ export const Home: React.FC = () => {
 
   const popularTags = ["Remote", "Full Stack", "React", "Frontend", "Backend", "Product Manager", "Node.js"];
 
+  const marqueeCompanies = [
+    {
+      name: "Google",
+      tag: "Tech Giant",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Microsoft",
+      tag: "Cloud & AI",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#F25022" d="M1 1h10v10H1z" />
+          <path fill="#00A4EF" d="M1 13h10v10H1z" />
+          <path fill="#7FBA00" d="M13 1h10v10H13z" />
+          <path fill="#FFB900" d="M13 13h10v10H13z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Amazon",
+      tag: "E-Commerce & AWS",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#FF9900">
+          <path d="M13.9 14.6c-2.3 1.7-5.7 2.6-8.6 2.6-4.1 0-7.7-1.5-10.5-4-.2-.2 0-.5.3-.4 3.1 1.8 6.9 2.8 10.8 2.8 2.6 0 5.4-.6 7.8-1.8.4-.2.7.2.2.8zm1.2-1.3c-.3-.4-1.9-.2-2.6-.1-.2 0-.3-.2-.1-.3 1.3-.9 3.5-.6 3.8-.3.3.4-.1 2.5-1.3 3.5-.2.1-.3 0-.3-.1.2-.8.8-2.3.5-2.7z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Meta",
+      tag: "Social & VR",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#0081FB">
+          <path d="M12 5.5c-3.1 0-5.3 2-6.5 3.9C4.3 11 3.5 13 3.5 14.5c0 2 1.4 3.5 3.4 3.5 2 0 3.6-1.5 5.1-3.6 1.5 2.1 3.1 3.6 5.1 3.6 2 0 3.4-1.5 3.4-3.5 0-1.5-.8-3.5-2-5.1-1.2-1.9-3.4-3.9-6.5-3.9zm-3.6 9.8c-1.1 0-1.9-.8-1.9-1.8 0-.9.6-2.2 1.5-3.6.9-1.3 2.1-2.6 4-2.6.2 0 .4 0 .6.1-2.4 3.4-3.5 6.4-4.2 7.9zm7.2 0c-.7-1.5-1.8-4.5-4.2-7.9.2-.1.4-.1.6-.1 1.9 0 3.1 1.3 4 2.6.9 1.4 1.5 2.7 1.5 3.6 0 1-.8 1.8-1.9 1.8z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Spotify",
+      tag: "Music & Audio",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#1ED760">
+          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.435-5.308-1.76-8.793-.963-.335.077-.67-.133-.746-.468-.077-.334.132-.67.467-.746 3.808-.87 7.076-.5 9.722 1.113.294.18.386.564.207.857zm1.226-2.723c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.413.127-.848-.106-.973-.517-.125-.413.108-.848.52-.973 3.632-1.102 8.147-.568 11.233 1.328.366.226.481.707.257 1.071zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.494.15-1.016-.129-1.166-.623-.149-.495.13-1.016.624-1.167 3.532-1.072 9.404-.866 13.115 1.337.445.264.59.838.327 1.282-.264.443-.838.59-1.28.326z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Netflix",
+      tag: "Streaming Media",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#E50914">
+          <path d="M5.398 0v24c1.865-.36 3.73-.78 5.594-1.258V0H5.398zm7.604 0v18.777l5.6 1.488V0h-5.6zm-2.01 0l5.618 19.34L11 18.06V0z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Stripe",
+      tag: "Fintech & Payments",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#635BFF">
+          <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697.355 12.64.355 7.416.355 3.882 3.09 3.882 7.476c0 5.768 7.787 4.887 7.787 7.405 0 .98-.812 1.409-2.072 1.409-2.308 0-5.163-.997-6.953-2.023l-.936 5.674c1.944.975 4.966 1.649 8.084 1.649 5.435 0 9.065-2.614 9.065-7.146 0-6.104-7.881-4.898-7.881-7.295z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Uber",
+      tag: "Mobility & Tech",
+      icon: (
+        <div className="font-black text-[11px] text-white tracking-tighter">
+          UBER
+        </div>
+      ),
+    },
+    {
+      name: "Airbnb",
+      tag: "Travel & Stays",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#FF5A5F">
+          <path d="M12 0c-4.1 0-7.3 3.1-7.3 7.1 0 4.9 5.8 12.3 6.6 13.3.4.5 1 .5 1.4 0 .8-1 6.6-8.4 6.6-13.3C19.3 3.1 16.1 0 12 0zm0 10.5c-1.9 0-3.4-1.5-3.4-3.4s1.5-3.4 3.4-3.4 3.4 1.5 3.4 3.4-1.5 3.4-3.4 3.4z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Adobe",
+      tag: "Creative Suite",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#FA0F00">
+          <path d="M13.96 0H24v24L13.96 0zM0 0h10.04L0 24V0zm11.98 10.37L16.29 24h-4.22l-1.95-4.87H7.31l4.67-8.76z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Razorpay",
+      tag: "Fintech Leader",
+      icon: (
+        <div className="font-extrabold text-[12px] text-sky-400">
+          R⚡
+        </div>
+      ),
+    },
+    {
+      name: "Swiggy",
+      tag: "Hyperlocal & Quick-Comm",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#FC8019">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5h-2v-2h2v2zm0-4h-2V7h2v5.5z" />
+        </svg>
+      ),
+    },
+    {
+      name: "TCS",
+      tag: "Enterprise IT Services",
+      icon: (
+        <div className="font-black text-[10px] text-indigo-400">
+          TCS
+        </div>
+      ),
+    },
+    {
+      name: "Infosys",
+      tag: "Consulting & Services",
+      icon: (
+        <div className="font-bold text-[10px] text-blue-400">
+          Infy
+        </div>
+      ),
+    },
+    {
+      name: "Atlassian",
+      tag: "Developer Tools",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#0052CC">
+          <path d="M11.53 2c0 2.4-1.2 4.5-3.1 5.8-3.1 2.1-5 5.5-5 9.4 0 2.6.9 5 2.5 6.8H.7C.3 22.4 0 20.4 0 18.2c0-5 2.6-9.5 6.6-12.2 2.7-1.8 4.4-4.7 4.9-8h0zm.94 13.8c0-2.4 1.2-4.5 3.1-5.8 3.1-2.1 5-5.5 5-9.4 0-2.6-.9-5-2.5-6.8h5.2c.4 1.6.7 3.6.7 5.8 0 5-2.6 9.5-6.6 12.2-2.7 1.8-4.4 4.7-4.9 8h0z" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       {/* Dynamic Floating Pill Header */}
@@ -342,6 +486,45 @@ export const Home: React.FC = () => {
               >
                 {tag}
               </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Companies Logo Marquee Strip (Right to Left Continuous Motion) */}
+      <section className="relative overflow-hidden bg-slate-950 border-y border-slate-800/80 py-6 sm:py-7">
+        {/* Left & Right Gradient Overlays for Smooth Edge Fade */}
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-slate-950 via-slate-950/90 to-transparent z-10 pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 mb-4 text-center">
+          <p className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-indigo-400 flex items-center justify-center gap-2 sm:gap-3">
+            <span className="h-px w-6 sm:w-10 bg-indigo-500/40" />
+            <span>Top Companies Hiring & Where Our Candidates Work</span>
+            <span className="h-px w-6 sm:w-10 bg-indigo-500/40" />
+          </p>
+        </div>
+
+        {/* Marquee Infinite Scrolling Track */}
+        <div className="flex overflow-hidden select-none">
+          <div className="animate-marquee flex items-center gap-4 sm:gap-6 shrink-0">
+            {marqueeCompanies.concat(marqueeCompanies).map((company, index) => (
+              <div
+                key={`${company.name}-${index}`}
+                className="flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-850 border border-slate-800 hover:border-indigo-500/50 transition-all duration-300 group cursor-default shrink-0 shadow-xs"
+              >
+                <div className="w-7 h-7 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform">
+                  {company.icon}
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-xs sm:text-sm font-bold text-slate-200 group-hover:text-white transition-colors leading-tight">
+                    {company.name}
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    {company.tag}
+                  </span>
+                </div>
+              </div>
             ))}
           </div>
         </div>
