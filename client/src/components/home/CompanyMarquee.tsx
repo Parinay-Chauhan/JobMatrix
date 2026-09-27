@@ -202,7 +202,7 @@ export const CompanyMarquee: React.FC = () => {
       </div>
 
       {/* Infinite Seamless Marquee Track */}
-      <div className="flex overflow-hidden select-none w-full">
+      <div className="marquee-container flex overflow-hidden select-none w-full">
         {/* Track 1 */}
         <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0 pr-10 sm:pr-16">
           {trackItems.map((company, index) => (

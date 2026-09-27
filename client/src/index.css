@@ -24,18 +24,10 @@
   animation: marquee 65s linear infinite;
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
 .animate-marquee-reverse {
   display: flex;
   width: max-content;
   animation: marquee-reverse 70s linear infinite;
-}
-
-.animate-marquee-reverse:hover {
-  animation-play-state: paused;
 }
 
 .animate-marquee-slow {
@@ -44,6 +36,9 @@
   animation: marquee 85s linear infinite;
 }
 
-.animate-marquee-slow:hover {
+/* Synchronized hover pause for all tracks inside marquee-container */
+.marquee-container:hover .animate-marquee,
+.marquee-container:hover .animate-marquee-reverse,
+.marquee-container:hover .animate-marquee-slow {
   animation-play-state: paused;
 }

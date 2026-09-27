@@ -170,7 +170,7 @@ export const TestimonialsSection: React.FC = () => {
 
       <div className="space-y-4">
         {/* Row 1 — Right to Left */}
-        <div className="flex overflow-hidden select-none w-full">
+        <div className="marquee-container flex overflow-hidden select-none w-full">
           <div className="animate-marquee flex items-stretch gap-4 shrink-0 pr-4">
             {row1.map((t, i) => (
               <TestimonialCard key={`r1-a-${i}`} t={t} />
@@ -184,7 +184,7 @@ export const TestimonialsSection: React.FC = () => {
         </div>
 
         {/* Row 2 — Left to Right */}
-        <div className="flex overflow-hidden select-none w-full">
+        <div className="marquee-container flex overflow-hidden select-none w-full">
           <div className="animate-marquee-reverse flex items-stretch gap-4 shrink-0 pr-4">
             {row2.map((t, i) => (
               <TestimonialCard key={`r2-a-${i}`} t={t} />
@@ -198,7 +198,7 @@ export const TestimonialsSection: React.FC = () => {
         </div>
 
         {/* Row 3 — Right to Left (slow) */}
-        <div className="flex overflow-hidden select-none w-full">
+        <div className="marquee-container flex overflow-hidden select-none w-full">
           <div className="animate-marquee-slow flex items-stretch gap-4 shrink-0 pr-4">
             {row3.map((t, i) => (
               <TestimonialCard key={`r3-a-${i}`} t={t} />
