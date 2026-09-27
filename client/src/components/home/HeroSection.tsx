@@ -117,11 +117,11 @@ export const HeroSection: React.FC = () => {
           Connect directly with high-growth companies and exceptional talent. Fast, modern, and transparent career matching powered by JobMatrix.
         </p>
 
-        {/* Apna-Style Pill Search Bar */}
-        <div ref={heroSearchRef} className="w-full max-w-4xl mt-10">
-          <div className="bg-white rounded-full p-2 pl-3 shadow-2xl shadow-black/40 border border-white/20 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 transition-all duration-300 hover:shadow-emerald-500/15">
+        {/* Responsive Search Bar: Card on mobile, Pill on desktop */}
+        <div ref={heroSearchRef} className="w-full max-w-4xl mt-8 sm:mt-10">
+          <div className="bg-white rounded-2xl sm:rounded-full p-2.5 sm:p-2 sm:pl-3 shadow-2xl shadow-black/40 border border-white/20 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 transition-all duration-300 hover:shadow-emerald-500/15">
             {/* Input 1: Job Title / Skills */}
-            <div className="flex-1 flex items-center gap-3 px-5 py-4 border-r border-gray-200/80 min-w-0">
+            <div className="flex-1 flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-4 border-b sm:border-b-0 sm:border-r border-gray-100 sm:border-gray-200/80 min-w-0">
               <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -136,7 +136,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             {/* Input 2: Location */}
-            <div className="flex-1 flex items-center gap-3 px-5 py-4 border-r border-gray-200/80 min-w-0">
+            <div className="flex-1 flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-4 border-b sm:border-b-0 sm:border-r border-gray-100 sm:border-gray-200/80 min-w-0">
               <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -152,7 +152,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             {/* Dropdown 3: Experience */}
-            <div className="flex items-center gap-2 px-4 py-4 min-w-[170px] relative">
+            <div className="flex items-center gap-2 px-4 py-3 sm:px-4 sm:py-4 min-w-0 sm:min-w-[170px] relative border-b sm:border-b-0 border-gray-100">
               <svg className="w-5 h-5 text-gray-400 shrink-0 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -178,7 +178,7 @@ export const HeroSection: React.FC = () => {
             {/* Search Button with Emerald/Teal Gradient */}
             <button
               onClick={handleSearchSubmit}
-              className="ml-1 shrink-0 px-8 py-3.5 rounded-full text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-95 shadow-md shadow-emerald-500/30"
+              className="w-full sm:w-auto sm:ml-1 shrink-0 px-8 py-3.5 rounded-xl sm:rounded-full text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-95 shadow-md shadow-emerald-500/30"
               style={{ background: "linear-gradient(135deg, #059669 0%, #0d9488 100%)" }}
             >
               Search
