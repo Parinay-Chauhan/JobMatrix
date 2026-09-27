@@ -15,29 +15,29 @@ export const FloatingHeader: React.FC = () => {
     const ctx = gsap.context(() => {
       // Header entrance animation
       gsap.from(headerRef.current, {
-        y: -40,
+        y: -20,
         opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
+        duration: 0.35,
+        ease: "power2.out",
       });
 
       // Logo entrance
       gsap.from(logoRef.current, {
-        scale: 0.85,
+        scale: 0.95,
         opacity: 0,
-        duration: 0.7,
-        delay: 0.15,
-        ease: "back.out(1.7)",
+        duration: 0.3,
+        delay: 0.05,
+        ease: "power2.out",
       });
 
       // Actions entrance
       if (navActionsRef.current) {
         gsap.from(navActionsRef.current, {
-          scale: 0.85,
+          scale: 0.95,
           opacity: 0,
-          duration: 0.6,
-          delay: 0.25,
-          ease: "back.out(1.5)",
+          duration: 0.3,
+          delay: 0.1,
+          ease: "power2.out",
         });
       }
     });

@@ -19,14 +19,13 @@ export const HeroSection: React.FC = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      const heroTl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
       if (heroBadgeRef.current) {
         heroTl.from(heroBadgeRef.current, {
-          y: -20,
+          y: -10,
           opacity: 0,
-          duration: 0.6,
-          delay: 0.1,
+          duration: 0.3,
         });
       }
 
@@ -34,11 +33,11 @@ export const HeroSection: React.FC = () => {
         heroTl.from(
           heroTitleRef.current,
           {
-            y: 30,
+            y: 15,
             opacity: 0,
-            duration: 0.8,
+            duration: 0.35,
           },
-          "-=0.3"
+          "-=0.2"
         );
       }
 
@@ -46,11 +45,11 @@ export const HeroSection: React.FC = () => {
         heroTl.from(
           heroSubtitleRef.current,
           {
-            y: 20,
+            y: 10,
             opacity: 0,
-            duration: 0.7,
+            duration: 0.3,
           },
-          "-=0.4"
+          "-=0.2"
         );
       }
 
@@ -58,13 +57,12 @@ export const HeroSection: React.FC = () => {
         heroTl.from(
           heroSearchRef.current,
           {
-            y: 25,
+            y: 15,
             opacity: 0,
-            scale: 0.97,
-            duration: 0.8,
-            ease: "back.out(1.3)",
+            scale: 0.98,
+            duration: 0.35,
           },
-          "-=0.35"
+          "-=0.2"
         );
       }
     });
