@@ -1,7 +1,7 @@
 import React from "react";
 
 export const CompanyMarquee: React.FC = () => {
-  const marqueeCompanies = [
+  const baseCompanies = [
     {
       name: "Google",
       icon: (
@@ -73,7 +73,26 @@ export const CompanyMarquee: React.FC = () => {
         </svg>
       ),
     },
+    {
+      name: "Airbnb",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#FF5A5F">
+          <path d="M12 0C7.2 0 4.5 3.3 4.5 7.1c0 3.8 2.8 8.1 7.5 13.9 4.7-5.8 7.5-10.1 7.5-13.9C19.5 3.3 16.8 0 12 0zm0 10.5c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Stripe",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#635BFF">
+          <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697.5 12.334.5 6.456.5 2.37 3.543 2.37 8.35c0 6.643 9.18 5.617 9.18 8.497 0 .984-.872 1.487-2.274 1.487-2.658 0-5.59-1.233-7.534-2.375L.768 21.49C2.793 22.84 5.922 23.5 9.18 23.5c6.24 0 10.516-2.923 10.516-7.859 0-7.078-9.456-5.882-9.456-8.528 0-.963.856-1.463 2.222-1.463 2.062 0 4.545.92 5.514 1.5z" />
+        </svg>
+      ),
+    },
   ];
+
+  // Repeat items to ensure smooth continuous flow on wide displays
+  const trackItems = [...baseCompanies, ...baseCompanies];
 
   return (
     <section
@@ -92,12 +111,30 @@ export const CompanyMarquee: React.FC = () => {
         </p>
       </div>
 
-      {/* Marquee Track */}
-      <div className="flex overflow-hidden select-none">
-        <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0">
-          {marqueeCompanies.concat(marqueeCompanies).map((company, index) => (
+      {/* Infinite Seamless Marquee Track */}
+      <div className="flex overflow-hidden select-none w-full">
+        {/* Track 1 */}
+        <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0 pr-10 sm:pr-16">
+          {trackItems.map((company, index) => (
             <div
-              key={`${company.name}-${index}`}
+              key={`t1-${company.name}-${index}`}
+              className="flex items-center gap-3 opacity-75 hover:opacity-100 hover:scale-105 transition-all duration-300 cursor-pointer shrink-0 group select-none py-1"
+            >
+              <div className="w-6 h-6 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                {company.icon}
+              </div>
+              <span className="text-base sm:text-lg font-extrabold text-slate-200 group-hover:text-emerald-300 tracking-tight transition-colors">
+                {company.name}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Track 2 (Duplicate for continuous loop with zero gap) */}
+        <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0 pr-10 sm:pr-16" aria-hidden="true">
+          {trackItems.map((company, index) => (
+            <div
+              key={`t2-${company.name}-${index}`}
               className="flex items-center gap-3 opacity-75 hover:opacity-100 hover:scale-105 transition-all duration-300 cursor-pointer shrink-0 group select-none py-1"
             >
               <div className="w-6 h-6 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
@@ -113,3 +150,4 @@ export const CompanyMarquee: React.FC = () => {
     </section>
   );
 };
+

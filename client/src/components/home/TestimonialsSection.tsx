@@ -170,28 +170,43 @@ export const TestimonialsSection: React.FC = () => {
 
       <div className="space-y-4">
         {/* Row 1 — Right to Left */}
-        <div className="flex overflow-hidden">
-          <div className="animate-marquee flex items-stretch gap-4">
-            {[...row1, ...row1].map((t, i) => (
-              <TestimonialCard key={`r1-${i}`} t={t} />
+        <div className="flex overflow-hidden select-none w-full">
+          <div className="animate-marquee flex items-stretch gap-4 shrink-0 pr-4">
+            {row1.map((t, i) => (
+              <TestimonialCard key={`r1-a-${i}`} t={t} />
+            ))}
+          </div>
+          <div className="animate-marquee flex items-stretch gap-4 shrink-0 pr-4" aria-hidden="true">
+            {row1.map((t, i) => (
+              <TestimonialCard key={`r1-b-${i}`} t={t} />
             ))}
           </div>
         </div>
 
         {/* Row 2 — Left to Right */}
-        <div className="flex overflow-hidden">
-          <div className="animate-marquee-reverse flex items-stretch gap-4">
-            {[...row2, ...row2].map((t, i) => (
-              <TestimonialCard key={`r2-${i}`} t={t} />
+        <div className="flex overflow-hidden select-none w-full">
+          <div className="animate-marquee-reverse flex items-stretch gap-4 shrink-0 pr-4">
+            {row2.map((t, i) => (
+              <TestimonialCard key={`r2-a-${i}`} t={t} />
+            ))}
+          </div>
+          <div className="animate-marquee-reverse flex items-stretch gap-4 shrink-0 pr-4" aria-hidden="true">
+            {row2.map((t, i) => (
+              <TestimonialCard key={`r2-b-${i}`} t={t} />
             ))}
           </div>
         </div>
 
         {/* Row 3 — Right to Left (slow) */}
-        <div className="flex overflow-hidden">
-          <div className="animate-marquee-slow flex items-stretch gap-4">
-            {[...row3, ...row3].map((t, i) => (
-              <TestimonialCard key={`r3-${i}`} t={t} />
+        <div className="flex overflow-hidden select-none w-full">
+          <div className="animate-marquee-slow flex items-stretch gap-4 shrink-0 pr-4">
+            {row3.map((t, i) => (
+              <TestimonialCard key={`r3-a-${i}`} t={t} />
+            ))}
+          </div>
+          <div className="animate-marquee-slow flex items-stretch gap-4 shrink-0 pr-4" aria-hidden="true">
+            {row3.map((t, i) => (
+              <TestimonialCard key={`r3-b-${i}`} t={t} />
             ))}
           </div>
         </div>
@@ -199,3 +214,4 @@ export const TestimonialsSection: React.FC = () => {
     </section>
   );
 };
+
