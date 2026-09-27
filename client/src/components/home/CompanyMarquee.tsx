@@ -14,6 +14,15 @@ export const CompanyMarquee: React.FC = () => {
       ),
     },
     {
+      name: "TCS",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#007ACC">
+          <circle cx="12" cy="12" r="10" fill="#0A3A60" />
+          <text x="12" y="16" fontSize="9" fontWeight="900" textAnchor="middle" fill="#FFFFFF" fontFamily="sans-serif">TCS</text>
+        </svg>
+      ),
+    },
+    {
       name: "Microsoft",
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -21,6 +30,15 @@ export const CompanyMarquee: React.FC = () => {
           <path fill="#00A4EF" d="M1 13h10v10H1z" />
           <path fill="#7FBA00" d="M13 1h10v10H13z" />
           <path fill="#FFB900" d="M13 13h10v10H13z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Infosys",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <rect width="24" height="24" rx="5" fill="#007CC3" />
+          <text x="12" y="16.5" fontSize="10" fontWeight="bold" textAnchor="middle" fill="#FFFFFF" fontFamily="sans-serif">Infy</text>
         </svg>
       ),
     },
@@ -34,10 +52,29 @@ export const CompanyMarquee: React.FC = () => {
       ),
     },
     {
+      name: "Accenture",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#A100FF">
+          <path d="M1.5 17.5L14 12 1.5 6.5l2.2-4.5L22.5 12 3.7 22l-2.2-4.5z" />
+        </svg>
+      ),
+    },
+    {
       name: "Meta",
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0668E1">
           <path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Wipro",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" fill="#000000" stroke="#7CB342" strokeWidth="2" />
+          <circle cx="8" cy="10" r="2.5" fill="#E91E63" />
+          <circle cx="16" cy="10" r="2.5" fill="#FF9800" />
+          <circle cx="12" cy="15" r="2.5" fill="#2196F3" />
         </svg>
       ),
     },
@@ -50,10 +87,27 @@ export const CompanyMarquee: React.FC = () => {
       ),
     },
     {
+      name: "Cognizant",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0033A0">
+          <rect width="24" height="24" rx="5" fill="#0033A0" />
+          <path d="M17 7h-6.5C8 7 6 9 6 11.5s2 4.5 4.5 4.5H17v-2.5h-6.5c-1.1 0-2-.9-2-2s.9-2 2-2H17V7z" fill="#FFFFFF" />
+        </svg>
+      ),
+    },
+    {
       name: "Netflix",
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#E50914">
           <path d="M4 0v24l6-3.5V0H4zm10 0v16.5l6 3.5V0h-6z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Capgemini",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0070AD">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5c-2.8 0-4.5-1.7-4.5-4.5s1.7-4.5 4.5-4.5c1.4 0 2.5.5 3.3 1.3l-1.4 1.4c-.5-.5-1.1-.8-1.9-.8-1.7 0-2.6 1.1-2.6 2.6s.9 2.6 2.6 2.6c.8 0 1.4-.3 1.9-.8l1.4 1.4c-.8.8-1.9 1.3-3.3 1.3z" />
         </svg>
       ),
     },
@@ -66,10 +120,27 @@ export const CompanyMarquee: React.FC = () => {
       ),
     },
     {
+      name: "HCLTech",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <rect width="24" height="24" rx="5" fill="#00358E" />
+          <text x="12" y="16" fontSize="9" fontWeight="900" textAnchor="middle" fill="#00A3E0" fontFamily="sans-serif">HCL</text>
+        </svg>
+      ),
+    },
+    {
       name: "Spotify",
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1DB954">
           <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+        </svg>
+      ),
+    },
+    {
+      name: "IBM",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0F62FE">
+          <path d="M2 5h6v2H2zm0 4h6v2H2zm0 4h6v2H2zm0 4h6v2H2zm7-12h6v2H9zm0 4h6v2H9zm0 4h6v2H9zm0 4h6v2H9zm7-12h6v2h-6zm0 4h6v2h-6zm0 4h6v2h-6zm0 4h6v2h-6z" />
         </svg>
       ),
     },
@@ -82,10 +153,29 @@ export const CompanyMarquee: React.FC = () => {
       ),
     },
     {
+      name: "Deloitte",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <rect width="24" height="24" rx="5" fill="#111827" />
+          <text x="10" y="16.5" fontSize="11" fontWeight="bold" textAnchor="middle" fill="#FFFFFF" fontFamily="sans-serif">D</text>
+          <circle cx="18" cy="15.5" r="2.5" fill="#86BC25" />
+        </svg>
+      ),
+    },
+    {
       name: "Stripe",
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#635BFF">
           <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697.5 12.334.5 6.456.5 2.37 3.543 2.37 8.35c0 6.643 9.18 5.617 9.18 8.497 0 .984-.872 1.487-2.274 1.487-2.658 0-5.59-1.233-7.534-2.375L.768 21.49C2.793 22.84 5.922 23.5 9.18 23.5c6.24 0 10.516-2.923 10.516-7.859 0-7.078-9.456-5.882-9.456-8.528 0-.963.856-1.463 2.222-1.463 2.062 0 4.545.92 5.514 1.5z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Oracle",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#F80000">
+          <rect width="24" height="24" rx="5" fill="#1e293b" />
+          <path d="M12 7c-3.3 0-6 2.2-6 5s2.7 5 6 5 6-2.2 6-5-2.7-5-6-5zm0 8c-2.2 0-4-1.3-4-3s1.8-3 4-3 4 1.3 4 3-1.8 3-4 3z" fill="#F80000" />
         </svg>
       ),
     },
@@ -106,7 +196,7 @@ export const CompanyMarquee: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 mb-3 sm:mb-4 text-center">
         <p className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-emerald-400/90 flex items-center justify-center gap-3 sm:gap-4">
           <span className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent to-emerald-500/50" />
-          <span>Top Companies Hiring & Where Our Candidates Work</span>
+          <span>Top Tech & Service Leaders Hiring on JobMatrix</span>
           <span className="h-px w-8 sm:w-16 bg-gradient-to-l from-transparent to-emerald-500/50" />
         </p>
       </div>
