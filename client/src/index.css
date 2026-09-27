@@ -2,43 +2,51 @@
 
 @keyframes marquee {
   0% {
-    transform: translateX(0%);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 @keyframes marquee-reverse {
   0% {
-    transform: translateX(-100%);
+    transform: translate3d(-50%, 0, 0);
   }
   100% {
-    transform: translateX(0%);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 65s linear infinite;
+  will-change: transform;
+  animation: marquee 50s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 .animate-marquee-reverse {
   display: flex;
   width: max-content;
-  animation: marquee-reverse 70s linear infinite;
+  will-change: transform;
+  animation: marquee-reverse 55s linear infinite;
+}
+
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
 }
 
 .animate-marquee-slow {
   display: flex;
   width: max-content;
-  animation: marquee 85s linear infinite;
+  will-change: transform;
+  animation: marquee 65s linear infinite;
 }
 
-/* Synchronized hover pause for all tracks inside marquee-container */
-.marquee-container:hover .animate-marquee,
-.marquee-container:hover .animate-marquee-reverse,
-.marquee-container:hover .animate-marquee-slow {
+.animate-marquee-slow:hover {
   animation-play-state: paused;
 }

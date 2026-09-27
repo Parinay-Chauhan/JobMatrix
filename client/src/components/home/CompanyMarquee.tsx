@@ -201,33 +201,15 @@ export const CompanyMarquee: React.FC = () => {
         </p>
       </div>
 
-      {/* Infinite Seamless Marquee Track */}
-      <div className="marquee-container flex overflow-hidden select-none w-full">
-        {/* Track 1 */}
-        <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0 pr-10 sm:pr-16">
+      {/* Infinite Seamless Single-Track Marquee */}
+      <div className="flex overflow-hidden select-none w-full">
+        <div className="animate-marquee flex items-center gap-10 sm:gap-14 shrink-0 pr-10 sm:pr-14">
           {trackItems.map((company, index) => (
             <div
-              key={`t1-${company.name}-${index}`}
-              className="flex items-center gap-3 opacity-75 hover:opacity-100 hover:scale-105 transition-all duration-300 cursor-pointer shrink-0 group select-none py-1"
+              key={`m-${company.name}-${index}`}
+              className="flex items-center gap-3 opacity-75 hover:opacity-100 transition-opacity duration-200 cursor-pointer shrink-0 group select-none py-1"
             >
-              <div className="w-6 h-6 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                {company.icon}
-              </div>
-              <span className="text-base sm:text-lg font-extrabold text-slate-200 group-hover:text-emerald-300 tracking-tight transition-colors">
-                {company.name}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Track 2 (Duplicate for continuous loop with zero gap) */}
-        <div className="animate-marquee flex items-center gap-10 sm:gap-16 shrink-0 pr-10 sm:pr-16" aria-hidden="true">
-          {trackItems.map((company, index) => (
-            <div
-              key={`t2-${company.name}-${index}`}
-              className="flex items-center gap-3 opacity-75 hover:opacity-100 hover:scale-105 transition-all duration-300 cursor-pointer shrink-0 group select-none py-1"
-            >
-              <div className="w-6 h-6 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
                 {company.icon}
               </div>
               <span className="text-base sm:text-lg font-extrabold text-slate-200 group-hover:text-emerald-300 tracking-tight transition-colors">
@@ -240,4 +222,5 @@ export const CompanyMarquee: React.FC = () => {
     </section>
   );
 };
+
 
