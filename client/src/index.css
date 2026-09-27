@@ -21,7 +21,7 @@
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 32s linear infinite;
+  animation: marquee 65s linear infinite;
 }
 
 .animate-marquee:hover {
@@ -31,7 +31,7 @@
 .animate-marquee-reverse {
   display: flex;
   width: max-content;
-  animation: marquee-reverse 36s linear infinite;
+  animation: marquee-reverse 70s linear infinite;
 }
 
 .animate-marquee-reverse:hover {
@@ -41,7 +41,7 @@
 .animate-marquee-slow {
   display: flex;
   width: max-content;
-  animation: marquee 42s linear infinite;
+  animation: marquee 85s linear infinite;
 }
 
 .animate-marquee-slow:hover {
