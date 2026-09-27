@@ -29,16 +29,16 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
       : job.salary || "Competitive";
 
   return (
-    <div className="group relative flex flex-col justify-between rounded-2xl border border-gray-200/90 bg-white p-6 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+    <div className="group relative flex flex-col justify-between rounded-2xl border border-gray-200/90 bg-white p-6 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md">
       <div>
         {/* Top Badges & Date */}
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex flex-wrap gap-1.5">
-            <span className="rounded-md bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700">
+            <span className="rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
               {job.jobType || "Full-time"}
             </span>
             {job.workMode && (
-              <span className="rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+              <span className="rounded-md bg-teal-50 px-2.5 py-1 text-xs font-semibold text-teal-700">
                 {job.workMode}
               </span>
             )}
@@ -51,10 +51,10 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
         </div>
 
         {/* Title & Company */}
-        <h3 className="text-lg font-bold text-gray-900 line-clamp-1 group-hover:text-indigo-600 transition-colors">
+        <h3 className="text-lg font-bold text-gray-900 line-clamp-1 group-hover:text-emerald-600 transition-colors">
           {job.title}
         </h3>
-        <p className="mt-0.5 text-xs font-semibold text-indigo-600">
+        <p className="mt-0.5 text-xs font-semibold text-emerald-700">
           {companyName} &bull; {job.category || "General"}
         </p>
 
