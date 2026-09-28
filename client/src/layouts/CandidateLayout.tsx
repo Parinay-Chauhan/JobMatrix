@@ -156,18 +156,6 @@ export const CandidateLayout: React.FC = () => {
               >
                 My Applications
               </NavLink>
-              <NavLink
-                to="/candidate/profile"
-                className={({ isActive }) =>
-                  `text-sm font-medium transition-colors relative py-1 ${
-                    isActive
-                      ? "text-emerald-400 font-bold"
-                      : "text-slate-300 hover:text-emerald-300"
-                  }`
-                }
-              >
-                My Profile
-              </NavLink>
             </nav>
 
             {/* Right Side Actions: Notification Bell & Avatar */}
