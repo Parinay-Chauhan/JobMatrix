@@ -21,7 +21,7 @@ const uploadOnCloudinary = async (localFilePath, resourceType = "auto") => {
 
     return response;
   } catch (error) {
-    console.log("Cloudinary Upload Error:", error);
+    console.error("Cloudinary Upload Error:", error?.message || error);
 
     if (localFilePath && fs.existsSync(localFilePath)) {
       fs.unlinkSync(localFilePath);
@@ -31,23 +31,27 @@ const uploadOnCloudinary = async (localFilePath, resourceType = "auto") => {
   }
 };
 
-const deleteFromCloudinary = async (publicId, resourceType = "raw") => {
+const deleteFromCloudinary = async (publicId, resourceType = "auto") => {
   try {
     if (!publicId) return null;
 
-    const response = await cloudinary.uploader.destroy(publicId, {
-      resource_type: resourceType, // Allows deleting PDFs ("raw" or "auto") and images
+    let targetType = resourceType === "auto" ? "image" : resourceType;
+    let response = await cloudinary.uploader.destroy(publicId, {
+      resource_type: targetType,
     });
+
+    if (!response || response.result === "not found") {
+      const altType = targetType === "image" ? "raw" : "image";
+      response = await cloudinary.uploader.destroy(publicId, {
+        resource_type: altType,
+      });
+    }
 
     return response;
   } catch (error) {
-    console.log("Cloudinary Delete Error:", error);
-
+    console.error("Cloudinary Delete Error:", error?.message || error);
     return null;
   }
 };
 
 export { uploadOnCloudinary, deleteFromCloudinary };
-
-// TODO: resource_type: "auto", resource_type: "image",
-//

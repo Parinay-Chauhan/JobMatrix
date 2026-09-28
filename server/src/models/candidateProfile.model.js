@@ -23,7 +23,7 @@ const CandidateProfile = new Schema(
     },
     skills: {
       type: [String],
-      required: true,
+      default: [],
     },
     experience: [
       {
