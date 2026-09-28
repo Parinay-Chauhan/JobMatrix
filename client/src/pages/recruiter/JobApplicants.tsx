@@ -10,8 +10,6 @@ import {
   Mail,
   Calendar,
   Sparkles,
-  ExternalLink,
-  FileText,
 } from "lucide-react";
 import type { ApplicationStatus } from "../../types";
 import { useJobApplicantsQuery, useUpdateApplicationStatusMutation } from "../../hooks/queries";

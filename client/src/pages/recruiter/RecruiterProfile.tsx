@@ -4,13 +4,7 @@ import { toast } from "sonner";
 import {
   Building2,
   User,
-  Globe,
-  MapPin,
-  Briefcase,
-  Phone,
-  Mail,
   Sparkles,
-  UploadCloud,
   LogOut,
   CheckCircle2,
 } from "lucide-react";

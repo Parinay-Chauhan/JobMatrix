@@ -1,13 +1,11 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
-  Briefcase,
   Search,
   PlusCircle,
   MapPin,
   Calendar,
   Users,
-  Layers,
   ArrowRight,
   AlertCircle,
   Sparkles,

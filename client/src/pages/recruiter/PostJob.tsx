@@ -4,10 +4,7 @@ import { toast } from "sonner";
 import {
   Sparkles,
   Briefcase,
-  Layers,
   MapPin,
-  DollarSign,
-  Users,
   FileText,
   CheckCircle2,
   ArrowLeft,
