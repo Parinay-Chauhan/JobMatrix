@@ -39,7 +39,7 @@ export const authService = {
   async updateAvatar(file: File): Promise<ApiResponse<User>> {
     const formData = new FormData();
     formData.append("avatar", file);
-    const response = await api.patch<ApiResponse<User>>("/users/avatar", formData, {
+    const response = await api.patch<ApiResponse<User>>("/users/update-avatar", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
