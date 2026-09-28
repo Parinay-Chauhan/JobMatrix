@@ -22,7 +22,7 @@ import {
   Pagination,
 } from "../../components/common";
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 20;
 
 export const FindJobs: React.FC = () => {
   const { user } = useAuth();

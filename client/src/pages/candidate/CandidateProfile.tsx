@@ -934,10 +934,10 @@ export const CandidateProfile: React.FC = () => {
                 size="sm"
                 variant="secondary"
                 onClick={() => setIsAddExpModalOpen(true)}
-                className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold cursor-pointer text-xs flex items-center gap-1.5"
+                leftIcon={<Plus className="w-3.5 h-3.5" />}
+                className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold cursor-pointer text-xs whitespace-nowrap shrink-0"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add Position</span>
+                Add Position
               </Button>
             </div>
 
@@ -1008,10 +1008,10 @@ export const CandidateProfile: React.FC = () => {
                 size="sm"
                 variant="secondary"
                 onClick={() => setIsAddEduModalOpen(true)}
-                className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold cursor-pointer text-xs flex items-center gap-1.5"
+                leftIcon={<Plus className="w-3.5 h-3.5" />}
+                className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold cursor-pointer text-xs whitespace-nowrap shrink-0"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add Education</span>
+                Add Education
               </Button>
             </div>
 
