@@ -74,12 +74,11 @@ export const candidateService = {
   ): Promise<ApiResponse<CandidateProfile>> {
     const formData = new FormData();
     formData.append("resume", file);
+    // NOTE: Do NOT set Content-Type header manually.
+    // Axios sets it automatically with the correct multipart boundary.
     const response = await api.post<ApiResponse<CandidateProfile>>(
       "/candidates/resume",
       formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      },
     );
     return response.data;
   },
