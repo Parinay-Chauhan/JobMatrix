@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { ZoomIn, ZoomOut, X } from "lucide-react";
 
 export interface AvatarCropModalProps {
   isOpen: boolean;
@@ -198,11 +199,11 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
       <div className="fixed inset-0" onClick={onClose} aria-hidden="true" />
 
       {/* Modal Dialog Card */}
-      <div className="relative w-full max-w-md rounded-2xl bg-[#0d1117] text-slate-100 border border-slate-800 shadow-2xl overflow-hidden z-10 animate-in zoom-in-95 duration-200 ring-1 ring-white/10 flex flex-col">
+      <div className="relative w-full max-w-md rounded-2xl bg-slate-900 text-slate-100 border border-slate-800 shadow-2xl overflow-hidden z-10 animate-in zoom-in-95 duration-200 flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-[#161b22]">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-950">
           <h3 className="text-sm font-bold text-white tracking-wide">
-            Crop your new profile picture
+            Adjust Profile Photo
           </h3>
           <button
             type="button"
@@ -210,16 +211,14 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
             className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="Close"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Crop Area */}
-        <div className="p-4 sm:p-5 flex flex-col items-center select-none bg-[#090d13]">
+        <div className="p-4 sm:p-5 flex flex-col items-center select-none bg-slate-950">
           <div
-            className="relative overflow-hidden rounded-xl bg-slate-950 flex items-center justify-center cursor-grab active:cursor-grabbing border border-slate-800/80 shadow-inner"
+            className="relative overflow-hidden rounded-xl bg-slate-900 flex items-center justify-center cursor-grab active:cursor-grabbing border border-slate-800 shadow-inner"
             style={{ width: VIEWPORT_SIZE, height: VIEWPORT_SIZE }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -281,13 +280,14 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
           {/* Zoom In / Zoom Out (+, -) Controls & Slider */}
           <div className="w-full max-w-xs mt-5 space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-400 px-1 font-semibold">
-              <span className="flex items-center gap-1">
-                <span>🔍</span> Zoom
+              <span className="flex items-center gap-1.5">
+                <ZoomIn className="w-3.5 h-3.5 text-slate-400" />
+                <span>Zoom Scale</span>
               </span>
               <span className="text-emerald-400 font-mono">{Math.round(zoom * 100)}%</span>
             </div>
 
-            <div className="flex items-center gap-3 bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-3 bg-slate-900 p-2 rounded-xl border border-slate-800">
               {/* Zoom Out Button (-) */}
               <button
                 type="button"
@@ -322,26 +322,33 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
               </button>
             </div>
             <p className="text-[11px] text-slate-500 text-center">
-              Drag to reposition • Scroll or use buttons to zoom
+              Drag to reposition • Scroll or use buttons to adjust scale
             </p>
           </div>
         </div>
 
-        {/* Footer with "Set new profile picture" Button */}
-        <div className="px-5 py-4 border-t border-slate-800 bg-[#161b22]">
+        {/* Footer */}
+        <div className="px-5 py-4 border-t border-slate-800 bg-slate-950 flex items-center justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl text-slate-300 hover:bg-slate-800 text-xs font-semibold border border-slate-700 transition-colors cursor-pointer"
+          >
+            Cancel
+          </button>
           <button
             type="button"
             onClick={handleConfirmCrop}
             disabled={isSaving}
-            className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-bold text-sm shadow-md shadow-emerald-950 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="py-2 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-[0.99] text-slate-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSaving ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Saving photo...</span>
+                <div className="w-3.5 h-3.5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                <span>Saving Photo...</span>
               </>
             ) : (
-              <span>Set new profile picture</span>
+              <span>Save Profile Photo</span>
             )}
           </button>
         </div>
@@ -349,4 +356,5 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
     </div>
   );
 };
+
 export default AvatarCropModal;
