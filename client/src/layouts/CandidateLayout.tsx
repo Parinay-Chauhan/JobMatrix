@@ -26,7 +26,7 @@ export const CandidateLayout: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
+      if (window.scrollY > 25) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -39,43 +39,33 @@ export const CandidateLayout: React.FC = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header entrance animation
+      // Header entrance animation (Matching Home FloatingHeader)
       gsap.from(headerRef.current, {
-        y: -25,
+        y: -20,
         opacity: 0,
-        duration: 0.6,
-        ease: "power3.out",
+        duration: 0.35,
+        ease: "power2.out",
       });
 
       // Logo entrance
       gsap.from(logoRef.current, {
-        x: -15,
+        scale: 0.95,
         opacity: 0,
-        duration: 0.5,
-        delay: 0.1,
+        duration: 0.3,
+        delay: 0.05,
         ease: "power2.out",
       });
 
-      // Nav Links stagger
-      if (navLinksRef.current?.children) {
-        gsap.from(navLinksRef.current.children, {
-          y: -8,
+      // Actions / Nav entrance
+      if (navLinksRef.current) {
+        gsap.from(navLinksRef.current, {
+          scale: 0.95,
           opacity: 0,
-          duration: 0.4,
-          stagger: 0.08,
-          delay: 0.2,
+          duration: 0.3,
+          delay: 0.1,
           ease: "power2.out",
         });
       }
-
-      // User Section pop-in
-      gsap.from(userSectionRef.current, {
-        x: 15,
-        opacity: 0,
-        duration: 0.5,
-        delay: 0.2,
-        ease: "power2.out",
-      });
     });
 
     return () => ctx.revert();
@@ -86,13 +76,6 @@ export const CandidateLayout: React.FC = () => {
     toast.success("Logged out successfully");
     navigate("/login");
   };
-
-  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 inline-block ${
-      isActive
-        ? "bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-extrabold shadow-md shadow-emerald-500/20"
-        : "text-slate-300 hover:text-emerald-300 hover:bg-slate-800/60"
-    }`;
 
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     `block px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
@@ -116,92 +99,107 @@ export const CandidateLayout: React.FC = () => {
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0" />
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none z-0" />
 
-      {/* Navbar Header - Smooth Floating Glassmorphic Pill */}
+      {/* Navbar Header - Exact Home FloatingHeader Style */}
       <div
         ref={headerWrapperRef}
-        className="sticky top-0 z-50 pointer-events-none flex justify-center w-full px-4 sm:px-6 pt-3 sm:pt-4"
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center w-full pt-4 sm:pt-5 pointer-events-none"
       >
         <header
           ref={headerRef}
-          className={`pointer-events-auto flex flex-col justify-center w-full max-w-5xl transition-all duration-300 ease-out ${
+          className={`pointer-events-auto flex flex-col justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             mobileMenuOpen
-              ? "rounded-3xl bg-slate-950/95 border border-slate-800 shadow-2xl p-4 sm:px-6 sm:py-3"
-              : `rounded-full border shadow-xl ${
-                  isScrolled
-                    ? "bg-slate-950/95 backdrop-blur-xl border-slate-800/90 shadow-black/70 px-4 sm:px-6 py-2"
-                    : "bg-slate-950/80 backdrop-blur-md border-slate-800/60 shadow-black/30 px-5 sm:px-6 py-2.5"
-                }`
+              ? "w-[92%] max-w-5xl px-6 py-4 rounded-3xl bg-slate-950/95 backdrop-blur-xl border border-emerald-500/20 shadow-2xl shadow-black/80 ring-1 ring-emerald-500/10 text-white"
+              : isScrolled
+              ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-950/60 backdrop-blur-xl backdrop-saturate-150 border border-emerald-500/20 shadow-2xl shadow-black/60 ring-1 ring-emerald-500/10 text-white"
+              : "w-[92%] max-w-5xl px-6 py-3 rounded-full bg-transparent border border-transparent text-white"
           }`}
         >
           <div className="flex items-center justify-between w-full">
-            {/* Left Brand Logo (Clean text without briefcase icon) */}
+            {/* Logo Section (Matching Home Page FloatingHeader) */}
             <div ref={logoRef} className="flex items-center shrink-0">
-              <Link
-                to="/candidate/dashboard"
-                className="flex items-center gap-2 group cursor-pointer"
-              >
-                <span className="font-black tracking-tight text-white text-xl sm:text-2xl transition-colors select-none">
-                  Job<span className="text-emerald-400">Matrix</span>
+              <Link to="/candidate/dashboard" className="flex items-center group cursor-pointer">
+                <span className="font-black tracking-tight text-xl sm:text-2xl text-white hover:opacity-90 transition-opacity">
+                  Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
                 </span>
-                <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="ml-2 hidden sm:inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   Candidate
                 </span>
               </Link>
             </div>
 
-            {/* Right Side Nav Links & User Controls */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              {/* Desktop Nav Links */}
-              <nav
-                ref={navLinksRef}
-                className="hidden md:flex items-center space-x-1 sm:space-x-1.5"
+            {/* Navigation Center Links */}
+            <nav
+              ref={navLinksRef}
+              className="hidden md:flex items-center space-x-7"
+            >
+              <NavLink
+                to="/candidate/find-jobs"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors relative py-1 ${
+                    isActive
+                      ? "text-emerald-400 font-bold"
+                      : "text-slate-300 hover:text-emerald-300"
+                  }`
+                }
               >
-                <NavLink to="/candidate/find-jobs" className={navLinkClass}>
-                  Explore Jobs
-                </NavLink>
-                <NavLink to="/candidate/applications" className={navLinkClass}>
-                  My Applications
-                </NavLink>
-                <NavLink to="/candidate/profile" className={navLinkClass}>
-                  My Profile
-                </NavLink>
-              </nav>
-
-              {/* Notification Bell & User Avatar */}
-              <div
-                ref={userSectionRef}
-                className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-slate-800"
+                Explore Jobs
+              </NavLink>
+              <NavLink
+                to="/candidate/applications"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors relative py-1 ${
+                    isActive
+                      ? "text-emerald-400 font-bold"
+                      : "text-slate-300 hover:text-emerald-300"
+                  }`
+                }
               >
-                {/* Real-time Notification Bell */}
-                <NotificationBell />
+                My Applications
+              </NavLink>
+              <NavLink
+                to="/candidate/profile"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors relative py-1 ${
+                    isActive
+                      ? "text-emerald-400 font-bold"
+                      : "text-slate-300 hover:text-emerald-300"
+                  }`
+                }
+              >
+                My Profile
+              </NavLink>
+            </nav>
 
-                {/* User Profile Avatar Link (Image with Fallback Initials) */}
-                <Link
-                  to="/candidate/profile"
-                  className="p-0.5 rounded-full hover:ring-2 hover:ring-emerald-400/80 transition-all group cursor-pointer inline-block"
-                  title={`Profile: ${user?.fullName || "Candidate"}`}
-                >
-                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-slate-900 border border-slate-700/80 text-slate-100 flex items-center justify-center font-extrabold text-xs shadow-md overflow-hidden group-hover:scale-105 transition-transform">
-                    {avatarUrl ? (
-                      <img
-                        src={avatarUrl}
-                        alt={user?.fullName || "Candidate"}
-                        className="w-full h-full object-cover rounded-full"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-extrabold text-xs">
-                        {userInitials}
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              </div>
+            {/* Right Side Actions: Notification Bell & Avatar */}
+            <div ref={userSectionRef} className="flex items-center space-x-3 shrink-0">
+              <NotificationBell />
+
+              {/* User Profile Avatar Link */}
+              <Link
+                to="/candidate/profile"
+                className="p-0.5 rounded-full hover:ring-2 hover:ring-emerald-400/80 transition-all group cursor-pointer inline-block"
+                title={`Profile: ${user?.fullName || "Candidate"}`}
+              >
+                <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-slate-900 border border-slate-700/80 text-slate-100 flex items-center justify-center font-extrabold text-xs shadow-md overflow-hidden group-hover:scale-105 transition-transform">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt={user?.fullName || "Candidate"}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-extrabold text-xs">
+                      {userInitials}
+                    </div>
+                  )}
+                </div>
+              </Link>
 
               {/* Hamburger Button for Mobile */}
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors"
+                className="md:hidden p-1.5 rounded-xl text-slate-300 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors cursor-pointer"
                 aria-label="Toggle menu"
               >
                 <svg
@@ -297,7 +295,7 @@ export const CandidateLayout: React.FC = () => {
       </div>
 
       {/* Dynamic Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-12 relative z-10">
         <Outlet />
       </main>
 
