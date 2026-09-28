@@ -32,8 +32,9 @@ export const Login: React.FC = () => {
 
       const userData = response.data.user;
       const accessToken = response.data.accessToken;
+      const refreshToken = response.data.refreshToken;
 
-      login(userData, accessToken);
+      login(userData, accessToken, refreshToken);
       toast.success(`Welcome back, ${userData.fullName || userData.username}!`, {
         description: `Logged in as ${userData.role}.`,
       });

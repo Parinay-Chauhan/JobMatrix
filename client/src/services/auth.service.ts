@@ -36,6 +36,14 @@ export const authService = {
     return response.data;
   },
 
+  async refreshAccessToken(refreshToken?: string): Promise<ApiResponse<{ accessToken: string; refreshToken?: string }>> {
+    const response = await api.post<ApiResponse<{ accessToken: string; refreshToken?: string }>>(
+      "/users/refresh-token",
+      { refreshToken: refreshToken || localStorage.getItem("refreshToken") }
+    );
+    return response.data;
+  },
+
   async updateAvatar(file: File): Promise<ApiResponse<User>> {
     const formData = new FormData();
     formData.append("avatar", file);
