@@ -73,7 +73,7 @@ export const CandidateProfile: React.FC = () => {
 
   // Resume Modal & Viewer State
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
-  const [resumeViewerMode, setResumeViewerMode] = useState<"google" | "direct">("google");
+  const [resumeViewerMode, setResumeViewerMode] = useState<"google" | "direct" | "office">("google");
   const resumeInputRef = useRef<HTMLInputElement>(null);
 
   // Edit Profile Form State
@@ -544,18 +544,18 @@ export const CandidateProfile: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Profile Photo */}
+            {/* Right Column: Profile Photo (Perfect Circular Frame) */}
             <div className="lg:col-span-4 space-y-4">
               <label className="block text-sm font-bold text-white">
                 Profile Photo
               </label>
 
-              <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl flex items-center justify-center overflow-hidden group">
+              <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-slate-900 border-2 border-slate-800 shadow-2xl flex items-center justify-center overflow-hidden group">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
                     alt={fullName}
-                    className="w-full h-full object-cover rounded-2xl"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center text-slate-400">
@@ -618,14 +618,14 @@ export const CandidateProfile: React.FC = () => {
             {/* Top ambient glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-16 bg-emerald-500/5 blur-xl pointer-events-none" />
 
-            {/* Profile Avatar */}
+            {/* Profile Avatar (Perfect Circle) */}
             <div className="relative mx-auto w-44 h-44 sm:w-48 sm:h-48 mb-5 group">
-              <div className="w-full h-full rounded-2xl bg-slate-950 border-2 border-slate-800 shadow-xl flex items-center justify-center relative overflow-hidden">
+              <div className="w-full h-full rounded-full bg-slate-950 border-4 border-slate-800 shadow-2xl flex items-center justify-center relative overflow-hidden">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
                     alt={fullName}
-                    className="w-full h-full object-cover rounded-2xl"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center text-slate-400">
@@ -1278,7 +1278,18 @@ export const CandidateProfile: React.FC = () => {
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
-                    Direct Frame
+                    Direct PDF
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setResumeViewerMode("office")}
+                    className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                      resumeViewerMode === "office"
+                        ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Office View
                   </button>
                 </div>
               )}
@@ -1286,21 +1297,20 @@ export const CandidateProfile: React.FC = () => {
             <div className="flex items-center gap-2">
               {profile?.resume && (
                 <>
-                  <a
-                    href={profile.resume}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="py-2 px-3.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all inline-flex items-center gap-1.5"
+                  <button
+                    type="button"
+                    onClick={() => window.open(profile.resume, "_blank", "noopener,noreferrer")}
+                    className="py-2 px-3.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all inline-flex items-center gap-1.5 cursor-pointer"
                   >
                     <span>Open in New Tab</span>
                     <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                  </button>
                   <a
                     href={profile.resume}
                     download
                     target="_blank"
                     rel="noreferrer"
-                    className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all inline-flex items-center gap-1.5"
+                    className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all inline-flex items-center gap-1.5 cursor-pointer"
                   >
                     <span>Download</span>
                     <Download className="w-3.5 h-3.5" />
@@ -1320,19 +1330,55 @@ export const CandidateProfile: React.FC = () => {
       >
         <div className="space-y-3">
           {profile?.resume ? (
-            <div className="relative w-full h-[68vh] rounded-xl bg-slate-950 border border-slate-800 overflow-hidden flex flex-col items-center justify-center">
-              <iframe
-                key={resumeViewerMode}
-                src={
-                  resumeViewerMode === "google"
-                    ? `https://docs.google.com/viewer?url=${encodeURIComponent(
-                        profile.resume,
-                      )}&embedded=true`
-                    : profile.resume
-                }
-                title="Resume Preview"
-                className="w-full h-full border-0 rounded-xl"
-              />
+            <div className="space-y-2">
+              {/* Document Banner Notice & Quick Action */}
+              <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-xs text-slate-300">
+                <span className="truncate max-w-md font-mono text-emerald-400">
+                  {profile.resume.split("/").pop()}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => window.open(profile.resume, "_blank", "noopener,noreferrer")}
+                  className="text-emerald-400 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Trouble viewing? Open in full tab</span>
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              </div>
+
+              <div className="relative w-full h-[65vh] rounded-xl bg-slate-950 border border-slate-800 overflow-hidden flex flex-col items-center justify-center">
+                {resumeViewerMode === "direct" ? (
+                  <object
+                    data={profile.resume}
+                    type="application/pdf"
+                    className="w-full h-full rounded-xl"
+                  >
+                    <iframe
+                      src={profile.resume}
+                      title="Direct Resume Frame"
+                      className="w-full h-full border-0 rounded-xl"
+                    />
+                  </object>
+                ) : resumeViewerMode === "office" ? (
+                  <iframe
+                    key="office-viewer"
+                    src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                      profile.resume,
+                    )}`}
+                    title="Office Resume Preview"
+                    className="w-full h-full border-0 rounded-xl"
+                  />
+                ) : (
+                  <iframe
+                    key="google-viewer"
+                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(
+                      profile.resume,
+                    )}&embedded=true`}
+                    title="Google Docs Resume Preview"
+                    className="w-full h-full border-0 rounded-xl"
+                  />
+                )}
+              </div>
             </div>
           ) : (
             <div className="text-center py-16 space-y-4">
