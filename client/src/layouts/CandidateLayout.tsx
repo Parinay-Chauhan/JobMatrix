@@ -125,11 +125,13 @@ export const CandidateLayout: React.FC = () => {
         <header
           ref={headerRef}
           className={`pointer-events-auto flex flex-col justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            mobileMenuOpen ? "rounded-2xl" : "rounded-full"
+            mobileMenuOpen ? "rounded-2xl bg-slate-950/95 border border-slate-800 shadow-2xl px-5 py-3" : "rounded-full"
           } ${
             isScrolled
               ? "w-[88%] max-w-4xl bg-slate-950/90 backdrop-blur-xl backdrop-saturate-150 border border-emerald-500/30 shadow-2xl shadow-black/80 px-4 sm:px-6 py-2 sm:py-2.5 ring-1 ring-emerald-500/10"
-              : "w-[92%] max-w-5xl bg-slate-950/80 backdrop-blur-xl backdrop-saturate-150 border border-slate-800/80 shadow-2xl shadow-black/60 px-5 sm:px-7 py-2.5 sm:py-3 ring-1 ring-white/5"
+              : !mobileMenuOpen
+              ? "w-[92%] max-w-5xl bg-transparent border border-transparent shadow-none ring-0 px-5 sm:px-7 py-2.5 sm:py-3"
+              : "w-[92%] max-w-5xl"
           }`}
         >
           <div className="flex items-center justify-between w-full">
