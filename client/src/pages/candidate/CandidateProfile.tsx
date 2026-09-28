@@ -476,75 +476,66 @@ export const CandidateProfile: React.FC = () => {
         </div>
 
         {/* ========================================================================= */}
-        {/* RIGHT COLUMN: README / Showcase, Skills, Experience & Education           */}
+        {/* RIGHT COLUMN: Professional Summary, Skills, Experience & Education         */}
         {/* ========================================================================= */}
         <div className="lg:col-span-8 space-y-6">
-          {/* GitHub Style README Card */}
-          <div className="bg-slate-900/90 rounded-3xl border border-slate-800/90 shadow-2xl backdrop-blur-xl overflow-hidden">
-            {/* Header bar (e.g. Parinay-Chauhan / README.md) */}
-            <div className="flex items-center justify-between px-6 py-3.5 border-b border-slate-800 bg-slate-950/60">
-              <div className="flex items-center gap-2 font-mono text-xs text-slate-400 font-semibold">
-                <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>{fullName.toLowerCase().replace(/\s+/g, "-")} / README.md</span>
+          {/* Professional Summary & Skills Card */}
+          <div className="bg-slate-900/90 rounded-3xl border border-slate-800/90 shadow-2xl backdrop-blur-xl p-6 sm:p-8 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xl">📄</span>
+                <h2 className="text-lg font-black text-white">About & Summary</h2>
               </div>
               <button
                 type="button"
                 onClick={handleOpenEditModal}
-                className="text-slate-400 hover:text-emerald-400 p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
-                title="Edit details"
+                className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all cursor-pointer"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
+                <span>Edit</span>
               </button>
             </div>
 
-            {/* Showcase Body */}
-            <div className="p-6 sm:p-8 space-y-6">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
-                  <span>🚀</span>
-                  <span>Hi, My name is {fullName}</span>
-                </h2>
-                <p className="text-slate-300 text-sm mt-3 leading-relaxed">
-                  {profile?.bio || (
-                    <span className="text-slate-500 italic">
-                      Welcome to my JobMatrix candidate profile. Add your professional summary and background here to get discovered by recruiters.
-                    </span>
-                  )}
-                </p>
-              </div>
-
-              {/* Skills Tags Showcase */}
-              <div className="border-t border-slate-800/80 pt-5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
-                    <span>⚡</span> Technical & Domain Skills
-                  </h3>
-                  <span className="text-xs text-slate-500 font-semibold">
-                    {skillsList.length} skills listed
+            {/* Bio */}
+            <div>
+              <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-line">
+                {profile?.bio || (
+                  <span className="text-slate-500 italic">
+                    No summary added yet. Click &quot;Edit profile&quot; to add your professional bio.
                   </span>
-                </div>
-
-                {skillsList.length > 0 ? (
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {skillsList.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 text-xs font-semibold hover:border-emerald-500/40 hover:text-emerald-300 transition-all shadow-xs"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-xs text-slate-500 italic">
-                    No skills added yet. Add skills like React, Node.js, TypeScript, etc.
-                  </p>
                 )}
+              </p>
+            </div>
+
+            {/* Skills */}
+            <div className="border-t border-slate-800/80 pt-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-extrabold uppercase tracking-wider text-emerald-400">
+                  Skills
+                </h3>
+                <span className="text-xs text-slate-500 font-semibold">
+                  {skillsList.length} skills listed
+                </span>
               </div>
+
+              {skillsList.length > 0 ? (
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {skillsList.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 text-xs font-semibold hover:border-emerald-500/40 hover:text-emerald-300 transition-all shadow-xs"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-slate-500 italic">
+                  No skills listed yet. Add skills in your profile.
+                </p>
+              )}
             </div>
           </div>
 
