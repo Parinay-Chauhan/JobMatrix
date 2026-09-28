@@ -37,12 +37,14 @@ const uploadOnCloudinary = async (localFilePath, resourceType = "auto") => {
     try {
       response = await cloudinary.uploader.upload(localFilePath, {
         resource_type: resourceType,
+        use_filename: true,
       });
     } catch (initialError) {
       console.warn("Primary Cloudinary upload failed, trying fallback:", initialError?.message || initialError);
       const fallbackType = resourceType === "auto" ? "raw" : "auto";
       response = await cloudinary.uploader.upload(localFilePath, {
         resource_type: fallbackType,
+        use_filename: true,
       });
     }
 

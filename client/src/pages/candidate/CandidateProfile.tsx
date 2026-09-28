@@ -50,6 +50,11 @@ export const CandidateProfile: React.FC = () => {
   const [deleteExpId, setDeleteExpId] = useState<string | null>(null);
   const [deleteEduId, setDeleteEduId] = useState<string | null>(null);
 
+  // Resume Modal & Viewer State
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+  const [resumeViewerMode, setResumeViewerMode] = useState<"google" | "direct">("google");
+  const resumeInputRef = useRef<HTMLInputElement>(null);
+
   // Edit Profile Form State
   const [phone, setPhone] = useState("");
   const [bio, setBio] = useState("");
@@ -130,6 +135,26 @@ export const CandidateProfile: React.FC = () => {
       // Reset file inputs so the same file can be re-selected if needed
       if (avatarInputRef.current) avatarInputRef.current.value = "";
       if (showcaseAvatarInputRef.current) showcaseAvatarInputRef.current.value = "";
+    }
+  };
+
+  // Auto-upload resume immediately on file select — no save button needed
+  const handleResumeFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+
+    try {
+      await uploadResumeMutation.mutateAsync(file);
+      toast.success("Resume updated successfully!", {
+        description: "Your resume document is now saved to your profile.",
+      });
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to upload resume document.";
+      toast.error("Upload Failed", { description: msg });
+    } finally {
+      if (resumeInputRef.current) resumeInputRef.current.value = "";
     }
   };
 
@@ -454,14 +479,13 @@ export const CandidateProfile: React.FC = () => {
                     <span className="text-emerald-300 font-mono truncate max-w-sm">
                       📄 {profile.resume.split("/").pop()}
                     </span>
-                    <a
-                      href={profile.resume}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-emerald-400 font-bold hover:underline"
+                    <button
+                      type="button"
+                      onClick={() => setIsResumeModalOpen(true)}
+                      className="text-emerald-400 font-bold hover:underline cursor-pointer flex items-center gap-1.5"
                     >
-                      View Current ↗
-                    </a>
+                      <span>👁️</span> View Current
+                    </button>
                   </div>
                 )}
                 <input
@@ -791,20 +815,20 @@ export const CandidateProfile: React.FC = () => {
                   {profile.resume.split("/").pop()}
                 </p>
                 <div className="flex items-center gap-2">
-                  <a
-                    href={profile.resume}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex-1 text-center py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all shadow-xs"
-                  >
-                    View Resume ↗
-                  </a>
                   <button
                     type="button"
-                    onClick={handleStartEditing}
-                    className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition-colors cursor-pointer"
+                    onClick={() => setIsResumeModalOpen(true)}
+                    className="flex-1 text-center py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
                   >
-                    Replace
+                    <span>👁️</span> View Resume
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => resumeInputRef.current?.click()}
+                    disabled={uploadResumeMutation.isPending}
+                    className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {uploadResumeMutation.isPending ? "..." : "Replace"}
                   </button>
                 </div>
               </div>
@@ -813,13 +837,30 @@ export const CandidateProfile: React.FC = () => {
                 <p className="text-xs text-slate-400 mb-2">Upload your PDF resume so employers can view your profile.</p>
                 <button
                   type="button"
-                  onClick={handleStartEditing}
-                  className="py-2 px-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold hover:bg-emerald-500/20 transition-all cursor-pointer"
+                  onClick={() => resumeInputRef.current?.click()}
+                  disabled={uploadResumeMutation.isPending}
+                  className="py-2 px-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold hover:bg-emerald-500/20 transition-all cursor-pointer inline-flex items-center gap-2 disabled:opacity-50"
                 >
-                  + Upload Resume (PDF)
+                  {uploadResumeMutation.isPending ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                      <span>Uploading...</span>
+                    </>
+                  ) : (
+                    <span>+ Upload Resume (PDF)</span>
+                  )}
                 </button>
               </div>
             )}
+
+            {/* Hidden File Input for Instant Resume Upload */}
+            <input
+              ref={resumeInputRef}
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={handleResumeFileSelect}
+              className="hidden"
+            />
           </div>
         </div>
 
@@ -1200,6 +1241,122 @@ export const CandidateProfile: React.FC = () => {
         onConfirm={confirmDeleteEducation}
         onCancel={() => setDeleteEduId(null)}
       />
+
+      {/* Interactive Resume Document Viewer Modal */}
+      <Modal
+        isOpen={isResumeModalOpen}
+        onClose={() => setIsResumeModalOpen(false)}
+        title="Candidate Resume Document"
+        size="full"
+        footer={
+          <div className="flex flex-wrap items-center justify-between gap-3 w-full">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => resumeInputRef.current?.click()}
+                disabled={uploadResumeMutation.isPending}
+                className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {uploadResumeMutation.isPending ? "Uploading..." : "Replace Resume"}
+              </button>
+              {profile?.resume && (
+                <div className="flex items-center rounded-xl bg-slate-950 p-0.5 border border-slate-800 text-[11px] font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setResumeViewerMode("google")}
+                    className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                      resumeViewerMode === "google"
+                        ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Google Viewer
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setResumeViewerMode("direct")}
+                    className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                      resumeViewerMode === "direct"
+                        ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Direct Frame
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {profile?.resume && (
+                <>
+                  <a
+                    href={profile.resume}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="py-2 px-3.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all inline-flex items-center gap-1.5 shadow-xs"
+                  >
+                    <span>Open in New Tab ↗</span>
+                  </a>
+                  <a
+                    href={profile.resume}
+                    download
+                    target="_blank"
+                    rel="noreferrer"
+                    className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition-all inline-flex items-center gap-1.5"
+                  >
+                    <span>Download ⬇</span>
+                  </a>
+                </>
+              )}
+              <Button
+                variant="ghost"
+                onClick={() => setIsResumeModalOpen(false)}
+                className="text-xs"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        }
+      >
+        <div className="space-y-3">
+          {profile?.resume ? (
+            <div className="relative w-full h-[68vh] rounded-2xl bg-slate-950 border border-slate-800/80 overflow-hidden flex flex-col items-center justify-center shadow-inner">
+              <iframe
+                key={resumeViewerMode}
+                src={
+                  resumeViewerMode === "google"
+                    ? `https://docs.google.com/viewer?url=${encodeURIComponent(
+                        profile.resume,
+                      )}&embedded=true`
+                    : profile.resume
+                }
+                title="Resume Preview"
+                className="w-full h-full border-0 rounded-2xl"
+              />
+            </div>
+          ) : (
+            <div className="text-center py-16 space-y-4">
+              <div className="w-16 h-16 mx-auto rounded-3xl bg-slate-800/80 border border-slate-700 flex items-center justify-center text-2xl shadow-xl">
+                📄
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-base font-bold text-white">No Resume Found</h4>
+                <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                  You haven&apos;t uploaded a resume document yet. Please upload a PDF or DOCX file to preview it here.
+                </p>
+              </div>
+              <Button
+                variant="primary"
+                onClick={() => resumeInputRef.current?.click()}
+                className="text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950"
+              >
+                Upload Resume Now
+              </Button>
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };

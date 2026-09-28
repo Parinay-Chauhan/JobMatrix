@@ -1,6 +1,12 @@
 import type { JobFilterParams } from "../types";
 
 export const queryKeys = {
+  // Auth
+  auth: {
+    all: ["auth"] as const,
+    currentUser: () => ["auth", "currentUser"] as const,
+  },
+
   // Jobs
   jobs: {
     all: ["jobs"] as const,
