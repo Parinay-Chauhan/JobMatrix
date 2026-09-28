@@ -178,19 +178,6 @@ export const RecruiterLayout: React.FC = () => {
                 <Briefcase className="w-3.5 h-3.5" />
                 <span>Manage Jobs</span>
               </NavLink>
-              <NavLink
-                to="/recruiter/profile"
-                className={({ isActive }) =>
-                  `text-sm font-medium transition-colors relative py-1 flex items-center gap-1.5 ${
-                    isActive
-                      ? "text-emerald-400 font-bold"
-                      : "text-slate-300 hover:text-emerald-300"
-                  }`
-                }
-              >
-                <Building2 className="w-3.5 h-3.5" />
-                <span>Company Profile</span>
-              </NavLink>
             </nav>
 
             {/* Right Side Actions: Notification Bell & Profile Avatar */}
