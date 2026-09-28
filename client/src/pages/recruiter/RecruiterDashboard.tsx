@@ -8,6 +8,7 @@ import {
   ArrowRight,
   MapPin,
   Calendar,
+  Layers,
   Sparkles,
 } from "lucide-react";
 import { useRecruiterJobsQuery } from "../../hooks/queries";
