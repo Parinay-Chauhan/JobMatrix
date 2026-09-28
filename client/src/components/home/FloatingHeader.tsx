@@ -1,10 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
+import { LayoutDashboard, LogIn, Sparkles } from "lucide-react";
 import { useJobContext } from "../../context/JobContext";
+import { useAuth } from "../../context/AuthContext";
 
 export const FloatingHeader: React.FC = () => {
   const { isScrolled } = useJobContext();
+  const { user } = useAuth();
   const headerWrapperRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
@@ -44,6 +47,9 @@ export const FloatingHeader: React.FC = () => {
 
     return () => ctx.revert();
   }, []);
+
+  const dashboardRoute =
+    user?.role === "recruiter" ? "/recruiter/dashboard" : "/candidate/dashboard";
 
   return (
     <div
@@ -92,36 +98,41 @@ export const FloatingHeader: React.FC = () => {
           </a>
         </nav>
 
-        {/* Action Button: Get Started */}
-        <div ref={navActionsRef} className="flex items-center shrink-0">
-          <Link
-            ref={getStartedButtonRef}
-            to="/register"
-            className="inline-flex items-center justify-center font-bold text-sm text-white px-5 py-2.5 rounded-full whitespace-nowrap active:scale-95 shadow-md shadow-emerald-500/25 hover:shadow-lg hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-200"
-            style={{
-              background: "linear-gradient(135deg, #10b981 0%, #0d9488 100%)",
-              color: "#ffffff",
-              display: "inline-flex",
-            }}
-            onMouseEnter={() => {
-              gsap.to(getStartedButtonRef.current, {
-                scale: 1.05,
-                boxShadow: "0 0 35px rgba(16, 185, 129, 0.6)",
-                duration: 0.3,
-                ease: "power2.out",
-              });
-            }}
-            onMouseLeave={() => {
-              gsap.to(getStartedButtonRef.current, {
-                scale: 1,
-                boxShadow: "0 4px 6px -1px rgba(16, 185, 129, 0.2)",
-                duration: 0.2,
-                ease: "power2.out",
-              });
-            }}
-          >
-            Get Started
-          </Link>
+        {/* Action Buttons: Logged In vs Logged Out */}
+        <div ref={navActionsRef} className="flex items-center gap-3 shrink-0">
+          {user ? (
+            <Link
+              ref={getStartedButtonRef}
+              to={dashboardRoute}
+              className="inline-flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-105 active:scale-95 transition-all duration-200"
+            >
+              <LayoutDashboard className="w-4 h-4 text-slate-950" />
+              <span>Go to Dashboard</span>
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white px-3 py-2 transition-colors"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Sign In</span>
+              </Link>
+              <Link
+                ref={getStartedButtonRef}
+                to="/register"
+                className="inline-flex items-center gap-1.5 font-bold text-xs sm:text-sm text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-full whitespace-nowrap active:scale-95 shadow-md shadow-emerald-500/25 hover:shadow-lg hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-200"
+                style={{
+                  background: "linear-gradient(135deg, #10b981 0%, #0d9488 100%)",
+                  color: "#ffffff",
+                  display: "inline-flex",
+                }}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
+                <span>Get Started</span>
+              </Link>
+            </>
+          )}
         </div>
       </header>
     </div>

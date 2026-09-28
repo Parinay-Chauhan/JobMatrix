@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { authService } from "../services";
+import { useAuth } from "../context/AuthContext";
 import type { UserRole } from "../types";
 
 export const Register: React.FC = () => {
@@ -22,7 +23,18 @@ export const Register: React.FC = () => {
   const perksRef = useRef<HTMLDivElement>(null);
   const formCardRef = useRef<HTMLDivElement>(null);
 
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      if (user.role === "recruiter") {
+        navigate("/recruiter/dashboard", { replace: true });
+      } else {
+        navigate("/candidate/dashboard", { replace: true });
+      }
+    }
+  }, [user, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
