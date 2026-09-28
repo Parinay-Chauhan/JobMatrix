@@ -83,11 +83,17 @@ const ProfileBasicForm: React.FC<ProfileBasicFormProps> = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 space-y-6 mb-8"
+      className="bg-slate-900/80 rounded-2xl border border-slate-800/90 shadow-xl p-6 sm:p-8 space-y-6 mb-8 backdrop-blur-md"
     >
-      <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
-        Personal Information
-      </h2>
+      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 className="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>👤</span>
+          <span>Personal Information</span>
+        </h2>
+        <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+          Basic Details
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input
@@ -155,22 +161,22 @@ const ProfileBasicForm: React.FC<ProfileBasicFormProps> = ({
       </div>
 
       {/* Resume Section */}
-      <div className="border-t border-gray-100 pt-6">
-        <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+      <div className="border-t border-slate-800 pt-6">
+        <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
           Resume / CV Document (PDF)
         </label>
         {profile.resume && (
-          <div className="mb-3 flex items-center justify-between p-3.5 bg-indigo-50/70 rounded-xl border border-indigo-100 text-sm">
-            <span className="text-indigo-950 font-medium truncate max-w-md flex items-center gap-2">
+          <div className="mb-3 flex items-center justify-between p-3.5 bg-slate-950/80 rounded-xl border border-emerald-500/30 text-sm">
+            <span className="text-emerald-300 font-semibold truncate max-w-md flex items-center gap-2">
               📄 {profile.resume.split("/").pop()}
             </span>
             <a
               href={profile.resume}
               target="_blank"
               rel="noreferrer"
-              className="text-xs bg-white border border-indigo-200 text-indigo-600 font-bold px-3 py-1.5 rounded-lg hover:bg-indigo-50 shadow-2xs"
+              className="text-xs bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-500/30 transition-colors shadow-xs"
             >
-              View Resume
+              View Resume ↗
             </a>
           </div>
         )}
@@ -180,12 +186,17 @@ const ProfileBasicForm: React.FC<ProfileBasicFormProps> = ({
           onChange={(e) =>
             setResumeFile(e.target.files ? e.target.files[0] : null)
           }
-          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+          className="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-500/10 file:text-emerald-400 hover:file:bg-emerald-500/20 cursor-pointer"
         />
       </div>
 
       <div className="flex justify-end pt-2">
-        <Button type="submit" variant="primary" isLoading={isSaving}>
+        <Button
+          type="submit"
+          variant="primary"
+          isLoading={isSaving}
+          className="bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black shadow-lg shadow-emerald-500/20 hover:from-emerald-400 hover:to-teal-300"
+        >
           Save Profile Details
         </Button>
       </div>
@@ -355,7 +366,7 @@ export const CandidateProfile: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <Skeleton className="h-10 w-1/3" />
-        <div className="bg-white rounded-2xl border border-gray-200/80 p-6 space-y-4">
+        <div className="bg-slate-900/80 rounded-2xl border border-slate-800/80 p-6 space-y-4">
           <Skeleton className="h-6 w-1/4" />
           <div className="grid grid-cols-2 gap-4">
             <Skeleton className="h-10 w-full" />
@@ -370,18 +381,22 @@ export const CandidateProfile: React.FC = () => {
     updateProfileMutation.isPending || uploadResumeMutation.isPending;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 p-6 sm:p-8 shadow-2xl">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-extrabold uppercase tracking-widest mb-3">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>Profile & Portfolio</span>
+        </div>
+        <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
           Candidate Profile
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Complete your profile to stand out to verified tech recruiters.
+        <p className="text-sm sm:text-base text-slate-400 mt-1 max-w-2xl">
+          Keep your skills, experience, and resume updated to attract top recruiters and automated shortlists.
         </p>
       </div>
 
-      {/* Main Info Form (keyed by profile ID for proper React state initialization) */}
+      {/* Main Info Form */}
       <ProfileBasicForm
         key={effectiveProfile._id || "profile-form"}
         profile={effectiveProfile}
@@ -390,29 +405,35 @@ export const CandidateProfile: React.FC = () => {
       />
 
       {/* Experience Section */}
-      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 space-y-6 mb-8">
-        <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
-          Work Experience
-        </h2>
+      <div className="bg-slate-900/80 rounded-2xl border border-slate-800/90 shadow-xl p-6 sm:p-8 space-y-6 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h2 className="text-lg font-extrabold text-white flex items-center gap-2">
+            <span>💼</span>
+            <span>Work Experience</span>
+          </h2>
+          <span className="text-xs font-bold text-teal-400 bg-teal-500/10 border border-teal-500/20 px-2.5 py-0.5 rounded-full">
+            {effectiveProfile.experience?.length || 0} entries
+          </span>
+        </div>
 
         {effectiveProfile.experience && effectiveProfile.experience.length > 0 ? (
           <div className="space-y-3">
             {effectiveProfile.experience.map((exp) => (
               <div
                 key={exp._id}
-                className="p-4 rounded-xl border border-gray-200/70 bg-gray-50/50 flex justify-between items-start"
+                className="p-4 rounded-xl border border-slate-800 bg-slate-950/70 flex justify-between items-start hover:border-slate-700 transition-colors"
               >
                 <div>
-                  <h3 className="font-bold text-gray-900 text-sm">
+                  <h3 className="font-bold text-white text-sm">
                     {exp.title} &bull;{" "}
-                    <span className="text-indigo-600">{exp.company}</span>
+                    <span className="text-emerald-400">{exp.company}</span>
                   </h3>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-xs text-slate-400 mt-0.5">
                     {exp.startDate?.split("T")[0]} &mdash;{" "}
                     {exp.endDate?.split("T")[0] || "Present"}
                   </p>
                   {exp.description && (
-                    <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+                    <p className="text-xs text-slate-300/80 mt-2 leading-relaxed">
                       {exp.description}
                     </p>
                   )}
@@ -420,7 +441,7 @@ export const CandidateProfile: React.FC = () => {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                  className="text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 cursor-pointer"
                   disabled={deleteExperienceMutation.isPending}
                   onClick={() => exp._id && setDeleteExpId(exp._id)}
                 >
@@ -430,7 +451,7 @@ export const CandidateProfile: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-gray-500 italic">
+          <p className="text-xs text-slate-400 italic">
             No work experience added yet.
           </p>
         )}
@@ -438,9 +459,9 @@ export const CandidateProfile: React.FC = () => {
         {/* Add Experience Form */}
         <form
           onSubmit={handleAddExperience}
-          className="border-t border-gray-100 pt-5 space-y-3"
+          className="border-t border-slate-800 pt-5 space-y-3"
         >
-          <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
             + Add Work Experience
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -490,6 +511,7 @@ export const CandidateProfile: React.FC = () => {
               size="sm"
               variant="secondary"
               isLoading={addExperienceMutation.isPending}
+              className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 font-bold"
             >
               Add Experience
             </Button>
@@ -498,24 +520,30 @@ export const CandidateProfile: React.FC = () => {
       </div>
 
       {/* Education Section */}
-      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 space-y-6">
-        <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
-          Education
-        </h2>
+      <div className="bg-slate-900/80 rounded-2xl border border-slate-800/90 shadow-xl p-6 sm:p-8 space-y-6 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h2 className="text-lg font-extrabold text-white flex items-center gap-2">
+            <span>🎓</span>
+            <span>Education</span>
+          </h2>
+          <span className="text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-full">
+            {effectiveProfile.education?.length || 0} entries
+          </span>
+        </div>
 
         {effectiveProfile.education && effectiveProfile.education.length > 0 ? (
           <div className="space-y-3">
             {effectiveProfile.education.map((edu) => (
               <div
                 key={edu._id}
-                className="p-4 rounded-xl border border-gray-200/70 bg-gray-50/50 flex justify-between items-start"
+                className="p-4 rounded-xl border border-slate-800 bg-slate-950/70 flex justify-between items-start hover:border-slate-700 transition-colors"
               >
                 <div>
-                  <h3 className="font-bold text-gray-900 text-sm">
+                  <h3 className="font-bold text-white text-sm">
                     {edu.degree} &bull;{" "}
-                    <span className="text-indigo-600">{edu.institution}</span>
+                    <span className="text-emerald-400">{edu.institution}</span>
                   </h3>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-xs text-slate-400 mt-0.5">
                     {edu.fieldOfStudy ? `${edu.fieldOfStudy} • ` : ""}
                     {edu.startYear || ""} &mdash; {edu.endYear || "Present"}
                   </p>
@@ -523,7 +551,7 @@ export const CandidateProfile: React.FC = () => {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                  className="text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 cursor-pointer"
                   disabled={deleteEducationMutation.isPending}
                   onClick={() => edu._id && setDeleteEduId(edu._id)}
                 >
@@ -533,7 +561,7 @@ export const CandidateProfile: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-gray-500 italic">
+          <p className="text-xs text-slate-400 italic">
             No education details added yet.
           </p>
         )}
@@ -541,9 +569,9 @@ export const CandidateProfile: React.FC = () => {
         {/* Add Education Form */}
         <form
           onSubmit={handleAddEducation}
-          className="border-t border-gray-100 pt-5 space-y-3"
+          className="border-t border-slate-800 pt-5 space-y-3"
         >
-          <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
             + Add Education
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -593,6 +621,7 @@ export const CandidateProfile: React.FC = () => {
               size="sm"
               variant="secondary"
               isLoading={addEducationMutation.isPending}
+              className="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 font-bold"
             >
               Add Education
             </Button>
@@ -601,10 +630,10 @@ export const CandidateProfile: React.FC = () => {
       </div>
 
       {/* Account Session & Sign Out Section */}
-      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8 mb-8">
+      <div className="bg-slate-900/80 rounded-2xl border border-slate-800/90 shadow-xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 backdrop-blur-md">
         <div>
-          <h2 className="text-base font-bold text-gray-900">Account Session</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-base font-extrabold text-white">Account Session</h2>
+          <p className="text-sm text-slate-400 mt-0.5">
             Sign out of your candidate account ({user?.email}) on this device.
           </p>
         </div>
@@ -612,7 +641,7 @@ export const CandidateProfile: React.FC = () => {
           type="button"
           variant="danger"
           onClick={handleLogout}
-          className="sm:w-auto w-full flex items-center justify-center gap-2 font-bold cursor-pointer"
+          className="sm:w-auto w-full flex items-center justify-center gap-2 font-bold cursor-pointer bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -649,3 +678,4 @@ export const CandidateProfile: React.FC = () => {
 };
 
 export default CandidateProfile;
+

@@ -21,45 +21,45 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   switch (normalized) {
     case "accepted":
     case "shortlisted":
-      styles = "bg-emerald-50 text-emerald-700 border-emerald-200";
-      dotColor = "bg-emerald-500";
+      styles = "bg-emerald-500/10 text-emerald-300 border-emerald-500/30";
+      dotColor = "bg-emerald-400 shadow-xs shadow-emerald-400";
       label = normalized === "shortlisted" ? "Shortlisted" : "Accepted";
       break;
     case "reviewed":
-      styles = "bg-blue-50 text-blue-700 border-blue-200";
-      dotColor = "bg-blue-500";
+      styles = "bg-cyan-500/10 text-cyan-300 border-cyan-500/30";
+      dotColor = "bg-cyan-400 shadow-xs shadow-cyan-400";
       label = "Reviewed";
       break;
     case "rejected":
-      styles = "bg-rose-50 text-rose-700 border-rose-200";
-      dotColor = "bg-rose-500";
+      styles = "bg-rose-500/10 text-rose-300 border-rose-500/30";
+      dotColor = "bg-rose-400 shadow-xs shadow-rose-400";
       label = "Rejected";
       break;
     case "active":
-      styles = "bg-emerald-50 text-emerald-700 border-emerald-200";
-      dotColor = "bg-emerald-500";
+      styles = "bg-emerald-500/10 text-emerald-300 border-emerald-500/30";
+      dotColor = "bg-emerald-400 shadow-xs shadow-emerald-400";
       label = "Active";
       break;
     case "closed":
-      styles = "bg-gray-100 text-gray-700 border-gray-300";
-      dotColor = "bg-gray-400";
+      styles = "bg-slate-800 text-slate-400 border-slate-700";
+      dotColor = "bg-slate-500";
       label = "Closed";
       break;
     default:
-      styles = "bg-amber-50 text-amber-700 border-amber-200";
-      dotColor = "bg-amber-500";
+      styles = "bg-amber-500/10 text-amber-300 border-amber-500/30";
+      dotColor = "bg-amber-400 shadow-xs shadow-amber-400";
       label = "Pending";
       break;
   }
 
   const sizeStyles = {
     sm: "px-2 py-0.5 text-[11px]",
-    md: "px-2.5 py-1 text-xs",
+    md: "px-3 py-1 text-xs font-bold",
   };
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border font-semibold capitalize shadow-xs ${sizeStyles[size]} ${styles} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border capitalize shadow-xs ${sizeStyles[size]} ${styles} ${className}`}
     >
       <span className={`h-1.5 w-1.5 rounded-full ${dotColor}`} />
       {label}
@@ -68,3 +68,4 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 };
 
 export default StatusBadge;
+

@@ -28,10 +28,10 @@ export const Pagination: React.FC<PaginationProps> = ({
       className={`flex flex-col sm:flex-row items-center justify-between gap-4 py-4 ${className}`}
     >
       {totalItems !== undefined && (
-        <p className="text-xs text-gray-500 font-medium">
-          Showing <span className="font-bold text-gray-800">{startItem}</span> to{" "}
-          <span className="font-bold text-gray-800">{endItem}</span> of{" "}
-          <span className="font-bold text-gray-800">{totalItems}</span> results
+        <p className="text-xs text-slate-400 font-medium">
+          Showing <span className="font-bold text-emerald-400">{startItem}</span> to{" "}
+          <span className="font-bold text-emerald-400">{endItem}</span> of{" "}
+          <span className="font-bold text-white">{totalItems}</span> results
         </p>
       )}
 
@@ -41,12 +41,13 @@ export const Pagination: React.FC<PaginationProps> = ({
           size="sm"
           disabled={currentPage <= 1}
           onClick={() => onPageChange(currentPage - 1)}
+          className="border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white disabled:bg-slate-950 disabled:text-slate-600 disabled:border-slate-900"
         >
           &larr; Previous
         </Button>
 
-        <div className="flex items-center gap-1 px-2 text-xs font-semibold text-gray-700">
-          Page {currentPage} of {totalPages}
+        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-bold text-slate-200">
+          Page <span className="text-emerald-400">{currentPage}</span> of {totalPages}
         </div>
 
         <Button
@@ -54,6 +55,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           size="sm"
           disabled={currentPage >= totalPages}
           onClick={() => onPageChange(currentPage + 1)}
+          className="border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white disabled:bg-slate-950 disabled:text-slate-600 disabled:border-slate-900"
         >
           Next &rarr;
         </Button>
@@ -63,3 +65,4 @@ export const Pagination: React.FC<PaginationProps> = ({
 };
 
 export default Pagination;
+

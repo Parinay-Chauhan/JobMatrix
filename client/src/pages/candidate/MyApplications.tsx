@@ -20,35 +20,92 @@ export const MyApplications: React.FC = () => {
     return applications.slice(start, start + PAGE_SIZE);
   }, [applications, currentPage]);
 
+  const stats = useMemo(() => {
+    let pending = 0;
+    let shortlisted = 0;
+    let rejected = 0;
+
+    applications.forEach((app) => {
+      const s = app.status?.toLowerCase();
+      if (s === "accepted" || s === "shortlisted") shortlisted++;
+      else if (s === "rejected") rejected++;
+      else pending++;
+    });
+
+    return { total: applications.length, pending, shortlisted, rejected };
+  }, [applications]);
+
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-          My Applications
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Track real-time updates and decisions on your submitted job applications ({applications.length} total).
-        </p>
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-300">
+      {/* Header & Stats Strip */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 p-6 sm:p-8 shadow-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-extrabold uppercase tracking-widest mb-3">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Application Tracker</span>
+            </div>
+            <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+              My Job Applications
+            </h1>
+            <p className="text-sm sm:text-base text-slate-400 mt-1 max-w-2xl">
+              Track live recruiter decisions and interview updates across your submitted applications.
+            </p>
+          </div>
+
+          <Link to="/candidate/find-jobs">
+            <Button
+              variant="primary"
+              size="sm"
+              className="bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black shadow-lg shadow-emerald-500/20"
+            >
+              + Browse More Jobs
+            </Button>
+          </Link>
+        </div>
+
+        {/* 4 Application Status Counters */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 mt-8 pt-6 border-t border-slate-800/80">
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4">
+            <span className="text-[11px] text-slate-400 font-medium block">Total Submitted</span>
+            <span className="text-xl font-black text-white">{stats.total}</span>
+          </div>
+
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4">
+            <span className="text-[11px] text-slate-400 font-medium block">Under Review</span>
+            <span className="text-xl font-black text-amber-400">{stats.pending}</span>
+          </div>
+
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4">
+            <span className="text-[11px] text-slate-400 font-medium block">Shortlisted / Won</span>
+            <span className="text-xl font-black text-emerald-400">{stats.shortlisted}</span>
+          </div>
+
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4">
+            <span className="text-[11px] text-slate-400 font-medium block">Archived / Rejected</span>
+            <span className="text-xl font-black text-slate-400">{stats.rejected}</span>
+          </div>
+        </div>
       </div>
 
       {errorMessage && (
-        <div className="mb-6 p-4 rounded-xl text-sm font-medium border bg-red-50 border-red-200 text-red-700">
-          {errorMessage}
+        <div className="p-4 rounded-2xl text-sm font-bold border bg-rose-500/10 border-rose-500/30 text-rose-300 flex items-center gap-2">
+          <span>⚠️</span>
+          <span>{errorMessage}</span>
         </div>
       )}
 
       {loading ? (
         <div className="space-y-4">
-          <div className="p-6 bg-white rounded-2xl border border-gray-200/80 space-y-3">
+          <div className="p-6 bg-slate-900/80 rounded-2xl border border-slate-800/80 space-y-3">
             <Skeleton className="h-6 w-1/3" />
             <Skeleton className="h-4 w-1/2" />
           </div>
-          <div className="p-6 bg-white rounded-2xl border border-gray-200/80 space-y-3">
+          <div className="p-6 bg-slate-900/80 rounded-2xl border border-slate-800/80 space-y-3">
             <Skeleton className="h-6 w-1/4" />
             <Skeleton className="h-4 w-2/3" />
           </div>
-          <div className="p-6 bg-white rounded-2xl border border-gray-200/80 space-y-3">
+          <div className="p-6 bg-slate-900/80 rounded-2xl border border-slate-800/80 space-y-3">
             <Skeleton className="h-6 w-1/3" />
             <Skeleton className="h-4 w-1/2" />
           </div>
@@ -56,10 +113,15 @@ export const MyApplications: React.FC = () => {
       ) : applications.length === 0 ? (
         <EmptyState
           title="No applications yet"
-          description="You haven't applied to any job postings yet. Explore open roles and jumpstart your career."
+          description="You haven't applied to any job openings yet. Discover handpicked opportunities and send your first application."
           action={
-            <Link to="/candidate/dashboard">
-              <Button variant="primary">Explore Open Jobs</Button>
+            <Link to="/candidate/find-jobs">
+              <Button
+                variant="primary"
+                className="bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black shadow-lg shadow-emerald-500/20"
+              >
+                Explore Open Roles
+              </Button>
             </Link>
           }
         />
@@ -73,28 +135,28 @@ export const MyApplications: React.FC = () => {
             const companyName =
               (typeof job?.recruiter === "object" ? job?.recruiter?.companyName : undefined) ||
               job?.companyName ||
-              "Company";
+              "Hiring Company";
 
             return (
               <div
                 key={app._id}
-                className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-xs hover:border-indigo-200 hover:shadow-md transition-all duration-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+                className="bg-slate-900/80 hover:bg-slate-900 border border-slate-800/90 hover:border-emerald-500/40 rounded-2xl p-5 sm:p-6 shadow-xl transition-all duration-300 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group"
               >
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">
+                  <h3 className="text-lg font-extrabold text-white group-hover:text-emerald-300 transition-colors">
                     {title}
                   </h3>
-                  <p className="text-xs font-semibold text-indigo-600 mt-0.5">
+                  <p className="text-xs font-semibold text-emerald-400 mt-1">
                     {companyName}
                   </p>
-                  <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-500 mt-3">
-                    <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5">
+                  <div className="flex flex-wrap items-center gap-2.5 text-xs text-slate-400 mt-3">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-950/70 border border-slate-800 px-2.5 py-1 text-slate-300">
                       📍 {location}
                     </span>
-                    <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-950/70 border border-slate-800 px-2.5 py-1 text-slate-300">
                       💼 {jobType}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-gray-400">
+                    <span className="inline-flex items-center gap-1.5 text-slate-400">
                       📅 Applied {new Date(app.createdAt).toLocaleDateString()}
                     </span>
                   </div>
@@ -123,3 +185,4 @@ export const MyApplications: React.FC = () => {
 };
 
 export default MyApplications;
+

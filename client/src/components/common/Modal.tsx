@@ -42,7 +42,7 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
       <div
         className="fixed inset-0"
         onClick={onClose}
@@ -50,14 +50,14 @@ export const Modal: React.FC<ModalProps> = ({
       />
 
       <div
-        className={`relative w-full rounded-2xl bg-white shadow-2xl border border-gray-100 overflow-hidden z-10 transition-all transform animate-in zoom-in-95 duration-200 ${sizeStyles[size]}`}
+        className={`relative w-full rounded-2xl bg-slate-900 text-slate-100 shadow-2xl border border-slate-800 overflow-hidden z-10 transition-all transform animate-in zoom-in-95 duration-200 ring-1 ring-white/10 ${sizeStyles[size]}`}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-          <h3 className="text-lg font-bold text-gray-900">{title}</h3>
+        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4 bg-slate-950/70">
+          <h3 className="text-lg font-bold text-white">{title}</h3>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer"
           >
             <svg
               className="h-5 w-5"
@@ -76,13 +76,13 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div className="px-6 py-5 max-h-[calc(100vh-200px)] overflow-y-auto">
+        <div className="px-6 py-5 max-h-[calc(100vh-200px)] overflow-y-auto text-slate-300">
           {children}
         </div>
 
         {/* Modal Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 border-t border-gray-100 bg-gray-50/70 px-6 py-3.5">
+          <div className="flex items-center justify-end gap-3 border-t border-slate-800 bg-slate-950/70 px-6 py-3.5">
             {footer}
           </div>
         )}
@@ -92,3 +92,4 @@ export const Modal: React.FC<ModalProps> = ({
 };
 
 export default Modal;
+

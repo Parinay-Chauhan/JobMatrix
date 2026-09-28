@@ -89,17 +89,17 @@ export const CandidateLayout: React.FC = () => {
   };
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `px-3.5 py-1.5 rounded-full text-sm font-semibold transition-all inline-block ${
+    `px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all inline-block ${
       isActive
-        ? "bg-indigo-600 text-white shadow-xs"
-        : "text-gray-600 hover:text-indigo-600 hover:bg-gray-100/60"
+        ? "bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-extrabold shadow-md shadow-emerald-500/25"
+        : "text-slate-300 hover:text-emerald-300 hover:bg-slate-800/80"
     }`;
 
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${
+    `block px-4 py-2.5 rounded-xl text-base font-bold transition-all ${
       isActive
-        ? "bg-indigo-50 text-indigo-700"
-        : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+        : "text-slate-300 hover:bg-slate-800/80 hover:text-emerald-300"
     }`;
 
   const userInitials = user?.fullName
@@ -112,18 +112,22 @@ export const CandidateLayout: React.FC = () => {
     : "C";
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col relative selection:bg-emerald-500/30 selection:text-emerald-200">
+      {/* Ambient background glow & grid */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0" />
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none z-0" />
+
       {/* Navbar Header - Dynamic Floating Glassmorphic Pill */}
       <div
         ref={headerWrapperRef}
-        className="sticky top-0 z-50 pointer-events-none flex justify-center w-full px-3 sm:px-6"
+        className="sticky top-0 z-50 pointer-events-none flex justify-center w-full px-3 sm:px-6 pt-3"
       >
         <header
           ref={headerRef}
           className={`pointer-events-auto flex flex-col justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isScrolled
-              ? "mt-3 w-[92%] max-w-4xl rounded-full bg-white/85 backdrop-blur-xl border border-gray-200/80 shadow-lg shadow-indigo-950/5 ring-1 ring-black/5 px-4 sm:px-6 py-2"
-              : "mt-0 w-full max-w-7xl rounded-none bg-white border-b border-gray-200/80 shadow-2xs px-4 sm:px-8 py-3.5"
+              ? "w-[94%] max-w-4xl rounded-full bg-slate-950/90 backdrop-blur-xl border border-emerald-500/30 shadow-2xl shadow-black/80 px-4 sm:px-6 py-2.5 ring-1 ring-white/10"
+              : "w-full max-w-7xl rounded-2xl bg-slate-950/80 backdrop-blur-md border border-slate-800/80 shadow-xl px-4 sm:px-8 py-3.5"
           }`}
         >
           <div className="flex items-center justify-between w-full">
@@ -131,25 +135,28 @@ export const CandidateLayout: React.FC = () => {
             <div ref={logoRef} className="flex items-center space-x-2 shrink-0">
               <Link
                 to="/candidate/dashboard"
-                className="flex items-center space-x-2 group"
+                className="flex items-center space-x-2.5 group"
               >
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-sm shadow-indigo-200 group-hover:scale-105 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-transform">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
                   </svg>
                 </div>
                 <span
-                  className={`font-black tracking-tight text-gray-900 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  className={`font-black tracking-tight text-white transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                     isScrolled ? "text-lg" : "text-xl sm:text-2xl"
                   }`}
                 >
-                  Job<span className="text-indigo-600">Matrix</span>
+                  Job<span className="text-emerald-400">Matrix</span>
+                </span>
+                <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Candidate
                 </span>
               </Link>
             </div>
 
             {/* Right Side Nav Links & User Controls */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               {/* Desktop Nav Links */}
               <nav
                 ref={navLinksRef}
@@ -163,7 +170,7 @@ export const CandidateLayout: React.FC = () => {
                   onMouseEnter={(e) => handleNavHover(e, true)}
                   onMouseLeave={(e) => handleNavHover(e, false)}
                 >
-                  Find Jobs
+                  Explore Jobs
                 </NavLink>
                 <NavLink
                   to="/candidate/applications"
@@ -173,12 +180,20 @@ export const CandidateLayout: React.FC = () => {
                 >
                   My Applications
                 </NavLink>
+                <NavLink
+                  to="/candidate/profile"
+                  className={navLinkClass}
+                  onMouseEnter={(e) => handleNavHover(e, true)}
+                  onMouseLeave={(e) => handleNavHover(e, false)}
+                >
+                  My Profile
+                </NavLink>
               </nav>
 
               {/* Notification Bell & User Avatar */}
               <div
                 ref={userSectionRef}
-                className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-gray-200"
+                className="flex items-center space-x-2 sm:space-x-3 border-l pl-2 sm:pl-3 border-slate-800"
               >
                 {/* Real-time Notification Bell */}
                 <NotificationBell />
@@ -188,10 +203,10 @@ export const CandidateLayout: React.FC = () => {
                   to="/candidate/profile"
                   onMouseEnter={(e) => handleNavHover(e, true)}
                   onMouseLeave={(e) => handleNavHover(e, false)}
-                  className="p-0.5 rounded-full hover:ring-2 hover:ring-indigo-500/40 hover:ring-offset-2 transition-all group cursor-pointer inline-block"
+                  className="p-0.5 rounded-full hover:ring-2 hover:ring-emerald-400/80 transition-all group cursor-pointer inline-block"
                   title={`Profile: ${user?.fullName || "Candidate"}`}
                 >
-                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:opacity-90 transition-opacity">
+                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-extrabold text-xs shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
                     {userInitials}
                   </div>
                 </Link>
@@ -201,7 +216,7 @@ export const CandidateLayout: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-1.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors"
+                className="md:hidden p-2 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors"
                 aria-label="Toggle menu"
               >
                 <svg
@@ -232,13 +247,13 @@ export const CandidateLayout: React.FC = () => {
 
           {/* Collapsible Mobile Menu Drawer */}
           {mobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-200/80 mt-2 pt-3 pb-2 space-y-1.5 animate-in slide-in-from-top-2 duration-200">
+            <div className="md:hidden border-t border-slate-800/80 mt-3 pt-3 pb-2 space-y-2 animate-in slide-in-from-top-2 duration-200">
               <NavLink
                 to="/candidate/find-jobs"
                 className={mobileNavLinkClass}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Find Jobs
+                Explore Jobs
               </NavLink>
               <NavLink
                 to="/candidate/applications"
@@ -252,7 +267,7 @@ export const CandidateLayout: React.FC = () => {
                 className={mobileNavLinkClass}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Profile
+                Profile & Resume
               </NavLink>
               <button
                 type="button"
@@ -260,7 +275,7 @@ export const CandidateLayout: React.FC = () => {
                   setMobileMenuOpen(false);
                   handleLogout();
                 }}
-                className="w-full text-left px-4 py-2 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 cursor-pointer"
+                className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-rose-400 hover:bg-rose-500/10 transition-all flex items-center gap-2 cursor-pointer"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -273,11 +288,17 @@ export const CandidateLayout: React.FC = () => {
       </div>
 
       {/* Dynamic Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         <Outlet />
       </main>
+
+      {/* Footer subtle branding */}
+      <footer className="border-t border-slate-800/60 bg-slate-950/80 py-6 text-center text-xs text-slate-500 relative z-10">
+        <p>© 2026 JobMatrix. Next-Gen Tech Talent & Career Platform.</p>
+      </footer>
     </div>
   );
 };
 
 export default CandidateLayout;
+
