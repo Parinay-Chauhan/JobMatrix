@@ -3,10 +3,12 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext";
+import { useCandidateProfileQuery } from "../hooks/queries";
 import { NotificationBell } from "../components/NotificationBell";
 
 export const CandidateLayout: React.FC = () => {
   const { user, logout } = useAuth();
+  const { data: profile } = useCandidateProfileQuery();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
@@ -17,9 +19,14 @@ export const CandidateLayout: React.FC = () => {
   const navLinksRef = useRef<HTMLElement>(null);
   const userSectionRef = useRef<HTMLDivElement>(null);
 
+  // Avatar URL from profile query or auth user
+  const avatarUrl =
+    (typeof profile?.user === "object" && profile?.user?.avatar) ||
+    user?.avatar;
+
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 25) {
+      if (window.scrollY > 20) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -34,53 +41,45 @@ export const CandidateLayout: React.FC = () => {
     const ctx = gsap.context(() => {
       // Header entrance animation
       gsap.from(headerRef.current, {
-        y: -35,
+        y: -25,
         opacity: 0,
-        duration: 0.8,
+        duration: 0.6,
         ease: "power3.out",
       });
 
-      // Logo bounce entrance
+      // Logo entrance
       gsap.from(logoRef.current, {
-        scale: 0.85,
+        x: -15,
         opacity: 0,
-        duration: 0.7,
-        delay: 0.15,
-        ease: "back.out(1.7)",
+        duration: 0.5,
+        delay: 0.1,
+        ease: "power2.out",
       });
 
       // Nav Links stagger
       if (navLinksRef.current?.children) {
         gsap.from(navLinksRef.current.children, {
-          y: -12,
+          y: -8,
           opacity: 0,
-          duration: 0.5,
-          stagger: 0.1,
-          delay: 0.25,
+          duration: 0.4,
+          stagger: 0.08,
+          delay: 0.2,
           ease: "power2.out",
         });
       }
 
       // User Section pop-in
       gsap.from(userSectionRef.current, {
-        scale: 0.8,
+        x: 15,
         opacity: 0,
-        duration: 0.6,
-        delay: 0.35,
-        ease: "back.out(1.5)",
+        duration: 0.5,
+        delay: 0.2,
+        ease: "power2.out",
       });
     });
 
     return () => ctx.revert();
   }, []);
-
-  const handleNavHover = (e: React.MouseEvent<HTMLElement>, enter: boolean) => {
-    gsap.to(e.currentTarget, {
-      scale: enter ? 1.05 : 1,
-      duration: 0.2,
-      ease: "power2.out",
-    });
-  };
 
   const handleLogout = async () => {
     await logout();
@@ -89,16 +88,16 @@ export const CandidateLayout: React.FC = () => {
   };
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all inline-block ${
+    `px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 inline-block ${
       isActive
-        ? "bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-extrabold shadow-md shadow-emerald-500/25"
-        : "text-slate-300 hover:text-emerald-300 hover:bg-slate-800/80"
+        ? "bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-extrabold shadow-md shadow-emerald-500/20"
+        : "text-slate-300 hover:text-emerald-300 hover:bg-slate-800/60"
     }`;
 
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `block px-4 py-2.5 rounded-xl text-base font-bold transition-all ${
+    `block px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
       isActive
-        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-extrabold"
         : "text-slate-300 hover:bg-slate-800/80 hover:text-emerald-300"
     }`;
 
@@ -117,40 +116,31 @@ export const CandidateLayout: React.FC = () => {
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0" />
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none z-0" />
 
-      {/* Navbar Header - Dynamic Floating Glassmorphic Pill */}
+      {/* Navbar Header - Smooth Floating Glassmorphic Pill */}
       <div
         ref={headerWrapperRef}
-        className="sticky top-0 z-50 pointer-events-none flex justify-center w-full px-3 sm:px-6 pt-3 sm:pt-4"
+        className="sticky top-0 z-50 pointer-events-none flex justify-center w-full px-4 sm:px-6 pt-3 sm:pt-4"
       >
         <header
           ref={headerRef}
-          className={`pointer-events-auto flex flex-col justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            mobileMenuOpen ? "rounded-2xl bg-slate-950/95 border border-slate-800 shadow-2xl px-5 py-3" : "rounded-full"
-          } ${
-            isScrolled
-              ? "w-[88%] max-w-4xl bg-slate-950/90 backdrop-blur-xl backdrop-saturate-150 border border-emerald-500/30 shadow-2xl shadow-black/80 px-4 sm:px-6 py-2 sm:py-2.5 ring-1 ring-emerald-500/10"
-              : !mobileMenuOpen
-              ? "w-[92%] max-w-5xl bg-transparent border border-transparent shadow-none ring-0 px-5 sm:px-7 py-2.5 sm:py-3"
-              : "w-[92%] max-w-5xl"
+          className={`pointer-events-auto flex flex-col justify-center w-full max-w-5xl transition-all duration-300 ease-out ${
+            mobileMenuOpen
+              ? "rounded-3xl bg-slate-950/95 border border-slate-800 shadow-2xl p-4 sm:px-6 sm:py-3"
+              : `rounded-full border shadow-xl ${
+                  isScrolled
+                    ? "bg-slate-950/95 backdrop-blur-xl border-slate-800/90 shadow-black/70 px-4 sm:px-6 py-2"
+                    : "bg-slate-950/80 backdrop-blur-md border-slate-800/60 shadow-black/30 px-5 sm:px-6 py-2.5"
+                }`
           }`}
         >
           <div className="flex items-center justify-between w-full">
-            {/* Left Brand Logo */}
-            <div ref={logoRef} className="flex items-center space-x-2 shrink-0">
+            {/* Left Brand Logo (Clean text without briefcase icon) */}
+            <div ref={logoRef} className="flex items-center shrink-0">
               <Link
                 to="/candidate/dashboard"
-                className="flex items-center space-x-2.5 group"
+                className="flex items-center gap-2 group cursor-pointer"
               >
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-transform">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
-                  </svg>
-                </div>
-                <span
-                  className={`font-black tracking-tight text-white transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                    isScrolled ? "text-lg" : "text-xl sm:text-2xl"
-                  }`}
-                >
+                <span className="font-black tracking-tight text-white text-xl sm:text-2xl transition-colors select-none">
                   Job<span className="text-emerald-400">Matrix</span>
                 </span>
                 <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -164,32 +154,15 @@ export const CandidateLayout: React.FC = () => {
               {/* Desktop Nav Links */}
               <nav
                 ref={navLinksRef}
-                className={`hidden md:flex items-center transition-all ${
-                  isScrolled ? "space-x-1" : "space-x-2"
-                }`}
+                className="hidden md:flex items-center space-x-1 sm:space-x-1.5"
               >
-                <NavLink
-                  to="/candidate/find-jobs"
-                  className={navLinkClass}
-                  onMouseEnter={(e) => handleNavHover(e, true)}
-                  onMouseLeave={(e) => handleNavHover(e, false)}
-                >
+                <NavLink to="/candidate/find-jobs" className={navLinkClass}>
                   Explore Jobs
                 </NavLink>
-                <NavLink
-                  to="/candidate/applications"
-                  className={navLinkClass}
-                  onMouseEnter={(e) => handleNavHover(e, true)}
-                  onMouseLeave={(e) => handleNavHover(e, false)}
-                >
+                <NavLink to="/candidate/applications" className={navLinkClass}>
                   My Applications
                 </NavLink>
-                <NavLink
-                  to="/candidate/profile"
-                  className={navLinkClass}
-                  onMouseEnter={(e) => handleNavHover(e, true)}
-                  onMouseLeave={(e) => handleNavHover(e, false)}
-                >
+                <NavLink to="/candidate/profile" className={navLinkClass}>
                   My Profile
                 </NavLink>
               </nav>
@@ -202,16 +175,24 @@ export const CandidateLayout: React.FC = () => {
                 {/* Real-time Notification Bell */}
                 <NotificationBell />
 
-                {/* User Profile Avatar Link */}
+                {/* User Profile Avatar Link (Image with Fallback Initials) */}
                 <Link
                   to="/candidate/profile"
-                  onMouseEnter={(e) => handleNavHover(e, true)}
-                  onMouseLeave={(e) => handleNavHover(e, false)}
                   className="p-0.5 rounded-full hover:ring-2 hover:ring-emerald-400/80 transition-all group cursor-pointer inline-block"
                   title={`Profile: ${user?.fullName || "Candidate"}`}
                 >
-                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-extrabold text-xs shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-                    {userInitials}
+                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-slate-900 border border-slate-700/80 text-slate-100 flex items-center justify-center font-extrabold text-xs shadow-md overflow-hidden group-hover:scale-105 transition-transform">
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt={user?.fullName || "Candidate"}
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-extrabold text-xs">
+                        {userInitials}
+                      </div>
+                    )}
                   </div>
                 </Link>
               </div>
@@ -252,6 +233,30 @@ export const CandidateLayout: React.FC = () => {
           {/* Collapsible Mobile Menu Drawer */}
           {mobileMenuOpen && (
             <div className="md:hidden border-t border-slate-800/80 mt-3 pt-3 pb-2 space-y-2 animate-in slide-in-from-top-2 duration-200">
+              <div className="flex items-center gap-3 px-3 py-2 mb-2 bg-slate-900/80 rounded-xl border border-slate-800">
+                <div className="h-10 w-10 rounded-full bg-slate-800 border border-slate-700 overflow-hidden flex items-center justify-center text-xs font-bold shrink-0">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt={user?.fullName || "Candidate"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-extrabold text-xs">
+                      {userInitials}
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-white truncate">
+                    {user?.fullName || "Candidate"}
+                  </p>
+                  <p className="text-[10px] text-slate-400 truncate">
+                    {user?.email}
+                  </p>
+                </div>
+              </div>
+
               <NavLink
                 to="/candidate/find-jobs"
                 className={mobileNavLinkClass}
