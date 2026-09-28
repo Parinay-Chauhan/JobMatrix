@@ -51,14 +51,14 @@ export interface SkeletonProps {
 export const Skeleton: React.FC<SkeletonProps> = ({ className = "h-4 w-full" }) => {
   return (
     <div
-      className={`animate-pulse rounded-lg bg-gray-200/80 ${className}`}
+      className={`animate-pulse rounded-lg bg-slate-800/80 ${className}`}
     />
   );
 };
 
 export const JobCardSkeleton: React.FC = () => {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
+    <div className="rounded-2xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl space-y-4">
       <div className="flex justify-between items-start">
         <Skeleton className="h-5 w-24 rounded-md" />
         <Skeleton className="h-4 w-16" />
@@ -75,3 +75,4 @@ export const JobCardSkeleton: React.FC = () => {
 };
 
 export default LoadingSpinner;
+

@@ -16,10 +16,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={textareaId}
-            className="block text-xs font-semibold text-gray-700 uppercase tracking-wider"
+            className="block text-xs font-bold text-slate-300 uppercase tracking-wider"
           >
             {label}
-            {props.required && <span className="text-red-500 ml-0.5">*</span>}
+            {props.required && <span className="text-rose-400 ml-0.5">*</span>}
           </label>
         )}
 
@@ -27,18 +27,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={textareaId}
           rows={rows}
-          className={`w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-gray-900 transition-all duration-150 placeholder:text-gray-400 focus:outline-none focus:ring-2 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed resize-none ${
+          className={`w-full rounded-xl border bg-slate-900/90 px-4 py-2.5 text-sm text-white transition-all duration-150 placeholder:text-slate-500 focus:outline-none focus:ring-2 disabled:bg-slate-950 disabled:text-slate-600 disabled:cursor-not-allowed resize-none ${
             error
-              ? "border-red-300 focus:border-red-500 focus:ring-red-200"
-              : "border-gray-300 hover:border-gray-400 focus:border-indigo-600 focus:ring-indigo-100"
+              ? "border-rose-500/80 focus:border-rose-400 focus:ring-rose-500/20"
+              : "border-slate-800 hover:border-slate-700 focus:border-emerald-500/80 focus:ring-emerald-500/20"
           } ${className}`}
           {...props}
         />
 
         {error ? (
-          <p className="text-xs text-red-600 font-medium">{error}</p>
+          <p className="text-xs text-rose-400 font-medium">{error}</p>
         ) : helperText ? (
-          <p className="text-xs text-gray-500">{helperText}</p>
+          <p className="text-xs text-slate-400">{helperText}</p>
         ) : null}
       </div>
     );
@@ -48,3 +48,4 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 Textarea.displayName = "Textarea";
 
 export default Textarea;
+

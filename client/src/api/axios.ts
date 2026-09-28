@@ -3,9 +3,6 @@ import axios, { type AxiosInstance } from "axios";
 const api: AxiosInstance = axios.create({
   baseURL: (import.meta.env.VITE_API_BASE_URL as string) || "/api/v1",
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 // Request Interceptor: Attach Authorization Bearer token from localStorage if available
@@ -15,6 +12,17 @@ api.interceptors.request.use(
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Crucial for file uploads (FormData): Let browser/axios generate multipart/form-data with boundary
+    if (config.data instanceof FormData && config.headers) {
+      delete config.headers["Content-Type"];
+      delete config.headers["content-type"];
+      if (typeof (config.headers as any).delete === "function") {
+        (config.headers as any).delete("Content-Type");
+        (config.headers as any).delete("content-type");
+      }
+    }
+
     return config;
   },
   (error) => {

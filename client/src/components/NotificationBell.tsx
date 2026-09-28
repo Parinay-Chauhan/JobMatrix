@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Bell, Clock, ArrowRight, CheckCheck } from "lucide-react";
 import { useNotifications } from "../context/NotificationContext";
 import { useAuth } from "../context/AuthContext";
 import type { NotificationItem } from "../types";
@@ -71,51 +72,39 @@ export const NotificationBell: React.FC = () => {
       {/* Bell Icon Button */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="relative p-2 rounded-xl text-gray-600 hover:text-indigo-600 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+        className="relative p-2 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors focus:outline-none cursor-pointer"
         aria-label="View notifications"
       >
-        <svg
-          className="w-5 h-5 sm:w-6 sm:h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
+        <Bell className="w-5 h-5" />
 
         {/* Unread Badge Counter */}
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-extrabold text-white bg-indigo-600 rounded-full shadow-xs ring-2 ring-white animate-pulse">
+          <span className="absolute top-1 right-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-slate-950 bg-emerald-400 rounded-full shadow-md ring-2 ring-slate-950">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
       </button>
 
-      {/* Mobile Backdrop Overlay (Tap to Dismiss) */}
+      {/* Mobile Backdrop Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs sm:hidden"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs sm:hidden"
           onClick={() => setIsOpen(false)}
           aria-hidden="true"
         />
       )}
 
-      {/* Notifications Dropdown / Modal */}
+      {/* Notifications Dropdown */}
       {isOpen && (
-        <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-84 max-h-[80vh] sm:max-h-96 bg-white border border-gray-200/90 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-x-3 top-20 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-88 max-h-[80vh] sm:max-h-96 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           {/* Header */}
-          <div className="p-3.5 sm:p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/70">
+          <div className="p-3.5 sm:p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-gray-900 text-xs sm:text-sm uppercase tracking-wider">
+              <span className="font-bold text-white text-xs sm:text-sm tracking-wide">
                 Notifications
               </span>
               {unreadCount > 0 && (
-                <span className="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
                   {unreadCount} new
                 </span>
               )}
@@ -124,29 +113,30 @@ export const NotificationBell: React.FC = () => {
             {unreadCount > 0 ? (
               <button
                 onClick={markAllAsRead}
-                className="text-xs text-indigo-600 hover:text-indigo-800 font-bold transition-colors cursor-pointer py-1 px-2 rounded-lg hover:bg-indigo-50"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors cursor-pointer flex items-center gap-1"
               >
-                Mark all as read
+                <CheckCheck className="w-3.5 h-3.5" />
+                <span>Mark all read</span>
               </button>
             ) : (
-              <span className="text-xs text-gray-400 font-medium">
+              <span className="text-xs text-slate-500 font-medium">
                 All caught up
               </span>
             )}
           </div>
 
           {/* Notifications List */}
-          <div className="divide-y divide-gray-100 overflow-y-auto flex-1">
+          <div className="divide-y divide-slate-800/80 overflow-y-auto flex-1">
             {notifications.length === 0 ? (
               <div className="py-8 px-4 text-center">
-                <div className="mx-auto w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center mb-2">
-                  🔔
+                <div className="mx-auto w-10 h-10 rounded-full bg-slate-800/80 text-slate-400 flex items-center justify-center mb-2">
+                  <Bell className="w-5 h-5" />
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-gray-700">
+                <p className="text-xs sm:text-sm font-semibold text-slate-200">
                   No notifications yet
                 </p>
-                <p className="text-[11px] text-gray-400 mt-0.5">
-                  We&apos;ll notify you when application statuses change.
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Updates regarding applications and invitations will appear here.
                 </p>
               </div>
             ) : (
@@ -157,17 +147,17 @@ export const NotificationBell: React.FC = () => {
                   <div
                     key={item._id}
                     onClick={() => handleNotificationClick(item)}
-                    className={`p-3.5 sm:p-4 text-xs sm:text-sm cursor-pointer transition-all flex items-start gap-3 active:bg-gray-100 group ${
+                    className={`p-3.5 sm:p-4 text-xs sm:text-sm cursor-pointer transition-all flex items-start gap-3 active:bg-slate-800 group ${
                       isUnread
-                        ? "bg-indigo-50/50 hover:bg-indigo-50/90 border-l-4 border-indigo-600"
-                        : "bg-white hover:bg-gray-50 text-gray-600"
+                        ? "bg-emerald-500/10 hover:bg-emerald-500/15 border-l-4 border-emerald-400"
+                        : "bg-slate-900/60 hover:bg-slate-800/60 text-slate-300"
                     }`}
                   >
                     {/* Unread dot */}
                     <span
                       className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${
                         isUnread
-                          ? "bg-indigo-600 ring-2 ring-indigo-200"
+                          ? "bg-emerald-400"
                           : "bg-transparent"
                       }`}
                     />
@@ -176,26 +166,32 @@ export const NotificationBell: React.FC = () => {
                       <p
                         className={`leading-snug break-words ${
                           isUnread
-                            ? "text-gray-900 font-bold"
-                            : "text-gray-600 font-normal"
+                            ? "text-white font-semibold"
+                            : "text-slate-300 font-normal"
                         }`}
                       >
                         {item.message}
                       </p>
-                      <div className="flex items-center justify-between mt-1.5 gap-2">
-                        <span className="text-[10px] sm:text-xs text-gray-400 flex items-center gap-1">
-                          🕒 {new Date(item.createdAt).toLocaleDateString()}{" "}
-                          {new Date(item.createdAt).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                      <div className="flex items-center justify-between mt-2 gap-2">
+                        <span className="text-[10px] sm:text-xs text-slate-500 flex items-center gap-1.5">
+                          <Clock className="w-3 h-3" />
+                          <span>
+                            {new Date(item.createdAt).toLocaleDateString()}{" "}
+                            {new Date(item.createdAt).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
                         </span>
-                        <span className="text-[10px] font-bold text-indigo-600 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-                          {item.type === "NEW_APPLICATION"
-                            ? "View Applicants →"
-                            : item.type === "APPLICATION_STATUS_UPDATED"
-                            ? "View Status →"
-                            : "View →"}
+                        <span className="text-[10px] font-semibold text-emerald-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                          <span>
+                            {item.type === "NEW_APPLICATION"
+                              ? "View Applicants"
+                              : item.type === "APPLICATION_STATUS_UPDATED"
+                              ? "View Status"
+                              : "Details"}
+                          </span>
+                          <ArrowRight className="w-3 h-3" />
                         </span>
                       </div>
                     </div>

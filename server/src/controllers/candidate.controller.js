@@ -88,7 +88,7 @@ const createCandidateProfile = asyncHandler(async (req, res) => {
 const getCandidateProfile = asyncHandler(async (req, res) => {
   let candidateProfile = await Candidate.findOne({
     user: req.user._id,
-  }).populate("user", ["fullName", "email"]);
+  }).populate("user", ["fullName", "email", "avatar", "username", "role"]);
 
   if (!candidateProfile) {
     // Auto-initialize candidate profile for the user
@@ -180,7 +180,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
       upsert: true,
       runValidators: true,
     },
-  ).populate("user", ["fullName", "email"]);
+  ).populate("user", ["fullName", "email", "avatar", "username", "role"]);
 
   return res
     .status(200)
@@ -449,30 +449,36 @@ const uploadAndUpdateResume = asyncHandler(async (req, res) => {
   // 3. Store old resume credentials for safe post-cleanup
   const oldResumePublicId = profile.resumePublicId;
 
-  // 4. Upload NEW resume first
-  const uploadedResume = await uploadOnCloudinary(resumeLocalPath, "raw");
+  // 4. Upload NEW resume with "auto" resource type (handles PDF, DOCX, etc.)
+  const uploadedResume = await uploadOnCloudinary(resumeLocalPath, "auto");
   const newResumeUrl = uploadedResume?.secure_url || uploadedResume?.url;
 
   if (!newResumeUrl) {
     throw new ApiError(500, "Failed to upload new resume to Cloudinary");
   }
 
-  // 5. Update DB document with matching schema fields (resume & resumePublicId)
-  profile.resume = newResumeUrl;
-  profile.resumePublicId = uploadedResume.public_id;
+  // 5. Update DB document directly using findByIdAndUpdate
+  const updatedProfile = await Candidate.findByIdAndUpdate(
+    profile._id,
+    {
+      $set: {
+        resume: newResumeUrl,
+        resumePublicId: uploadedResume.public_id,
+      },
+    },
+    { new: true }
+  ).populate("user", ["fullName", "email", "avatar", "username", "role"]);
 
-  try {
-    await profile.save();
-  } catch (error) {
+  if (!updatedProfile) {
     // DB Save failed -> Rollback: Delete the newly uploaded Cloudinary file to prevent orphan files
-    await deleteFromCloudinary(uploadedResume.public_id, "raw");
+    await deleteFromCloudinary(uploadedResume.public_id, "auto");
     throw new ApiError(500, "Failed to save resume details in database");
   }
 
   // 6. DB update successful -> Safely cleanup OLD resume from Cloudinary
   if (oldResumePublicId) {
     try {
-      await deleteFromCloudinary(oldResumePublicId, "raw");
+      await deleteFromCloudinary(oldResumePublicId, "auto");
     } catch (cleanupError) {
       console.error(
         "Failed to delete old resume from Cloudinary:",
@@ -483,7 +489,7 @@ const uploadAndUpdateResume = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, profile, "Resume updated successfully"));
+    .json(new ApiResponse(200, updatedProfile, "Resume updated successfully"));
 });
 
 const deleteResume = asyncHandler(async (req, res) => {
@@ -502,29 +508,28 @@ const deleteResume = asyncHandler(async (req, res) => {
   }
 
   // 3. Cloudinary se resume file remove karo
-  const resourceType = candidate.resumeResourceType || "raw";
-  const deleteResult = await deleteFromCloudinary(
-    candidate.resumePublicId,
-    resourceType,
-  );
-
-  if (!deleteResult) {
-    throw new ApiError(500, "Failed to delete resume from Cloudinary");
+  try {
+    await deleteFromCloudinary(candidate.resumePublicId, "auto");
+  } catch (error) {
+    console.error("Error deleting resume from Cloudinary:", error);
   }
 
   // 4. Database fields clear karo
-  candidate.resume = "";
-  candidate.resumePublicId = "";
-  if (candidate.resumeResourceType) {
-    candidate.resumeResourceType = "";
-  }
-
-  await candidate.save();
+  const updatedCandidate = await Candidate.findByIdAndUpdate(
+    candidate._id,
+    {
+      $set: {
+        resume: "",
+        resumePublicId: "",
+      },
+    },
+    { new: true }
+  ).populate("user", ["fullName", "email", "avatar", "username", "role"]);
 
   // 5. Response send karo
   return res
     .status(200)
-    .json(new ApiResponse(200, candidate, "Resume deleted successfully"));
+    .json(new ApiResponse(200, updatedCandidate, "Resume deleted successfully"));
 });
 
 export {

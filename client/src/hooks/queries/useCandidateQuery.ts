@@ -92,8 +92,55 @@ export const useUploadResumeMutation = () => {
 
   return useMutation({
     mutationFn: (file: File) => candidateService.uploadResume(file),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.candidate.profile() });
+    onSuccess: (response) => {
+      try {
+        if (response?.data) {
+          queryClient.setQueryData(queryKeys.candidate.profile(), (old: any) => {
+            if (!old) return old;
+            return {
+              ...old,
+              resume: response.data.resume,
+              resumePublicId: response.data.resumePublicId,
+            };
+          });
+        }
+        queryClient.invalidateQueries({ queryKey: queryKeys.candidate.profile() });
+      } catch (e) {
+        console.warn("Resume cache update warning:", e);
+      }
+    },
+  });
+};
+
+// 8. Upload Profile Avatar Mutation
+export const useUploadAvatarMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const { authService } = await import("../../services/auth.service");
+      return authService.updateAvatar(file);
+    },
+    onSuccess: (response) => {
+      try {
+        if (response?.data) {
+          queryClient.setQueryData(queryKeys.candidate.profile(), (old: any) => {
+            if (!old) return old;
+            return {
+              ...old,
+              user: {
+                ...(typeof old.user === "object" ? old.user : {}),
+                avatar: response.data.avatar,
+                avatarPublicId: response.data.avatarPublicId,
+              },
+            };
+          });
+        }
+        queryClient.invalidateQueries({ queryKey: queryKeys.candidate.profile() });
+        queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser() });
+      } catch (e) {
+        console.warn("Avatar cache update warning:", e);
+      }
     },
   });
 };

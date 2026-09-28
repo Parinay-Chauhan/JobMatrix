@@ -16,9 +16,9 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 }) => {
   return (
     <div
-      className={`rounded-2xl border border-red-200 bg-red-50/70 p-6 text-center ${className}`}
+      className={`rounded-2xl border border-rose-500/30 bg-rose-950/30 backdrop-blur-md p-6 text-center ${className}`}
     >
-      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 text-red-600">
+      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
         <svg
           className="h-6 w-6"
           fill="none"
@@ -34,8 +34,8 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         </svg>
       </div>
 
-      <h4 className="text-base font-bold text-red-900">{title}</h4>
-      <p className="mt-1 text-sm text-red-700">{message}</p>
+      <h4 className="text-base font-bold text-white">{title}</h4>
+      <p className="mt-1 text-sm text-slate-300">{message}</p>
 
       {onRetry && (
         <div className="mt-4">
