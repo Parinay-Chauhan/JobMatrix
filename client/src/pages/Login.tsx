@@ -17,6 +17,7 @@ export const Login: React.FC = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subtextRef = useRef<HTMLParagraphElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const formCardRef = useRef<HTMLDivElement>(null);
   const { user, loading: authLoading, login } = useAuth();
   const navigate = useNavigate();
 
