@@ -107,7 +107,20 @@ export const useUploadAvatarMutation = () => {
       const { authService } = await import("../../services/auth.service");
       return authService.updateAvatar(file);
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      if (response?.data) {
+        queryClient.setQueryData(queryKeys.candidate.profile(), (old: any) => {
+          if (!old) return old;
+          return {
+            ...old,
+            user: {
+              ...(typeof old.user === "object" ? old.user : {}),
+              avatar: response.data.avatar,
+              avatarPublicId: response.data.avatarPublicId,
+            },
+          };
+        });
+      }
       queryClient.invalidateQueries({ queryKey: queryKeys.candidate.profile() });
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser() });
     },

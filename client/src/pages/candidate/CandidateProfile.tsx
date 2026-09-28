@@ -59,10 +59,11 @@ export const CandidateProfile: React.FC = () => {
   const [github, setGithub] = useState("");
   const [portfolio, setPortfolio] = useState("");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  // avatarPreview is used for instant UI feedback during auto-upload
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const avatarInputRef = useRef<HTMLInputElement>(null);
+  const showcaseAvatarInputRef = useRef<HTMLInputElement>(null);
 
   // New Experience Form State
   const [newExp, setNewExp] = useState<Experience>({
@@ -99,17 +100,36 @@ export const CandidateProfile: React.FC = () => {
     setGithub(current.github || "");
     setPortfolio(current.portfolio || "");
     setResumeFile(null);
-    setAvatarFile(null);
     setAvatarPreview(null);
     setIsEditing(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleAvatarFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setAvatarFile(file);
-      setAvatarPreview(URL.createObjectURL(file));
+  // Auto-upload avatar immediately on file select — no save button needed
+  const handleAvatarFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+
+    // Show local preview instantly
+    const localUrl = URL.createObjectURL(file);
+    setAvatarPreview(localUrl);
+
+    try {
+      await uploadAvatarMutation.mutateAsync(file);
+      toast.success("Profile picture updated!", {
+        description: "Your new photo has been saved to your profile.",
+      });
+    } catch (err: unknown) {
+      // Revert preview on failure
+      setAvatarPreview(null);
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to upload profile picture.";
+      toast.error("Upload Failed", { description: msg });
+    } finally {
+      // Reset file inputs so the same file can be re-selected if needed
+      if (avatarInputRef.current) avatarInputRef.current.value = "";
+      if (showcaseAvatarInputRef.current) showcaseAvatarInputRef.current.value = "";
     }
   };
 
@@ -133,10 +153,7 @@ export const CandidateProfile: React.FC = () => {
     try {
       await updateProfileMutation.mutateAsync(payload);
 
-      if (avatarFile) {
-        await uploadAvatarMutation.mutateAsync(avatarFile);
-      }
-
+      // Avatar is uploaded instantly on file select — not here.
       if (resumeFile) {
         await uploadResumeMutation.mutateAsync(resumeFile);
       }
@@ -497,6 +514,14 @@ export const CandidateProfile: React.FC = () => {
                   </span>
                 )}
 
+                {/* Uploading Spinner Overlay */}
+                {uploadAvatarMutation.isPending && (
+                  <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs flex flex-col items-center justify-center text-white z-20">
+                    <div className="w-8 h-8 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin mb-2" />
+                    <span className="text-xs font-semibold text-emerald-300">Saving photo...</span>
+                  </div>
+                )}
+
                 {/* Hidden File Input for Avatar */}
                 <input
                   ref={avatarInputRef}
@@ -510,7 +535,8 @@ export const CandidateProfile: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => avatarInputRef.current?.click()}
-                  className="absolute bottom-3 left-1/2 -translate-x-1/2 py-1.5 px-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white text-xs font-bold border border-slate-700 hover:border-emerald-500/40 shadow-lg flex items-center gap-1.5 transition-all cursor-pointer"
+                  disabled={uploadAvatarMutation.isPending}
+                  className="absolute bottom-3 left-1/2 -translate-x-1/2 py-1.5 px-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white text-xs font-bold border border-slate-700 hover:border-emerald-500/40 shadow-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                 >
                   <svg
                     className="w-3.5 h-3.5 text-slate-300"
@@ -525,7 +551,7 @@ export const CandidateProfile: React.FC = () => {
                       d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                     />
                   </svg>
-                  <span>Edit</span>
+                  <span>{uploadAvatarMutation.isPending ? "Uploading..." : "Edit"}</span>
                 </button>
               </div>
 
@@ -572,17 +598,35 @@ export const CandidateProfile: React.FC = () => {
                   </span>
                 )}
 
+                {/* Uploading Spinner Overlay */}
+                {uploadAvatarMutation.isPending && (
+                  <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs flex flex-col items-center justify-center text-white z-20">
+                    <div className="w-8 h-8 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin mb-2" />
+                    <span className="text-xs font-semibold text-emerald-300">Saving photo...</span>
+                  </div>
+                )}
+
+                {/* Hidden File Input for Avatar in Showcase */}
+                <input
+                  ref={showcaseAvatarInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarFileSelect}
+                  className="hidden"
+                />
+
                 {/* Change photo hover overlay */}
                 <button
                   type="button"
-                  onClick={handleStartEditing}
-                  className="absolute inset-0 bg-black/60 backdrop-blur-2xs flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-bold gap-1.5"
+                  onClick={() => showcaseAvatarInputRef.current?.click()}
+                  disabled={uploadAvatarMutation.isPending}
+                  className="absolute inset-0 bg-black/60 backdrop-blur-2xs flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-bold gap-1.5 disabled:opacity-0"
                 >
                   <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <span>Edit Profile</span>
+                  <span>Change Photo</span>
                 </button>
               </div>
 
