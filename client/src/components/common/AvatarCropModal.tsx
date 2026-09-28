@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { ZoomIn, ZoomOut, X } from "lucide-react";
+import { ZoomIn, X } from "lucide-react";
 
 export interface AvatarCropModalProps {
   isOpen: boolean;

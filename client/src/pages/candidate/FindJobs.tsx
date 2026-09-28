@@ -6,13 +6,10 @@ import {
   Layers,
   Search,
   X,
-  Building2,
-  GraduationCap,
   Filter,
   CheckCircle2,
 } from "lucide-react";
 import { useJobsQuery, useMyApplicationsQuery, useApplyJobMutation } from "../../hooks/queries";
-import { useAuth } from "../../context/AuthContext";
 import {
   JobCard,
   JobCardSkeleton,
@@ -25,7 +22,6 @@ import {
 const PAGE_SIZE = 20;
 
 export const FindJobs: React.FC = () => {
-  const { user } = useAuth();
 
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");

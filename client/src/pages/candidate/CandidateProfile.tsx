@@ -16,7 +16,6 @@ import {
   UploadCloud,
   Plus,
   Trash2,
-  CheckCircle2,
   Pencil,
   ArrowLeft,
   Calendar,
