@@ -88,7 +88,7 @@ const createCandidateProfile = asyncHandler(async (req, res) => {
 const getCandidateProfile = asyncHandler(async (req, res) => {
   let candidateProfile = await Candidate.findOne({
     user: req.user._id,
-  }).populate("user", ["fullName", "email"]);
+  }).populate("user", ["fullName", "email", "avatar", "username", "role"]);
 
   if (!candidateProfile) {
     // Auto-initialize candidate profile for the user
@@ -180,7 +180,7 @@ const updateCandidateProfile = asyncHandler(async (req, res) => {
       upsert: true,
       runValidators: true,
     },
-  ).populate("user", ["fullName", "email"]);
+  ).populate("user", ["fullName", "email", "avatar", "username", "role"]);
 
   return res
     .status(200)
@@ -467,7 +467,7 @@ const uploadAndUpdateResume = asyncHandler(async (req, res) => {
       },
     },
     { new: true }
-  ).populate("user", ["fullName", "email"]);
+  ).populate("user", ["fullName", "email", "avatar", "username", "role"]);
 
   if (!updatedProfile) {
     // DB Save failed -> Rollback: Delete the newly uploaded Cloudinary file to prevent orphan files
@@ -524,7 +524,7 @@ const deleteResume = asyncHandler(async (req, res) => {
       },
     },
     { new: true }
-  ).populate("user", ["fullName", "email"]);
+  ).populate("user", ["fullName", "email", "avatar", "username", "role"]);
 
   // 5. Response send karo
   return res

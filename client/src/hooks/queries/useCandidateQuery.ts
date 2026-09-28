@@ -97,3 +97,19 @@ export const useUploadResumeMutation = () => {
     },
   });
 };
+
+// 8. Upload Profile Avatar Mutation
+export const useUploadAvatarMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const { authService } = await import("../../services/auth.service");
+      return authService.updateAvatar(file);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.candidate.profile() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.currentUser() });
+    },
+  });
+};

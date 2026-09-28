@@ -15,6 +15,7 @@ import {
   useAddEducationMutation,
   useDeleteEducationMutation,
   useUploadResumeMutation,
+  useUploadAvatarMutation,
 } from "../../hooks/queries";
 import {
   Input,
@@ -38,6 +39,7 @@ export const CandidateProfile: React.FC = () => {
   const addEducationMutation = useAddEducationMutation();
   const deleteEducationMutation = useDeleteEducationMutation();
   const uploadResumeMutation = useUploadResumeMutation();
+  const uploadAvatarMutation = useUploadAvatarMutation();
 
   // Dialog & Modal states
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -55,6 +57,7 @@ export const CandidateProfile: React.FC = () => {
   const [github, setGithub] = useState("");
   const [portfolio, setPortfolio] = useState("");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   // New Experience Form State
   const [newExp, setNewExp] = useState<Experience>({
@@ -91,6 +94,7 @@ export const CandidateProfile: React.FC = () => {
     setGithub(current.github || "");
     setPortfolio(current.portfolio || "");
     setResumeFile(null);
+    setAvatarFile(null);
     setIsEditModalOpen(true);
   };
 
@@ -114,12 +118,16 @@ export const CandidateProfile: React.FC = () => {
     try {
       await updateProfileMutation.mutateAsync(payload);
 
+      if (avatarFile) {
+        await uploadAvatarMutation.mutateAsync(avatarFile);
+      }
+
       if (resumeFile) {
         await uploadResumeMutation.mutateAsync(resumeFile);
       }
 
       toast.success("Profile Updated", {
-        description: "Your candidate profile and resume have been saved successfully.",
+        description: "Your candidate profile details have been saved successfully.",
       });
       setIsEditModalOpen(false);
     } catch (err: unknown) {
@@ -243,6 +251,8 @@ export const CandidateProfile: React.FC = () => {
   const effectiveUser = profile?.user || authUser;
   const fullName = effectiveUser?.fullName || "Candidate User";
   const email = effectiveUser?.email || "";
+  const avatarUrl = effectiveUser?.avatar || authUser?.avatar;
+
   const skillsList = Array.isArray(profile?.skills)
     ? profile.skills
     : typeof profile?.skills === "string" && (profile.skills as string).length > 0
@@ -257,11 +267,13 @@ export const CandidateProfile: React.FC = () => {
     .toUpperCase();
 
   const isSaving =
-    updateProfileMutation.isPending || uploadResumeMutation.isPending;
+    updateProfileMutation.isPending ||
+    uploadResumeMutation.isPending ||
+    uploadAvatarMutation.isPending;
 
   return (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-8 animate-in fade-in duration-300">
-      {/* 2-Column Developer Profile Grid (GitHub Style) */}
+      {/* 2-Column Developer Profile Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* ========================================================================= */}
         {/* LEFT COLUMN: Avatar, Details & "Edit profile" Button                      */}
@@ -272,23 +284,44 @@ export const CandidateProfile: React.FC = () => {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-20 bg-emerald-500/10 blur-2xl pointer-events-none" />
 
             {/* Profile Avatar */}
-            <div className="relative mx-auto w-44 h-44 sm:w-52 sm:h-52 mb-5">
-              <div className="w-full h-full rounded-full bg-gradient-to-tr from-slate-950 via-slate-900 to-emerald-950 border-4 border-slate-800/90 shadow-2xl flex items-center justify-center relative overflow-hidden group">
+            <div className="relative mx-auto w-44 h-44 sm:w-52 sm:h-52 mb-5 group">
+              <div className="w-full h-full rounded-full bg-gradient-to-tr from-slate-950 via-slate-900 to-emerald-950 border-4 border-slate-800/90 shadow-2xl flex items-center justify-center relative overflow-hidden">
                 {/* Glow ring */}
-                <div className="absolute inset-0 rounded-full border-2 border-emerald-500/30 group-hover:border-emerald-400/50 transition-colors" />
+                <div className="absolute inset-0 rounded-full border-2 border-emerald-500/30 group-hover:border-emerald-400/50 transition-colors pointer-events-none" />
                 
-                <span className="text-4xl sm:text-5xl font-black bg-gradient-to-tr from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent select-none">
-                  {initials || "CM"}
-                </span>
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={fullName}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                ) : (
+                  <span className="text-4xl sm:text-5xl font-black bg-gradient-to-tr from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent select-none">
+                    {initials || "CM"}
+                  </span>
+                )}
 
-                {/* Status Dot */}
-                <div className="absolute bottom-3 right-3 flex items-center justify-center p-1 rounded-full bg-slate-950 border border-slate-700 shadow-md" title="Available for hire">
-                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
+                {/* Change photo hover overlay */}
+                <button
+                  type="button"
+                  onClick={handleOpenEditModal}
+                  className="absolute inset-0 bg-black/60 backdrop-blur-2xs flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-bold gap-1.5"
+                >
+                  <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>Change Photo</span>
+                </button>
+              </div>
+
+              {/* Status Dot */}
+              <div className="absolute bottom-3 right-3 flex items-center justify-center p-1 rounded-full bg-slate-950 border border-slate-700 shadow-md z-10" title="Available for hire">
+                <span className="w-3.5 h-3.5 rounded-full bg-emerald-400 animate-pulse" />
               </div>
             </div>
 
-            {/* Name & Handle */}
+            {/* Name & Role */}
             <div className="text-center sm:text-left space-y-1">
               <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-snug">
                 {fullName}
@@ -314,7 +347,7 @@ export const CandidateProfile: React.FC = () => {
               )}
             </div>
 
-            {/* Edit Profile Button (GitHub Style) */}
+            {/* Edit Profile Button */}
             <div className="mt-5">
               <button
                 type="button"
@@ -703,6 +736,30 @@ export const CandidateProfile: React.FC = () => {
         size="lg"
       >
         <form onSubmit={handleSaveProfile} className="space-y-4">
+          {/* Profile Picture Upload Section */}
+          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center overflow-hidden shrink-0">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={fullName} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-emerald-400 font-black text-lg">{initials}</span>
+              )}
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-bold text-slate-200 mb-1">
+                Profile Photo (Avatar)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) =>
+                  setAvatarFile(e.target.files ? e.target.files[0] : null)
+                }
+                className="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-emerald-500/10 file:text-emerald-400 hover:file:bg-emerald-500/20 cursor-pointer"
+              />
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Full Name"

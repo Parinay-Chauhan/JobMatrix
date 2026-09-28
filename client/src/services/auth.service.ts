@@ -36,12 +36,12 @@ export const authService = {
     return response.data;
   },
 
-  async refreshToken(): Promise<
-    ApiResponse<{ accessToken: string; refreshToken: string }>
-  > {
-    const response = await api.post<
-      ApiResponse<{ accessToken: string; refreshToken: string }>
-    >("/users/refresh-token");
+  async updateAvatar(file: File): Promise<ApiResponse<User>> {
+    const formData = new FormData();
+    formData.append("avatar", file);
+    const response = await api.patch<ApiResponse<User>>("/users/avatar", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   },
 };
