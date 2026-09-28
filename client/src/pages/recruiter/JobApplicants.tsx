@@ -1,6 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "sonner";
+import {
+  Users,
+  ArrowLeft,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Mail,
+  Calendar,
+  Sparkles,
+  ExternalLink,
+  FileText,
+} from "lucide-react";
 import type { ApplicationStatus } from "../../types";
 import { useJobApplicantsQuery, useUpdateApplicationStatusMutation } from "../../hooks/queries";
 import {
@@ -13,6 +25,7 @@ import {
 
 export const JobApplicants: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
+  const [filterStatus, setFilterStatus] = useState<string>("all");
 
   // Reject Confirmation Dialog State
   const [rejectingAppId, setRejectingAppId] = useState<string | null>(null);
@@ -54,11 +67,27 @@ export const JobApplicants: React.FC = () => {
     setRejectingAppId(null);
   };
 
+  const counts = useMemo(() => {
+    const total = applicants.length;
+    const pending = applicants.filter((a) => a.status === "pending" || a.status === "reviewed").length;
+    const shortlisted = applicants.filter((a) => a.status === "accepted" || a.status === "shortlisted").length;
+    const rejected = applicants.filter((a) => a.status === "rejected").length;
+    return { total, pending, shortlisted, rejected };
+  }, [applicants]);
+
+  const filteredApplicants = useMemo(() => {
+    if (filterStatus === "all") return applicants;
+    if (filterStatus === "pending") return applicants.filter((a) => a.status === "pending" || a.status === "reviewed");
+    if (filterStatus === "shortlisted") return applicants.filter((a) => a.status === "accepted" || a.status === "shortlisted");
+    if (filterStatus === "rejected") return applicants.filter((a) => a.status === "rejected");
+    return applicants;
+  }, [applicants, filterStatus]);
+
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="space-y-6">
         <Skeleton className="h-8 w-1/4" />
-        <div className="bg-white rounded-2xl border border-gray-200/80 p-6 space-y-4">
+        <div className="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 space-y-4">
           <Skeleton className="h-12 w-full" />
           <Skeleton className="h-12 w-full" />
           <Skeleton className="h-12 w-full" />
@@ -68,21 +97,99 @@ export const JobApplicants: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Back Link & Header */}
-      <div className="mb-6">
-        <Link
-          to="/recruiter/jobs"
-          className="text-xs font-bold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1 mb-2"
+    <div className="space-y-8">
+      {/* Back Link */}
+      <Link
+        to="/recruiter/jobs"
+        className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-emerald-400 transition-colors"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" />
+        <span>Back to Manage Jobs</span>
+      </Link>
+
+      {/* Header Banner */}
+      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Candidate Evaluation</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            Applicant Pipeline
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl">
+            Review candidate profiles, evaluate credentials, and update their recruitment pipeline status in real-time.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 bg-slate-950/80 border border-slate-800 px-4 py-2.5 rounded-2xl">
+          <Users className="w-5 h-5 text-emerald-400" />
+          <span className="text-sm font-bold text-white">{applicants.length} Total Submissions</span>
+        </div>
+      </div>
+
+      {/* Pipeline Summary Counters & Filter Tabs */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <button
+          type="button"
+          onClick={() => setFilterStatus("all")}
+          className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
+            filterStatus === "all"
+              ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-300 ring-1 ring-emerald-500/20"
+              : "bg-slate-900/80 border-slate-800 hover:border-slate-700 text-slate-400"
+          }`}
         >
-          &larr; Back to Posted Jobs
-        </Link>
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-          Applicant Pipeline
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Review candidates who applied, inspect resumes, and update recruitment status.
-        </p>
+          <span className="text-xs font-bold uppercase tracking-wider block">All Candidates</span>
+          <span className="text-xl font-black text-white mt-1 block">{counts.total}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setFilterStatus("pending")}
+          className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
+            filterStatus === "pending"
+              ? "bg-amber-500/15 border-amber-500/40 text-amber-300 ring-1 ring-amber-500/20"
+              : "bg-slate-900/80 border-slate-800 hover:border-slate-700 text-slate-400"
+          }`}
+        >
+          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-400">
+            <Clock className="w-3.5 h-3.5" />
+            <span>Under Review</span>
+          </div>
+          <span className="text-xl font-black text-amber-400 mt-1 block">{counts.pending}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setFilterStatus("shortlisted")}
+          className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
+            filterStatus === "shortlisted"
+              ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-300 ring-1 ring-emerald-500/20"
+              : "bg-slate-900/80 border-slate-800 hover:border-slate-700 text-slate-400"
+          }`}
+        >
+          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-400">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Shortlisted</span>
+          </div>
+          <span className="text-xl font-black text-emerald-400 mt-1 block">{counts.shortlisted}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setFilterStatus("rejected")}
+          className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
+            filterStatus === "rejected"
+              ? "bg-rose-500/15 border-rose-500/40 text-rose-300 ring-1 ring-rose-500/20"
+              : "bg-slate-900/80 border-slate-800 hover:border-slate-700 text-slate-400"
+          }`}
+        >
+          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <XCircle className="w-3.5 h-3.5" />
+            <span>Rejected</span>
+          </div>
+          <span className="text-xl font-black text-slate-400 mt-1 block">{counts.rejected}</span>
+        </button>
       </div>
 
       {applicants.length === 0 ? (
@@ -91,19 +198,36 @@ export const JobApplicants: React.FC = () => {
           description="Candidates who apply for this job listing will appear here in real-time."
           action={
             <Link to="/recruiter/jobs">
-              <Button variant="secondary">Back to Manage Jobs</Button>
+              <Button
+                variant="primary"
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold"
+              >
+                Back to Manage Jobs
+              </Button>
             </Link>
           }
         />
+      ) : filteredApplicants.length === 0 ? (
+        <div className="bg-slate-900/80 rounded-2xl border border-slate-800 p-12 text-center">
+          <p className="text-slate-400 text-sm">No applications found with status filter "{filterStatus}".</p>
+          <button
+            type="button"
+            onClick={() => setFilterStatus("all")}
+            className="mt-3 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+          >
+            Show All Applications
+          </button>
+        </div>
       ) : (
         <div className="space-y-4">
           {/* Mobile View: Dedicated Applicant Cards (md:hidden) */}
           <div className="grid grid-cols-1 gap-4 md:hidden">
-            {applicants.map((app) => {
+            {filteredApplicants.map((app) => {
               const candidate =
                 typeof app.applicant === "object" ? app.applicant : undefined;
               const candidateName = candidate?.fullName || "Candidate";
               const candidateEmail = candidate?.email || "";
+              const candidateAvatar = candidate?.avatar;
               const initials = candidateName
                 .split(" ")
                 .map((n) => n[0])
@@ -121,23 +245,28 @@ export const JobApplicants: React.FC = () => {
               return (
                 <div
                   key={app._id}
-                  className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-4"
+                  className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
-                        {initials || "CA"}
+                      <div className="h-11 w-11 rounded-full bg-slate-950 border border-slate-800 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+                        {candidateAvatar ? (
+                          <img src={candidateAvatar} alt={candidateName} className="w-full h-full object-cover" />
+                        ) : (
+                          initials || "CA"
+                        )}
                       </div>
-                      <div>
-                        <h3 className="font-bold text-gray-900 text-base">
+                      <div className="min-w-0">
+                        <h3 className="font-bold text-white text-base truncate">
                           {candidateName}
                         </h3>
                         {candidateEmail && (
                           <a
                             href={`mailto:${candidateEmail}`}
-                            className="text-xs text-indigo-600 hover:underline mt-0.5 block truncate max-w-[200px]"
+                            className="text-xs text-emerald-400 hover:underline mt-0.5 flex items-center gap-1 truncate"
                           >
-                            {candidateEmail}
+                            <Mail className="w-3 h-3 shrink-0" />
+                            <span className="truncate">{candidateEmail}</span>
                           </a>
                         )}
                       </div>
@@ -145,12 +274,12 @@ export const JobApplicants: React.FC = () => {
                     <StatusBadge status={app.status} size="sm" />
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
-                    <span>
-                      📅 Applied:{" "}
-                      {app.createdAt
-                        ? new Date(app.createdAt).toLocaleDateString()
-                        : "Recently"}
+                  <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
+                    <span className="flex items-center gap-1 text-slate-500">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>
+                        Applied: {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "Recently"}
+                      </span>
                     </span>
                   </div>
 
@@ -161,9 +290,14 @@ export const JobApplicants: React.FC = () => {
                       disabled={isUpdatingThisApp || isAccepted}
                       isLoading={isUpdatingThisApp}
                       onClick={() => handleStatusChange(app._id, "accepted")}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 justify-center"
+                      className={`w-full justify-center font-bold ${
+                        isAccepted
+                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                          : "bg-emerald-500 hover:bg-emerald-400 text-slate-950"
+                      }`}
                     >
-                      {isAccepted ? "Shortlisted" : "Shortlist"}
+                      <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                      <span>{isAccepted ? "Shortlisted" : "Shortlist"}</span>
                     </Button>
                     <Button
                       size="sm"
@@ -171,9 +305,14 @@ export const JobApplicants: React.FC = () => {
                       disabled={isUpdatingThisApp || isRejected}
                       isLoading={isUpdatingThisApp}
                       onClick={() => setRejectingAppId(app._id)}
-                      className="w-full justify-center"
+                      className={`w-full justify-center font-bold ${
+                        isRejected
+                          ? "bg-slate-800 text-slate-500 border border-slate-700"
+                          : "bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30"
+                      }`}
                     >
-                      {isRejected ? "Rejected" : "Reject"}
+                      <XCircle className="w-3.5 h-3.5 mr-1" />
+                      <span>{isRejected ? "Rejected" : "Reject"}</span>
                     </Button>
                   </div>
                 </div>
@@ -181,47 +320,74 @@ export const JobApplicants: React.FC = () => {
             })}
           </div>
 
-          {/* Desktop/Tablet View: Table Layout (hidden md:block) */}
-          <div className="hidden md:block bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
+          {/* Desktop View: Table Layout (hidden md:block) */}
+          <div className="hidden md:block bg-slate-900/80 rounded-2xl border border-slate-800 shadow-xl overflow-hidden backdrop-blur-md">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50/80 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    <th className="px-6 py-4">Candidate</th>
+                  <tr className="bg-slate-950/70 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4">Candidate Profile</th>
                     <th className="px-6 py-4">Applied Date</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-right">Review Action</th>
+                    <th className="px-6 py-4">Current Status</th>
+                    <th className="px-6 py-4 text-right">Review Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 text-sm">
-                  {applicants.map((app) => {
+                <tbody className="divide-y divide-slate-800/80 text-sm">
+                  {filteredApplicants.map((app) => {
                     const candidate =
                       typeof app.applicant === "object" ? app.applicant : undefined;
                     const candidateName = candidate?.fullName || "Candidate";
                     const candidateEmail = candidate?.email || "";
+                    const candidateAvatar = candidate?.avatar;
+                    const initials = candidateName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .substring(0, 2)
+                      .toUpperCase();
                     const isUpdatingThisApp =
                       updateStatusMutation.isPending &&
                       updateStatusMutation.variables?.applicationId === app._id;
+                    const isAccepted =
+                      app.status?.toLowerCase() === "accepted" ||
+                      app.status?.toLowerCase() === "shortlisted";
+                    const isRejected = app.status?.toLowerCase() === "rejected";
 
                     return (
                       <tr
                         key={app._id}
-                        className="hover:bg-gray-50/60 transition-colors"
+                        className="hover:bg-slate-800/40 transition-colors group"
                       >
                         <td className="px-6 py-4">
-                          <div className="font-bold text-gray-900">
-                            {candidateName}
-                          </div>
-                          {candidateEmail && (
-                            <div className="text-xs text-gray-500 mt-0.5">
-                              {candidateEmail}
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-full bg-slate-950 border border-slate-800 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
+                              {candidateAvatar ? (
+                                <img src={candidateAvatar} alt={candidateName} className="w-full h-full object-cover" />
+                              ) : (
+                                initials || "CA"
+                              )}
                             </div>
-                          )}
+                            <div>
+                              <div className="font-bold text-white group-hover:text-emerald-300 transition-colors">
+                                {candidateName}
+                              </div>
+                              {candidateEmail && (
+                                <a
+                                  href={`mailto:${candidateEmail}`}
+                                  className="text-xs text-slate-400 hover:text-emerald-400 mt-0.5 flex items-center gap-1 transition-colors"
+                                >
+                                  <Mail className="w-3 h-3 text-slate-500" />
+                                  <span>{candidateEmail}</span>
+                                </a>
+                              )}
+                            </div>
+                          </div>
                         </td>
-                        <td className="px-6 py-4 text-gray-500 text-xs">
-                          {app.createdAt
-                            ? new Date(app.createdAt).toLocaleDateString()
-                            : "Recently"}
+                        <td className="px-6 py-4 text-slate-400 text-xs">
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                            <span>{app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "Recently"}</span>
+                          </div>
                         </td>
                         <td className="px-6 py-4">
                           <StatusBadge status={app.status} />
@@ -230,28 +396,32 @@ export const JobApplicants: React.FC = () => {
                           <Button
                             size="sm"
                             variant="primary"
-                            disabled={
-                              isUpdatingThisApp ||
-                              app.status?.toLowerCase() === "accepted" ||
-                              app.status?.toLowerCase() === "shortlisted"
-                            }
+                            disabled={isUpdatingThisApp || isAccepted}
                             isLoading={isUpdatingThisApp}
                             onClick={() => handleStatusChange(app._id, "accepted")}
-                            className="bg-emerald-600 hover:bg-emerald-700"
+                            className={`font-bold ${
+                              isAccepted
+                                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                                : "bg-emerald-500 hover:bg-emerald-400 text-slate-950"
+                            }`}
                           >
-                            Shortlist
+                            <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                            <span>{isAccepted ? "Shortlisted" : "Shortlist"}</span>
                           </Button>
                           <Button
                             size="sm"
                             variant="danger"
-                            disabled={
-                              isUpdatingThisApp ||
-                              app.status?.toLowerCase() === "rejected"
-                            }
+                            disabled={isUpdatingThisApp || isRejected}
                             isLoading={isUpdatingThisApp}
                             onClick={() => setRejectingAppId(app._id)}
+                            className={`font-bold ${
+                              isRejected
+                                ? "bg-slate-800 text-slate-500 border border-slate-700"
+                                : "bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30"
+                            }`}
                           >
-                            Reject
+                            <XCircle className="w-3.5 h-3.5 mr-1" />
+                            <span>{isRejected ? "Rejected" : "Reject"}</span>
                           </Button>
                         </td>
                       </tr>
@@ -268,7 +438,7 @@ export const JobApplicants: React.FC = () => {
       <ConfirmDialog
         isOpen={Boolean(rejectingAppId)}
         title="Reject Applicant"
-        description="Are you sure you want to reject this candidate? Their application status will be marked as Rejected."
+        description="Are you sure you want to mark this candidate as Rejected? They will be informed via status update."
         confirmText="Reject Application"
         variant="danger"
         isLoading={updateStatusMutation.isPending}

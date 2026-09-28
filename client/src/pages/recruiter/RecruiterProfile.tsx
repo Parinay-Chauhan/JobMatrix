@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import {
+  Building2,
+  User,
+  Globe,
+  MapPin,
+  Briefcase,
+  Phone,
+  Mail,
+  Sparkles,
+  UploadCloud,
+  LogOut,
+  CheckCircle2,
+} from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import {
   useRecruiterProfileQuery,
@@ -114,8 +127,8 @@ export const RecruiterProfile: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         <Skeleton className="h-10 w-1/3" />
-        <Skeleton className="h-64 rounded-2xl" />
-        <Skeleton className="h-64 rounded-2xl" />
+        <Skeleton className="h-64 rounded-3xl" />
+        <Skeleton className="h-64 rounded-3xl" />
       </div>
     );
   }
@@ -127,30 +140,34 @@ export const RecruiterProfile: React.FC = () => {
     updateProfileMutation.isPending || uploadLogoMutation.isPending;
 
   return (
-    <div className="max-w-4xl mx-auto pb-12">
-      {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+    <div className="max-w-4xl mx-auto space-y-8 pb-12">
+      {/* Page Header Banner */}
+      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Employer Identity</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
           Recruiter & Company Profile
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Manage your personal recruiter details, company identity, and hiring branding.
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl">
+          Manage your personal recruiter credentials, organization branding, and public hiring profile.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Card 1: Personal Recruiter Identity */}
-        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 space-y-6">
-          <div className="flex items-center gap-3 border-b border-gray-100 pb-3">
-            <div className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-base">
-              👤
+        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6">
+          <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
+            <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">
+              <User className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold text-white">
                 Personal Recruiter Details
               </h2>
-              <p className="text-xs text-gray-400">
-                Information about you as a hiring partner
+              <p className="text-xs text-slate-400">
+                Information about you as a hiring coordinator
               </p>
             </div>
           </div>
@@ -177,14 +194,14 @@ export const RecruiterProfile: React.FC = () => {
               placeholder="e.g. Senior Talent Partner, HR Lead"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
-              helperText="Your job title within the company"
+              helperText="Your role within the hiring team"
             />
             <Input
               label="Recruiter Experience"
               placeholder="e.g. 5+ Years in Tech Hiring"
               value={experience}
               onChange={(e) => setExperience(e.target.value)}
-              helperText="Total years of recruitment expertise"
+              helperText="Total years of hiring expertise"
             />
           </div>
 
@@ -212,16 +229,16 @@ export const RecruiterProfile: React.FC = () => {
         </div>
 
         {/* Card 2: Company Information */}
-        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 space-y-6">
-          <div className="flex items-center gap-3 border-b border-gray-100 pb-3">
-            <div className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-base">
-              🏢
+        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6">
+          <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
+            <div className="h-10 w-10 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-base">
+              <Building2 className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold text-white">
                 Company & Organization Details
               </h2>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-slate-400">
                 This information will be displayed to candidates on your job postings
               </p>
             </div>
@@ -268,12 +285,12 @@ export const RecruiterProfile: React.FC = () => {
           />
 
           {/* Company Logo Upload */}
-          <div className="pt-2 border-t border-gray-100">
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+          <div className="pt-4 border-t border-slate-800">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
               Company Logo
             </label>
             <div className="flex flex-col sm:flex-row items-center gap-6">
-              <div className="h-20 w-20 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0 shadow-2xs">
+              <div className="h-20 w-20 rounded-full border-2 border-dashed border-slate-700 bg-slate-950 flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
                 {logoPreview ? (
                   <img
                     src={logoPreview}
@@ -281,19 +298,17 @@ export const RecruiterProfile: React.FC = () => {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <span className="text-xs font-bold text-gray-400 text-center px-1">
-                    No Logo
-                  </span>
+                  <Building2 className="w-8 h-8 text-slate-600" />
                 )}
               </div>
-              <div className="flex-1 w-full space-y-1.5">
+              <div className="flex-1 w-full space-y-2">
                 <input
                   type="file"
                   accept="image/png, image/jpeg, image/webp"
                   onChange={handleLogoChange}
-                  className="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+                  className="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-500/15 file:text-emerald-300 hover:file:bg-emerald-500/25 cursor-pointer"
                 />
-                <p className="text-[11px] text-gray-400">
+                <p className="text-[11px] text-slate-500">
                   Supported formats: PNG, JPG, WEBP (Max 2MB). Transparent backgrounds recommended.
                 </p>
               </div>
@@ -308,32 +323,31 @@ export const RecruiterProfile: React.FC = () => {
             size="lg"
             variant="primary"
             isLoading={isSaving}
-            className="w-full sm:w-auto px-8 py-3 text-sm font-bold shadow-md shadow-indigo-100"
+            className="w-full sm:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-bold shadow-lg shadow-emerald-500/20"
           >
-            {isSaving ? "Saving Profile..." : "Save Recruiter Profile"}
+            <CheckCircle2 className="w-4 h-4 mr-1.5" />
+            <span>{isSaving ? "Saving Profile..." : "Save Recruiter Profile"}</span>
           </Button>
         </div>
       </form>
 
       {/* Account Session & Sign Out Card at Bottom */}
-      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8">
+      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8 backdrop-blur-xl shadow-2xl">
         <div>
-          <h2 className="text-base font-bold text-gray-900">
+          <h2 className="text-base font-bold text-white">
             Employer Account Session
           </h2>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Signed in as <span className="font-semibold text-gray-800">{fullName}</span> ({email})
+          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+            Signed in as <span className="font-semibold text-emerald-400">{fullName}</span> ({email})
           </p>
         </div>
         <Button
           type="button"
           variant="danger"
           onClick={handleLogout}
-          className="sm:w-auto w-full flex items-center justify-center gap-2 font-bold cursor-pointer"
+          className="sm:w-auto w-full flex items-center justify-center gap-2 font-bold bg-rose-500/15 border border-rose-500/30 text-rose-300 hover:bg-rose-500/25 cursor-pointer"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
+          <LogOut className="w-4 h-4" />
           <span>Sign Out / Logout</span>
         </Button>
       </div>
