@@ -24,6 +24,7 @@ import {
   Skeleton,
   Modal,
   ConfirmDialog,
+  AvatarCropModal,
 } from "../../components/common";
 import { useAuth } from "../../context/AuthContext";
 
@@ -70,6 +71,10 @@ export const CandidateProfile: React.FC = () => {
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const showcaseAvatarInputRef = useRef<HTMLInputElement>(null);
 
+  // Avatar Cropper Modal State
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+
   // New Experience Form State
   const [newExp, setNewExp] = useState<Experience>({
     company: "",
@@ -110,31 +115,39 @@ export const CandidateProfile: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Auto-upload avatar immediately on file select — no save button needed
-  const handleAvatarFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Open Avatar Cropper Modal when user selects a photo
+  const handleAvatarFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
 
+    // Open crop modal with the chosen file
+    setCropFile(file);
+    setIsCropModalOpen(true);
+
+    // Reset file inputs so the same file can be re-selected if needed
+    if (avatarInputRef.current) avatarInputRef.current.value = "";
+    if (showcaseAvatarInputRef.current) showcaseAvatarInputRef.current.value = "";
+  };
+
+  // Upload cropped avatar file
+  const handleCropSave = async (croppedFile: File) => {
     // Show local preview instantly
-    const localUrl = URL.createObjectURL(file);
+    const localUrl = URL.createObjectURL(croppedFile);
     setAvatarPreview(localUrl);
 
     try {
-      await uploadAvatarMutation.mutateAsync(file);
+      await uploadAvatarMutation.mutateAsync(croppedFile);
+      setIsCropModalOpen(false);
+      setCropFile(null);
       toast.success("Profile picture updated!", {
         description: "Your new photo has been saved to your profile.",
       });
     } catch (err: unknown) {
-      // Revert preview on failure
       setAvatarPreview(null);
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message || "Failed to upload profile picture.";
       toast.error("Upload Failed", { description: msg });
-    } finally {
-      // Reset file inputs so the same file can be re-selected if needed
-      if (avatarInputRef.current) avatarInputRef.current.value = "";
-      if (showcaseAvatarInputRef.current) showcaseAvatarInputRef.current.value = "";
     }
   };
 
@@ -1357,6 +1370,18 @@ export const CandidateProfile: React.FC = () => {
           )}
         </div>
       </Modal>
+
+      {/* Avatar Image Cropper & Zoom Modal */}
+      <AvatarCropModal
+        isOpen={isCropModalOpen}
+        imageFile={cropFile}
+        onClose={() => {
+          setIsCropModalOpen(false);
+          setCropFile(null);
+        }}
+        onSave={handleCropSave}
+        isSaving={uploadAvatarMutation.isPending}
+      />
     </div>
   );
 };
