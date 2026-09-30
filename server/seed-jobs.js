@@ -14,153 +14,378 @@ const seedData = async () => {
     await mongoose.connect(dbUri);
     console.log("Connected to MongoDB successfully!");
 
-    // 1. Find or create a demo recruiter user
-    let recruiterUser = await User.findOne({ email: "recruiter@jobmatrix.com" });
-    if (!recruiterUser) {
-      recruiterUser = await User.create({
-        username: "nexusrecruiter",
-        fullName: "JobMatrix Talent Lead",
-        email: "recruiter@jobmatrix.com",
-        password: "Password@123",
-        role: "recruiter",
-        avatar: "",
-      });
-      console.log("Created demo recruiter user:", recruiterUser._id);
+    // 1. Cleanup old test/junk jobs
+    const junkPatterns = [/test/i, /demo/i, /asdf/i, /qwerty/i, /sample/i, /temp/i, /fake/i, /dummy/i, /abc/i, /xyz/i, /\d{10,}/];
+    const allJobs = await Job.find({}).populate("recruiter");
+    for (const job of allJobs) {
+      if (
+        !job.title ||
+        job.title.length < 5 ||
+        junkPatterns.some((pattern) => pattern.test(job.title)) ||
+        job.recruiter?.companyName === "Acme Tech A"
+      ) {
+        await Job.findByIdAndDelete(job._id);
+        console.log(`Deleted test job: "${job.title}"`);
+      }
     }
 
-    // 2. Find or create recruiter profiles
-    let recruiterProfile = await RecruiterProfile.findOne({ user: recruiterUser._id });
-    if (!recruiterProfile) {
-      recruiterProfile = await RecruiterProfile.create({
-        user: recruiterUser._id,
-        companyName: "Nexus Technologies",
-        designation: "Head of Talent Acquisition",
-        experience: "8+ Years",
-        phone: "+91 9876543210",
-        bio: "Hiring exceptional engineering, design, and product talent worldwide.",
-        companyWebsite: "https://nexus-tech.example.com",
-        companyDescription: "Leading global technology enterprise creating cutting-edge cloud and web solutions.",
-        location: "Bengaluru, India",
-        industry: "Information Technology",
-        companyLogo: "",
-      });
-      console.log("Created demo recruiter profile:", recruiterProfile._id);
-    }
-
-    // 3. Define 7 clean, realistic jobs matching all popular categories
-    const sampleJobs = [
+    // 2. Verified recruiters and companies
+    const recruitersData = [
       {
-        title: "Junior Frontend Engineer (Fresher / 2024-2026 Batch)",
-        description: "Great opportunity for fresh engineering graduates to join our core web development team. You will build modern, accessible user interfaces using React, TypeScript, and Tailwind CSS under senior mentorship.",
-        requirements: ["HTML5, Modern CSS & JavaScript (ES6+)", "Basic understanding of React or Vue.js", "Problem solving, fast learner & team player"],
+        email: "talent@razorpay.com",
+        username: "razorpay_talent",
+        fullName: "Aarav Sharma",
+        companyName: "Razorpay",
+        designation: "Head of Technical Recruitment",
+        experience: "9+ Years in Fintech Hiring",
+        phone: "+91 98112 34567",
+        bio: "Building the financial backbone of the internet. Hiring high-impact engineers and product leaders.",
+        companyWebsite: "https://razorpay.com",
+        companyDescription: "Razorpay is India's leading full-stack financial services company, empowering millions of businesses with payments and banking solutions.",
+        location: "Bengaluru, Karnataka",
+        industry: "Information Technology",
+        companyLogo: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80",
+      },
+      {
+        email: "recruiter@jobmatrix.com",
+        username: "nexusrecruiter",
+        fullName: "Ananya Iyer",
+        companyName: "Nexus Cloud Labs",
+        designation: "Principal Talent Partner",
+        experience: "7+ Years",
+        phone: "+91 98765 43210",
+        bio: "Connecting top 1% engineering and design talent with world-class cloud infrastructure teams.",
+        companyWebsite: "https://nexuslabs.dev",
+        companyDescription: "Global enterprise engineering studio delivering next-gen cloud platforms, edge computing, and real-time collaboration suites.",
+        location: "Bengaluru / Remote",
+        industry: "Information Technology",
+        companyLogo: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=150&auto=format&fit=crop&q=80",
+      },
+      {
+        email: "careers@swiggy.in",
+        username: "swiggy_careers",
+        fullName: "Vikram Malhotra",
+        companyName: "Swiggy Tech",
+        designation: "Director of Engineering Hiring",
+        experience: "11+ Years",
+        phone: "+91 98450 12345",
+        bio: "Powering hyperlocal commerce at lightning speed. Scaling algorithms and high-throughput systems.",
+        companyWebsite: "https://swiggy.com",
+        companyDescription: "India's leading on-demand convenience platform connecting consumers to food, grocery, and dining experiences.",
+        location: "Bengaluru / Hyderabad",
+        industry: "Information Technology",
+        companyLogo: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=150&auto=format&fit=crop&q=80",
+      },
+      {
+        email: "talent@stripe.com",
+        username: "stripe_talent",
+        fullName: "Neha Kapoor",
+        companyName: "Stripe",
+        designation: "Senior Staff Recruiter",
+        experience: "8+ Years",
+        phone: "+91 99200 98765",
+        bio: "Increasing the GDP of the internet. Hiring developers, distributed systems engineers, and UI specialists.",
+        companyWebsite: "https://stripe.com",
+        companyDescription: "Stripe builds economic infrastructure for the internet — from small startups to public market enterprises.",
+        location: "Bengaluru, India / Remote",
+        industry: "Information Technology",
+        companyLogo: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=150&auto=format&fit=crop&q=80",
+      }
+    ];
+
+    const recruiterProfiles = [];
+
+    for (const rData of recruitersData) {
+      let user = await User.findOne({ email: rData.email });
+      if (!user) {
+        user = await User.create({
+          username: rData.username,
+          fullName: rData.fullName,
+          email: rData.email,
+          password: "Password@123",
+          role: "recruiter",
+          avatar: "",
+        });
+      }
+
+      let profile = await RecruiterProfile.findOne({ user: user._id });
+      if (!profile) {
+        profile = await RecruiterProfile.create({
+          user: user._id,
+          companyName: rData.companyName,
+          designation: rData.designation,
+          experience: rData.experience,
+          phone: rData.phone,
+          bio: rData.bio,
+          companyWebsite: rData.companyWebsite,
+          companyDescription: rData.companyDescription,
+          location: rData.location,
+          industry: rData.industry,
+          companyLogo: rData.companyLogo,
+        });
+      } else {
+        profile.companyName = rData.companyName;
+        profile.designation = rData.designation;
+        profile.bio = rData.bio;
+        profile.location = rData.location;
+        profile.companyWebsite = rData.companyWebsite;
+        profile.companyDescription = rData.companyDescription;
+        await profile.save();
+      }
+
+      recruiterProfiles.push({ user, profile });
+    }
+
+    // 3. Top-tier curated professional jobs
+    const professionalJobs = [
+      {
+        title: "Senior Frontend Engineer (React, TypeScript & Design Systems)",
+        description: "Join our core web experience team to build pixel-perfect, high-performance dashboards and checkout flows. You will architect modular component systems, optimize Web Vitals, and lead front-end best practices across product squads.",
+        requirements: [
+          "4+ years of professional experience with modern React, TypeScript, and Next.js",
+          "Deep mastery of state management, CSS architecture, and browser performance optimization",
+          "Demonstrated experience building reusable component libraries and accessibility standards (WCAG 2.1)",
+          "Track record of writing robust end-to-end tests with Playwright or Cypress"
+        ],
         location: "Bengaluru, Karnataka",
         jobType: "Full-time",
         workMode: "Hybrid",
         category: "Software Development",
-        experienceLevel: "Entry-level",
-        salary: 650000,
-        positions: 4,
-        recruiter: recruiterProfile._id,
-        createdBy: recruiterUser._id,
-        isActive: true,
-      },
-      {
-        title: "Full Stack React & Node Developer (100% Remote)",
-        description: "Join our globally distributed team to architect high-performance cloud applications. Work on customer-facing dashboards, real-time messaging, and high-throughput APIs from the comfort of your home.",
-        requirements: ["React.js, Next.js, and TypeScript", "Node.js & Express / NestJS", "MongoDB or PostgreSQL", "REST APIs & Git workflow"],
-        location: "Remote / Work From Home",
-        jobType: "Full-time",
-        workMode: "Remote",
-        category: "Software Development",
-        experienceLevel: "Mid-level",
-        salary: 1450000,
+        experienceLevel: "Senior-level",
+        salary: 2800000,
         positions: 3,
-        recruiter: recruiterProfile._id,
-        createdBy: recruiterUser._id,
+        recruiter: recruiterProfiles[0].profile._id,
+        createdBy: recruiterProfiles[0].user._id,
         isActive: true,
       },
       {
-        title: "Part-time Technical Content Writer & Reviewer",
-        description: "Flexible part-time role (15-20 hours per week). Write technical tutorials, developer guides, and engineering blog posts for a high-traffic developer community.",
-        requirements: ["Strong command of English grammar and technical writing", "Familiarity with web technologies & coding concepts", "Ability to dedicate 3-4 flexible hours daily"],
-        location: "Remote / Flexible Shifts",
-        jobType: "Part-time",
-        workMode: "Remote",
-        category: "Marketing",
-        experienceLevel: "Entry-level",
-        salary: 380000,
-        positions: 2,
-        recruiter: recruiterProfile._id,
-        createdBy: recruiterUser._id,
-        isActive: true,
-      },
-      {
-        title: "Product Designer - UI/UX (Women in Tech Initiative)",
-        description: "Equal-opportunity initiative focused on accelerating women in product leadership. Lead intuitive UX research, design systems, and delightful interfaces for fintech solutions.",
-        requirements: ["Figma, Wireframing & Prototyping", "User research and empathetic UX thinking", "Experience collaborating with engineering teams"],
-        location: "Gurugram, NCR / Hybrid",
-        jobType: "Full-time",
-        workMode: "Hybrid",
-        category: "Design",
-        experienceLevel: "Mid-level",
-        salary: 1300000,
-        positions: 2,
-        recruiter: recruiterProfile._id,
-        createdBy: recruiterUser._id,
-        isActive: true,
-      },
-      {
-        title: "Backend Engineer - Go & Distributed Systems (Full Time)",
-        description: "Scale high-concurrency microservices processing millions of daily transactions. Implement asynchronous queues, caching, and robust database architectures.",
-        requirements: ["Go (Golang) or Java / Node.js", "Docker, Kubernetes, and AWS/GCP", "PostgreSQL, Redis & Kafka/RabbitMQ", "Clean code and unit testing standards"],
-        location: "Hyderabad, Telangana",
+        title: "Staff Backend Engineer - Distributed Payment Systems",
+        description: "Architect mission-critical payment settlement and ledger microservices capable of processing over 50,000 requests per second with 99.999% uptime. You will solve complex concurrency challenges, idempotency protocols, and data replication across cloud regions.",
+        requirements: [
+          "6+ years building low-latency distributed systems using Go, Java, or Node.js",
+          "Deep understanding of distributed consensus, Kafka/RabbitMQ event pipelines, and ACID transactions",
+          "Extensive production experience with PostgreSQL, Redis clustering, and AWS/GCP cloud environments",
+          "Strong passion for clean architecture, observability (OpenTelemetry), and zero-downtime deployments"
+        ],
+        location: "Bengaluru, Karnataka",
         jobType: "Full-time",
         workMode: "On-site",
         category: "Software Development",
-        experienceLevel: "Mid-level",
-        salary: 1850000,
-        positions: 3,
-        recruiter: recruiterProfile._id,
-        createdBy: recruiterUser._id,
+        experienceLevel: "Senior-level",
+        salary: 3800000,
+        positions: 2,
+        recruiter: recruiterProfiles[0].profile._id,
+        createdBy: recruiterProfiles[0].user._id,
         isActive: true,
       },
       {
-        title: "Graduate Engineer Trainee - Cloud & DevOps (Freshers Welcome)",
-        description: "Kickstart your career in cloud infrastructure and DevOps. Includes comprehensive certification support for AWS/Azure, CI/CD pipeline automation, and production monitoring.",
-        requirements: ["B.Tech / B.E / BCA / MCA / B.Sc IT", "Linux command line & basic networking", "Eagerness to learn DevOps, Docker, and Cloud tools"],
-        location: "Pune, Maharashtra",
+        title: "Full Stack Engineer - Realtime Collaboration & Cloud",
+        description: "Work on cutting-edge collaborative web software with live cursor presence, optimistic sync engines, and WebSocket infrastructure. You will own features end-to-end from database modeling to rich browser canvas rendering.",
+        requirements: [
+          "3+ years building full-stack applications with React, Node.js, and TypeScript",
+          "Solid foundations in WebSockets, asynchronous messaging, and REST/GraphQL APIs",
+          "Experience with MongoDB, PostgreSQL, and Redis caching layers",
+          "Strong problem-solving ability, self-driven attitude, and enthusiasm for developer tooling"
+        ],
+        location: "Remote / Work From Home",
+        jobType: "Full-time",
+        workMode: "Remote",
+        category: "Software Development",
+        experienceLevel: "Mid-level",
+        salary: 1800000,
+        positions: 4,
+        recruiter: recruiterProfiles[1].profile._id,
+        createdBy: recruiterProfiles[1].user._id,
+        isActive: true,
+      },
+      {
+        title: "Junior Software Engineer (Graduate / 2024-2026 Batch)",
+        description: "An accelerated career launchpad for passionate fresh engineering graduates. You will be paired with senior engineering mentors to ship customer-facing web features, write clean modular code, and master cloud-native workflows.",
+        requirements: [
+          "B.Tech / B.E / MCA / BCA in Computer Science, IT or related technical discipline",
+          "Strong programming foundation in JavaScript / TypeScript, Data Structures & Algorithms",
+          "Familiarity with Git version control, HTML5, CSS3, and modern web frameworks",
+          "Exceptional curiosity, fast learning curve, and proactive team communication"
+        ],
+        location: "Bengaluru / Hybrid",
         jobType: "Full-time",
         workMode: "Hybrid",
         category: "Software Development",
         experienceLevel: "Entry-level",
-        salary: 580000,
-        positions: 5,
-        recruiter: recruiterProfile._id,
-        createdBy: recruiterUser._id,
+        salary: 850000,
+        positions: 6,
+        recruiter: recruiterProfiles[1].profile._id,
+        createdBy: recruiterProfiles[1].user._id,
         isActive: true,
       },
       {
-        title: "Remote QA Automation Tester (Part-time / Flexible)",
-        description: "Flexible 20 hours per week role to design automated test suites using Playwright and Cypress. Validate web and mobile user flows before product releases.",
-        requirements: ["JavaScript/TypeScript automation testing", "Playwright, Cypress, or Selenium", "Bug tracking and API testing with Postman"],
+        title: "Lead Product Designer (UI/UX, Mobile & Design Systems)",
+        description: "Shape the visual and interaction design language for millions of daily consumers. You will spearhead end-to-end product design from generative user research and wireframing to high-fidelity interactive prototypes and design token systems.",
+        requirements: [
+          "5+ years designing world-class consumer-facing web and mobile applications",
+          "Mastery of Figma, component libraries, interaction design, and micro-animations",
+          "Strong portfolio exhibiting thoughtful UX problem solving and crisp visual aesthetics",
+          "Excellent presentation skills with ability to collaborate closely with product managers and engineers"
+        ],
+        location: "Bengaluru, Karnataka",
+        jobType: "Full-time",
+        workMode: "Hybrid",
+        category: "Design",
+        experienceLevel: "Senior-level",
+        salary: 2600000,
+        positions: 2,
+        recruiter: recruiterProfiles[2].profile._id,
+        createdBy: recruiterProfiles[2].user._id,
+        isActive: true,
+      },
+      {
+        title: "Software Engineering Intern - Web & Backend (Summer 2026)",
+        description: "Exciting 6-month paid internship with pre-placement offer (PPO) opportunities. Work alongside talented engineers building hyperlocal routing algorithms, customer order dispatching, and high-throughput microservices.",
+        requirements: [
+          "Currently pursuing Bachelor's or Master's degree in Computer Science or related fields",
+          "Proficiency in at least one modern language: JavaScript/TypeScript, Python, Java, or Go",
+          "Hands-on project experience with web development or RESTful APIs",
+          "Availability for 6 months full-time internship starting immediately"
+        ],
+        location: "Bengaluru / Hyderabad",
+        jobType: "Internship",
+        workMode: "On-site",
+        category: "Software Development",
+        experienceLevel: "Entry-level",
+        salary: 480000,
+        positions: 8,
+        recruiter: recruiterProfiles[2].profile._id,
+        createdBy: recruiterProfiles[2].user._id,
+        isActive: true,
+      },
+      {
+        title: "Staff Cloud Infrastructure & SRE Engineer",
+        description: "Own the reliability, security, and scalability of multi-region Kubernetes clusters. Automate Infrastructure as Code (Terraform), engineer resilient CI/CD delivery pipelines, and establish SLI/SLO observability metrics.",
+        requirements: [
+          "5+ years in DevOps / SRE roles managing production cloud workloads on AWS or GCP",
+          "Expertise with Kubernetes, Helm, Docker, Terraform, and GitOps workflows",
+          "Proficiency in Prometheus, Grafana, ELK Stack, and automated incident response",
+          "Scripting mastery in Python, Bash, or Go for infrastructure automation"
+        ],
+        location: "Remote / Work From Home",
+        jobType: "Full-time",
+        workMode: "Remote",
+        category: "Software Development",
+        experienceLevel: "Senior-level",
+        salary: 3200000,
+        positions: 2,
+        recruiter: recruiterProfiles[3].profile._id,
+        createdBy: recruiterProfiles[3].user._id,
+        isActive: true,
+      },
+      {
+        title: "Product Marketing Manager - Developer Ecosystem",
+        description: "Drive global developer adoption, product storytelling, and go-to-market execution for next-gen APIs. You will create engaging technical walkthroughs, lead launch campaigns, and collaborate with Developer Relations.",
+        requirements: [
+          "3+ years experience in B2B SaaS, developer tooling, or API product marketing",
+          "Exceptional technical copywriting, messaging hierarchy, and narrative craft",
+          "Data-driven mindset with experience tracking funnel conversions and user acquisition",
+          "Comfortable understanding technical developer concepts and translating them into compelling value propositions"
+        ],
+        location: "Bengaluru, Karnataka",
+        jobType: "Full-time",
+        workMode: "Hybrid",
+        category: "Marketing",
+        experienceLevel: "Mid-level",
+        salary: 1900000,
+        positions: 2,
+        recruiter: recruiterProfiles[3].profile._id,
+        createdBy: recruiterProfiles[3].user._id,
+        isActive: true,
+      },
+      {
+        title: "Enterprise Solutions Consultant & Technical Sales",
+        description: "Partner with enterprise leadership to identify key payment modernization opportunities. Conduct architectural technical discovery, tailor proofs-of-concept, and guide technical decision-makers to close high-value annual contracts.",
+        requirements: [
+          "4+ years in pre-sales engineering, technical account management, or enterprise SaaS sales",
+          "Solid grasp of API integrations, web architectures, and cloud security frameworks",
+          "Proven record of surpassing sales quotas and managing complex B2B buyer journeys",
+          "Polished communication, executive presentation, and contract negotiation skills"
+        ],
+        location: "Mumbai / Gurugram",
+        jobType: "Full-time",
+        workMode: "Hybrid",
+        category: "Sales",
+        experienceLevel: "Senior-level",
+        salary: 2400000,
+        positions: 3,
+        recruiter: recruiterProfiles[0].profile._id,
+        createdBy: recruiterProfiles[0].user._id,
+        isActive: true,
+      },
+      {
+        title: "UI/UX Visual Designer - Interaction & Web (Part-time)",
+        description: "Flexible 20 hours per week role for a talented visual designer. Create stunning web landing pages, marketing assets, vector illustrations, and micro-animations for upcoming product releases.",
+        requirements: [
+          "2+ years experience crafting digital interfaces, web design, and graphic design",
+          "Strong portfolio in Figma, Adobe Creative Suite, and responsive web design",
+          "Keen eye for typography, spatial balance, modern dark mode aesthetics, and color theory",
+          "Ability to deliver high-quality work independently under flexible hours"
+        ],
         location: "Remote / Work From Home",
         jobType: "Part-time",
         workMode: "Remote",
-        category: "Software Development",
+        category: "Design",
         experienceLevel: "Mid-level",
-        salary: 550000,
+        salary: 650000,
         positions: 2,
-        recruiter: recruiterProfile._id,
-        createdBy: recruiterUser._id,
+        recruiter: recruiterProfiles[1].profile._id,
+        createdBy: recruiterProfiles[1].user._id,
         isActive: true,
       },
+      {
+        title: "Contract Senior QA Automation Specialist (6-12 Months)",
+        description: "High-impact contract role to build resilient automated testing suites for our core financial checkout pipelines. Integrate automated smoke and regression tests into GitHub Actions CI pipelines.",
+        requirements: [
+          "4+ years specialized in automated API and end-to-end testing with Playwright or Cypress",
+          "Experience with performance/load testing using k6 or JMeter",
+          "Proficiency in JavaScript/TypeScript and CI/CD integration",
+          "Thorough mindset with focus on test flakiness elimination and edge-case validation"
+        ],
+        location: "Remote / Bengaluru",
+        jobType: "Contract",
+        workMode: "Remote",
+        category: "Software Development",
+        experienceLevel: "Mid-level",
+        salary: 1600000,
+        positions: 2,
+        recruiter: recruiterProfiles[0].profile._id,
+        createdBy: recruiterProfiles[0].user._id,
+        isActive: true,
+      },
+      {
+        title: "Digital Growth & Content Strategist (Social & SEO)",
+        description: "Drive organic search visibility, high-converting social campaigns, and authoritative industry thought leadership. You will plan editorial calendars, optimize landing page SEO, and scale brand engagement.",
+        requirements: [
+          "2+ years in digital marketing, organic SEO, and content distribution",
+          "Experience with Google Analytics 4, Ahrefs/Semrush, and conversion rate optimization",
+          "Proven success building high-engagement social media campaigns across LinkedIn & Twitter",
+          "Strong creative storytelling and analytical performance reporting skills"
+        ],
+        location: "Gurugram, NCR",
+        jobType: "Full-time",
+        workMode: "On-site",
+        category: "Marketing",
+        experienceLevel: "Entry-level",
+        salary: 900000,
+        positions: 2,
+        recruiter: recruiterProfiles[2].profile._id,
+        createdBy: recruiterProfiles[2].user._id,
+        isActive: true,
+      }
     ];
 
-    // Remove older sample jobs to avoid duplicates if re-run
-    await Job.deleteMany({ createdBy: recruiterUser._id });
+    for (const rp of recruiterProfiles) {
+      await Job.deleteMany({ createdBy: rp.user._id });
+    }
 
-    const createdJobs = await Job.insertMany(sampleJobs);
-    console.log(`Successfully seeded ${createdJobs.length} jobs across all popular categories!`);
+    const createdJobs = await Job.insertMany(professionalJobs);
+    console.log(`Successfully seeded ${createdJobs.length} professional jobs across verified companies!`);
 
     await mongoose.disconnect();
     console.log("Disconnected from MongoDB. Seed complete.");
@@ -172,3 +397,4 @@ const seedData = async () => {
 };
 
 seedData();
+
