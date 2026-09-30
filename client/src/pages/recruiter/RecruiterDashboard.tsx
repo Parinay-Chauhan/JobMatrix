@@ -180,7 +180,7 @@ export const RecruiterDashboard: React.FC = () => {
                     <Button
                       variant="primary"
                       size="sm"
-                      className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 font-bold"
+                      className="font-bold shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-105 active:scale-95 transition-all"
                     >
                       <Users className="w-3.5 h-3.5 mr-1" />
                       <span>View Applicants</span>
