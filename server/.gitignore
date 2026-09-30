@@ -6,6 +6,9 @@
 logs
 **/*.backup.*
 **/*.back.*
+check-jobs.js
+clean-and-seed.js
+cleanup-unprofessional-jobs.js
 
 node_modules/
 node_modules
