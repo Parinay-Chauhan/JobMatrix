@@ -11,8 +11,6 @@ export type ApplicationStatus =
 export interface ApplicantUser {
   _id: string;
   fullName?: string;
-  fullname?: string;
-  name?: string;
   email?: string;
   avatar?: string;
 }
