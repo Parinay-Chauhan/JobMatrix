@@ -12,6 +12,47 @@ const NotificationContext = createContext<NotificationContextType>({
   clearAll: () => {},
 });
 
+const playNotificationSound = () => {
+  try {
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    const ctx = new AudioContextClass();
+    if (ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
+
+    const now = ctx.currentTime;
+
+    // Harmonic dual-tone chime (D5 -> A5)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(587.33, now);
+    gain1.gain.setValueAtTime(0.06, now);
+    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.3);
+
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(880, now + 0.08);
+    gain2.gain.setValueAtTime(0.06, now + 0.08);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.08);
+    osc2.stop(now + 0.4);
+  } catch {
+    // Browser audio policy / autoplay restrictions ignored safely
+  }
+};
+
 export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
@@ -48,13 +89,8 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
       // Append new notification to top of the list
       setNotifications((prev) => [newNotif, ...prev]);
 
-      // Play soft audio alert sound (Optional)
-      try {
-        const audio = new Audio("/sounds/notification.mp3");
-        audio.play().catch(() => {});
-      } catch {
-        // audio playback might be restricted
-      }
+      // Play soft synthesized chime
+      playNotificationSound();
     };
 
     socket.on("application_status_updated", handleIncomingNotification);
