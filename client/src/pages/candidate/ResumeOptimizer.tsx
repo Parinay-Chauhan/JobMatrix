@@ -10,7 +10,6 @@ import {
   Plus,
   Copy,
   Check,
-  Eye,
   UploadCloud,
   Search,
   ExternalLink,
@@ -18,8 +17,6 @@ import {
   ArrowRight,
   ShieldCheck,
   Building2,
-  MapPin,
-  RefreshCw,
 } from "lucide-react";
 import type { Job } from "../../types";
 import {
@@ -28,19 +25,14 @@ import {
   useJobsQuery,
   useUploadResumeMutation,
 } from "../../hooks/queries";
-import {
-  analyzeJobATS,
-  extractSkillsFromText,
-  generateTailoredBullets,
-  getATSChecklist,
-} from "../../utils/atsEngine";
-import { Input, Textarea, Button, Modal } from "../../components/common";
+import { analyzeJobATS } from "../../utils/atsEngine";
+import { Input, Textarea, Modal } from "../../components/common";
 
 export const ResumeOptimizer: React.FC = () => {
   const { data: profile } = useCandidateProfileQuery();
   const updateProfileMutation = useUpdateCandidateProfileMutation();
   const uploadResumeMutation = useUploadResumeMutation();
-  const { data: jobs = [], isLoading: loadingJobs } = useJobsQuery();
+  const { data: jobs = [] } = useJobsQuery();
 
   // Mode: "platform_job" | "custom_jd"
   const [analysisMode, setAnalysisMode] = useState<"platform_job" | "custom_jd">("platform_job");
@@ -48,7 +40,7 @@ export const ResumeOptimizer: React.FC = () => {
   const [jobSearchTerm, setJobSearchTerm] = useState("");
 
   // Custom JD state
-  const [customRoleTitle, setCustomRoleTitle] = useState("Software Engineer");
+  const [customRoleTitle, setCustomRoleTitle] = useState("Senior Full Stack Engineer");
   const [customCompanyName, setCustomCompanyName] = useState("Target Company");
   const [customJdText, setCustomJdText] = useState(
     "We are looking for a Senior Full Stack Engineer experienced in React, TypeScript, Node.js, Next.js, PostgreSQL, Docker, and AWS. Must have experience designing scalable REST APIs and CI/CD pipelines."
@@ -71,13 +63,26 @@ export const ResumeOptimizer: React.FC = () => {
     return [];
   }, [profile?.skills]);
 
+  // Fallback default job
+  const fallbackJob: Job = useMemo(() => ({
+    _id: "demo-job",
+    title: "Senior Full Stack Engineer",
+    companyName: "Tech Innovations Inc.",
+    description: "Seeking a developer skilled in React, TypeScript, Node.js, REST APIs, PostgreSQL, and Cloud infrastructure.",
+    location: "Remote / Hybrid",
+    jobType: "Full-time",
+    requirements: ["React", "TypeScript", "Node.js", "PostgreSQL"],
+    createdAt: new Date().toISOString(),
+  } as unknown as Job), []);
+
   // Selected or Synthetic Job
-  const currentJob = useMemo<Job | null>(() => {
+  const currentJob = useMemo<Job>(() => {
     if (analysisMode === "platform_job") {
       if (selectedJobId) {
-        return jobs.find((j) => j._id === selectedJobId) || null;
+        const found = jobs.find((j) => j._id === selectedJobId);
+        if (found) return found;
       }
-      return jobs[0] || null;
+      return jobs[0] || fallbackJob;
     } else {
       // Synthetic Job created from Custom JD
       return {
@@ -91,11 +96,10 @@ export const ResumeOptimizer: React.FC = () => {
         createdAt: new Date().toISOString(),
       } as unknown as Job;
     }
-  }, [analysisMode, selectedJobId, jobs, customRoleTitle, customCompanyName, customJdText]);
+  }, [analysisMode, selectedJobId, jobs, customRoleTitle, customCompanyName, customJdText, fallbackJob]);
 
   // Run ATS Analysis
   const analysis = useMemo(() => {
-    if (!currentJob) return null;
     return analyzeJobATS(currentJob, profile);
   }, [currentJob, profile]);
 
@@ -148,7 +152,8 @@ export const ResumeOptimizer: React.FC = () => {
   const filteredJobs = useMemo(() => {
     if (!jobSearchTerm) return jobs;
     return jobs.filter((j) =>
-      j.title.toLowerCase().includes(jobSearchTerm.toLowerCase()) ||
+      j.title?.toLowerCase().includes(jobSearchTerm.toLowerCase()) ||
+      (typeof j.recruiter === "object" && j.recruiter?.companyName?.toLowerCase().includes(jobSearchTerm.toLowerCase())) ||
       j.companyName?.toLowerCase().includes(jobSearchTerm.toLowerCase())
     );
   }, [jobs, jobSearchTerm]);
@@ -270,7 +275,7 @@ export const ResumeOptimizer: React.FC = () => {
             </div>
             <div>
               <span className="text-[10px] text-slate-400 font-semibold uppercase block">Selected Match</span>
-              <span className="text-base font-bold text-white">{analysis?.score || 0}%</span>
+              <span className="text-base font-bold text-white">{analysis.score}%</span>
             </div>
           </div>
         </div>
@@ -324,40 +329,46 @@ export const ResumeOptimizer: React.FC = () => {
                 />
 
                 <div className="space-y-2 max-h-[420px] overflow-y-auto custom-scrollbar pr-1">
-                  {filteredJobs.map((j) => {
-                    const isSelected = (selectedJobId || jobs[0]?._id) === j._id;
-                    const comp =
-                      (typeof j.recruiter === "object" ? j.recruiter?.companyName : undefined) ||
-                      j.companyName ||
-                      "Organization";
+                  {filteredJobs.length === 0 ? (
+                    <div className="p-6 text-center text-slate-400 text-xs bg-slate-950/40 rounded-xl border border-slate-800">
+                      No jobs match your search keywords.
+                    </div>
+                  ) : (
+                    filteredJobs.map((j) => {
+                      const isSelected = (selectedJobId || jobs[0]?._id) === j._id;
+                      const comp =
+                        (typeof j.recruiter === "object" ? j.recruiter?.companyName : undefined) ||
+                        j.companyName ||
+                        "Organization";
 
-                    return (
-                      <div
-                        key={j._id}
-                        onClick={() => setSelectedJobId(j._id)}
-                        className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
-                          isSelected
-                            ? "bg-emerald-500/10 border-emerald-500/40 shadow-md"
-                            : "bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-950"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <h4 className={`text-xs sm:text-sm font-bold line-clamp-1 ${isSelected ? "text-emerald-300" : "text-white"}`}>
-                            {j.title}
-                          </h4>
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 shrink-0 font-medium">
-                            {j.jobType || "Full-time"}
-                          </span>
+                      return (
+                        <div
+                          key={j._id}
+                          onClick={() => setSelectedJobId(j._id)}
+                          className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                            isSelected
+                              ? "bg-emerald-500/10 border-emerald-500/40 shadow-md"
+                              : "bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-950"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className={`text-xs sm:text-sm font-bold line-clamp-1 ${isSelected ? "text-emerald-300" : "text-white"}`}>
+                              {j.title}
+                            </h4>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 shrink-0 font-medium">
+                              {j.jobType || "Full-time"}
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+                            <Building2 className="w-3.5 h-3.5 text-slate-500" />
+                            <span>{comp}</span>
+                            <span className="text-slate-600">&bull;</span>
+                            <span>{j.location || "Remote"}</span>
+                          </p>
                         </div>
-                        <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
-                          <Building2 className="w-3.5 h-3.5 text-slate-500" />
-                          <span>{comp}</span>
-                          <span className="text-slate-600">&bull;</span>
-                          <span>{j.location || "Remote"}</span>
-                        </p>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                  )}
                 </div>
               </div>
             ) : (
@@ -427,256 +438,249 @@ export const ResumeOptimizer: React.FC = () => {
         {/* RIGHT COLUMN: Live Score & Diagnostic Workspace                           */}
         {/* ========================================================================= */}
         <div className="lg:col-span-7 space-y-6">
-          {analysis && currentJob ? (
-            <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 shadow-xl overflow-hidden">
-              {/* Header Strip with Glowing Gradient */}
-              <div className={`p-6 border-b border-slate-800 bg-gradient-to-r ${bandConfig.accentBg} flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+          <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 shadow-xl overflow-hidden">
+            {/* Header Strip with Glowing Gradient */}
+            <div className={`p-6 border-b border-slate-800 bg-gradient-to-r ${bandConfig.accentBg} flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block mb-1">
+                  Analyzing Role
+                </span>
+                <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                  {currentJob.title}
+                </h2>
+                <p className="text-xs text-slate-300 flex items-center gap-1.5 mt-1 font-medium">
+                  <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>
+                    {(typeof currentJob.recruiter === "object" ? currentJob.recruiter?.companyName : undefined) ||
+                      currentJob.companyName ||
+                      "Organization"}
+                  </span>
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                    <path
+                      className="text-slate-800"
+                      strokeWidth="3.5"
+                      stroke="currentColor"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      className={bandConfig.circleClass}
+                      strokeDasharray={`${analysis.score}, 100`}
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                      stroke="currentColor"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                    <span className="text-base font-black text-white">{analysis.score}%</span>
+                  </div>
+                </div>
                 <div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block mb-1">
-                    Analyzing Role
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${bandConfig.badgeClass} block text-center`}>
+                    {bandConfig.text}
                   </span>
-                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    {currentJob.title}
-                  </h2>
-                  <p className="text-xs text-slate-300 flex items-center gap-1.5 mt-1 font-medium">
-                    <Building2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>
-                      {(typeof currentJob.recruiter === "object" ? currentJob.recruiter?.companyName : undefined) ||
-                        currentJob.companyName ||
-                        "Organization"}
-                    </span>
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
-                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                      <path
-                        className="text-slate-800"
-                        strokeWidth="3.5"
-                        stroke="currentColor"
-                        fill="none"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <path
-                        className={bandConfig.circleClass}
-                        strokeDasharray={`${analysis.score}, 100`}
-                        strokeWidth="3.5"
-                        strokeLinecap="round"
-                        stroke="currentColor"
-                        fill="none"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                      <span className="text-base font-black text-white">{analysis.score}%</span>
-                    </div>
-                  </div>
-                  <div>
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${bandConfig.badgeClass} block text-center`}>
-                      {bandConfig.text}
-                    </span>
-                    <span className="text-[10px] text-slate-400 mt-1 block">
-                      {analysis.matchedSkills.length} of {analysis.allRequiredSkills.length} required skills
-                    </span>
-                  </div>
+                  <span className="text-[10px] text-slate-400 mt-1 block">
+                    {analysis.matchedSkills.length} of {analysis.allRequiredSkills.length} required skills
+                  </span>
                 </div>
               </div>
+            </div>
 
-              {/* Tab Navigation */}
-              <div className="flex items-center gap-2 p-4 border-b border-slate-800 bg-slate-950/40">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("skills")}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    activeTab === "skills"
-                      ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
-                  }`}
-                >
-                  <span>Skills Gap Breakdown</span>
-                  <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
-                    {analysis.allRequiredSkills.length}
-                  </span>
-                </button>
+            {/* Tab Navigation */}
+            <div className="flex items-center gap-2 p-4 border-b border-slate-800 bg-slate-950/40">
+              <button
+                type="button"
+                onClick={() => setActiveTab("skills")}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === "skills"
+                    ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                }`}
+              >
+                <span>Skills Gap Breakdown</span>
+                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
+                  {analysis.allRequiredSkills.length}
+                </span>
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("bullets")}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    activeTab === "bullets"
-                      ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
-                  }`}
-                >
-                  <span>Tailored Resume Bullets</span>
-                  <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
-                    {analysis.suggestedBullets.length}
-                  </span>
-                </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("bullets")}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === "bullets"
+                    ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                }`}
+              >
+                <span>Tailored Resume Bullets</span>
+                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
+                  {analysis.suggestedBullets.length}
+                </span>
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("checklist")}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    activeTab === "checklist"
-                      ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
-                  }`}
-                >
-                  <span>ATS Checklist</span>
-                  <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
-                    5/5
-                  </span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab("checklist")}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === "checklist"
+                    ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                }`}
+              >
+                <span>ATS Checklist</span>
+                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
+                  {analysis.formattingTips.length}
+                </span>
+              </button>
+            </div>
 
-              {/* Tab Content */}
-              <div className="p-6 space-y-6">
-                {activeTab === "skills" && (
-                  <div className="space-y-6">
-                    {/* Diagnostic Advice */}
-                    <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 leading-relaxed">
-                      <p className="font-semibold text-emerald-400 mb-1">ATS Diagnostic Advice:</p>
-                      {analysis.keywordDensityAdvice}
-                    </div>
-
-                    {/* Matched Skills */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                          <span>Matching Skills in Profile ({analysis.matchedSkills.length})</span>
-                        </h4>
-                        <span className="text-[11px] text-slate-500">Will pass keyword filters</span>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2">
-                        {analysis.matchedSkills.map((sk) => (
-                          <span
-                            key={sk}
-                            className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-1.5"
-                          >
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>{sk}</span>
-                          </span>
-                        ))}
-                        {analysis.matchedSkills.length === 0 && (
-                          <p className="text-xs text-slate-500 italic">
-                            No matching skills found yet. Review missing skills below.
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Missing Skills with 1-Click Add */}
-                    <div className="space-y-3 border-t border-slate-800 pt-5">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                          <AlertTriangle className="w-4 h-4 text-amber-400" />
-                          <span>Missing Keywords to Add ({analysis.missingSkills.length})</span>
-                        </h4>
-                        <span className="text-[11px] text-slate-500">Click &quot;+&quot; to add to profile</span>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2">
-                        {analysis.missingSkills.map((sk) => (
-                          <button
-                            key={sk}
-                            type="button"
-                            onClick={() => handleAddSkillToProfile(sk)}
-                            className="px-3 py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer group"
-                            title={`Add "${sk}" to your profile skills`}
-                          >
-                            <Plus className="w-3.5 h-3.5 text-amber-400 group-hover:scale-125 transition-transform" />
-                            <span>{sk}</span>
-                          </button>
-                        ))}
-                        {analysis.missingSkills.length === 0 && (
-                          <p className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>Fantastic! Your profile covers all detected required skills for this job.</span>
-                          </p>
-                        )}
-                      </div>
-                    </div>
+            {/* Tab Content */}
+            <div className="p-6 space-y-6">
+              {activeTab === "skills" && (
+                <div className="space-y-6">
+                  {/* Diagnostic Advice */}
+                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 leading-relaxed">
+                    <p className="font-semibold text-emerald-400 mb-1">ATS Diagnostic Advice:</p>
+                    {analysis.keywordDensityAdvice}
                   </div>
-                )}
 
-                {activeTab === "bullets" && (
-                  <div className="space-y-4">
-                    <p className="text-xs text-slate-400">
-                      Copy these ATS-optimized accomplishment statements tailored to this position. Paste them directly into your resume under your relevant work experience entries.
-                    </p>
-
-                    <div className="space-y-3">
-                      {analysis.suggestedBullets.map((bullet, idx) => (
-                        <div
-                          key={idx}
-                          className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 flex items-start justify-between gap-3 transition-colors"
-                        >
-                          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
-                            &bull; {bullet}
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() => handleCopyBullet(bullet, idx)}
-                            className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 transition-colors shrink-0 cursor-pointer"
-                            title="Copy bullet point"
-                          >
-                            {copiedIndex === idx ? (
-                              <Check className="w-4 h-4 text-emerald-400" />
-                            ) : (
-                              <Copy className="w-4 h-4" />
-                            )}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === "checklist" && (
+                  {/* Matched Skills */}
                   <div className="space-y-3">
-                    {analysis.checklist.map((item, idx) => (
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        <span>Matching Skills in Profile ({analysis.matchedSkills.length})</span>
+                      </h4>
+                      <span className="text-[11px] text-slate-500">Will pass keyword filters</span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {analysis.matchedSkills.map((sk) => (
+                        <span
+                          key={sk}
+                          className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-1.5"
+                        >
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>{sk}</span>
+                        </span>
+                      ))}
+                      {analysis.matchedSkills.length === 0 && (
+                        <p className="text-xs text-slate-500 italic">
+                          No matching skills found yet. Review missing skills below.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Missing Skills with 1-Click Add */}
+                  <div className="space-y-3 border-t border-slate-800 pt-5">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                        <AlertTriangle className="w-4 h-4 text-amber-400" />
+                        <span>Missing Keywords to Add ({analysis.missingSkills.length})</span>
+                      </h4>
+                      <span className="text-[11px] text-slate-500">Click &quot;+&quot; to add to profile</span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {analysis.missingSkills.map((sk) => (
+                        <button
+                          key={sk}
+                          type="button"
+                          onClick={() => handleAddSkillToProfile(sk)}
+                          className="px-3 py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer group"
+                          title={`Add "${sk}" to your profile skills`}
+                        >
+                          <Plus className="w-3.5 h-3.5 text-amber-400 group-hover:scale-125 transition-transform" />
+                          <span>{sk}</span>
+                        </button>
+                      ))}
+                      {analysis.missingSkills.length === 0 && (
+                        <p className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Fantastic! Your profile covers all detected required skills for this job.</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "bullets" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-slate-400">
+                    Copy these ATS-optimized accomplishment statements tailored to this position. Paste them directly into your resume under your relevant work experience entries.
+                  </p>
+
+                  <div className="space-y-3">
+                    {analysis.suggestedBullets.map((bullet, idx) => (
                       <div
                         key={idx}
-                        className={`p-4 rounded-xl border flex items-start gap-3.5 ${
-                          item.passed
-                            ? "bg-emerald-500/5 border-emerald-500/20"
-                            : "bg-slate-950/80 border-slate-800"
-                        }`}
+                        className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 flex items-start justify-between gap-3 transition-colors"
                       >
-                        <div className="mt-0.5 shrink-0">
-                          {item.passed ? (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                          &bull; {bullet}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => handleCopyBullet(bullet, idx)}
+                          className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 transition-colors shrink-0 cursor-pointer"
+                          title="Copy bullet point"
+                        >
+                          {copiedIndex === idx ? (
+                            <Check className="w-4 h-4 text-emerald-400" />
                           ) : (
-                            <AlertTriangle className="w-4 h-4 text-amber-400" />
+                            <Copy className="w-4 h-4" />
                           )}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h5 className="text-xs font-bold text-white">{item.label}</h5>
-                            <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${item.passed ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"}`}>
-                              {item.passed ? "Optimized" : "Action Needed"}
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                            {item.tip}
-                          </p>
-                        </div>
+                        </button>
                       </div>
                     ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+
+              {activeTab === "checklist" && (
+                <div className="space-y-3">
+                  {analysis.formattingTips.map((tip, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-4 rounded-xl border flex items-start gap-3.5 ${
+                        tip.passed
+                          ? "bg-emerald-500/5 border-emerald-500/20"
+                          : "bg-slate-950/80 border-slate-800"
+                      }`}
+                    >
+                      <div className="mt-0.5 shrink-0">
+                        {tip.passed ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        ) : (
+                          <AlertTriangle className="w-4 h-4 text-amber-400" />
+                        )}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h5 className="text-xs font-bold text-white">{tip.title}</h5>
+                          <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${tip.passed ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"}`}>
+                            {tip.passed ? "Optimized" : "Action Needed"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          {tip.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-12 text-center text-slate-400">
-              <Sparkles className="w-8 h-8 text-emerald-400 mx-auto mb-3 opacity-60" />
-              <p className="text-sm font-semibold">Select or paste a job description on the left to start ATS analysis.</p>
-            </div>
-          )}
+          </div>
         </div>
       </div>
 
