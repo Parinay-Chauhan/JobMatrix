@@ -19,6 +19,9 @@ import {
   Pencil,
   ArrowLeft,
   Calendar,
+  Sparkles,
+  CheckCircle2,
+  ArrowRight,
 } from "lucide-react";
 import type {
   CandidateProfile as CandidateProfileType,
@@ -860,6 +863,132 @@ export const CandidateProfile: React.FC = () => {
         {/* RIGHT COLUMN: Summary, Skills, Work Experience, Education                */}
         {/* ========================================================================= */}
         <div className="lg:col-span-8 space-y-6">
+          {/* AI ATS Resume Readiness & Keyword Optimizer Card */}
+          {(() => {
+            let atsScore = 0;
+            if (profile?.resume) atsScore += 25;
+            if (skillsList.length >= 5) atsScore += 25;
+            else if (skillsList.length > 0) atsScore += 10;
+            if (profile?.bio && profile.bio.trim().length >= 40) atsScore += 20;
+            if (profile?.experience && profile.experience.length > 0) atsScore += 15;
+            if (profile?.education && profile.education.length > 0) atsScore += 15;
+
+            const popularSuggestions = [
+              "TypeScript",
+              "React",
+              "Node.js",
+              "Docker",
+              "PostgreSQL",
+              "REST APIs",
+              "Git",
+              "Tailwind CSS",
+              "AWS",
+              "CI/CD",
+            ].filter((s) => !skillsList.some((k) => k.toLowerCase() === s.toLowerCase()));
+
+            const handleQuickAddSkill = async (skill: string) => {
+              const updated = [...skillsList, skill];
+              try {
+                await updateProfileMutation.mutateAsync({ skills: updated });
+                toast.success(`Added "${skill}" to your skills!`);
+              } catch {
+                toast.error("Failed to add skill.");
+              }
+            };
+
+            return (
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/95 to-slate-950 border border-emerald-500/20 p-6 shadow-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-base sm:text-lg font-bold text-white">
+                          AI ATS Resume & Keyword Optimizer
+                        </h2>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                          Live Analysis
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Optimize profile discoverability across Automated Tracking Systems and recruiter filters.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ATS Health Score Gauge Badge */}
+                  <div className="flex items-center gap-2.5 self-start sm:self-center px-3.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                    <div className="text-right">
+                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">ATS Readiness</span>
+                      <span className="text-xs font-bold text-slate-200">
+                        {atsScore >= 80 ? "Top Candidate" : atsScore >= 50 ? "Good Foundation" : "Needs Keywords"}
+                      </span>
+                    </div>
+                    <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-black text-sm text-emerald-400">
+                      {atsScore}%
+                    </div>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="mt-4">
+                  <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                    <div
+                      className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full transition-all duration-500"
+                      style={{ width: `${atsScore}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* 4 Checkpoint Badges */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-4">
+                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.resume ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
+                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.resume ? "text-emerald-400" : "text-slate-600"}`} />
+                    <span className="truncate">Resume PDF</span>
+                  </div>
+                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${skillsList.length >= 5 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
+                    <CheckCircle2 className={`w-3.5 h-3.5 ${skillsList.length >= 5 ? "text-emerald-400" : "text-slate-600"}`} />
+                    <span className="truncate">5+ Key Skills ({skillsList.length})</span>
+                  </div>
+                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.bio ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
+                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.bio ? "text-emerald-400" : "text-slate-600"}`} />
+                    <span className="truncate">Summary Bio</span>
+                  </div>
+                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.experience && profile.experience.length > 0 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
+                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.experience && profile.experience.length > 0 ? "text-emerald-400" : "text-slate-600"}`} />
+                    <span className="truncate">Work Experience</span>
+                  </div>
+                </div>
+
+                {/* Quick Add Suggestions */}
+                {popularSuggestions.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-slate-800/80">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                        Suggested In-Demand ATS Keywords (1-Click Add):
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {popularSuggestions.slice(0, 6).map((sug) => (
+                        <button
+                          key={sug}
+                          type="button"
+                          onClick={() => handleQuickAddSkill(sug)}
+                          className="px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/30 text-slate-300 hover:text-emerald-300 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer group"
+                        >
+                          <Plus className="w-3 h-3 text-emerald-400 group-hover:scale-110 transition-transform" />
+                          <span>{sug}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
           {/* Professional Summary & Skills Card */}
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 shadow-xl p-6 sm:p-7 space-y-6">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">

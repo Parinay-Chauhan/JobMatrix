@@ -9,6 +9,7 @@ import {
   Filter,
   CheckCircle2,
 } from "lucide-react";
+import type { Job } from "../../types";
 import { useJobsQuery, useMyApplicationsQuery, useApplyJobMutation } from "../../hooks/queries";
 import {
   JobCard,
@@ -18,6 +19,7 @@ import {
   Select,
   Pagination,
 } from "../../components/common";
+import { ATSAnalyzerModal } from "../../components/candidate";
 
 const PAGE_SIZE = 20;
 
@@ -29,6 +31,7 @@ export const FindJobs: React.FC = () => {
   const [selectedJobType, setSelectedJobType] = useState("");
   const [selectedWorkMode, setSelectedWorkMode] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedAtsJob, setSelectedAtsJob] = useState<Job | null>(null);
 
   // TanStack Queries
   const { data: jobs = [], isLoading: loadingJobs } = useJobsQuery();
@@ -381,6 +384,7 @@ export const FindJobs: React.FC = () => {
                   isApplied={isApplied}
                   isLoading={isApplyingThisJob}
                   onAction={handleApply}
+                  onOpenATS={(selectedJob) => setSelectedAtsJob(selectedJob)}
                 />
               );
             })}
@@ -395,6 +399,15 @@ export const FindJobs: React.FC = () => {
           />
         </div>
       )}
+
+      {/* Interactive AI ATS Resume Optimizer Modal */}
+      <ATSAnalyzerModal
+        job={selectedAtsJob}
+        isOpen={Boolean(selectedAtsJob)}
+        onClose={() => setSelectedAtsJob(null)}
+        onApply={handleApply}
+        isApplied={selectedAtsJob ? appliedJobIds.includes(selectedAtsJob._id) : false}
+      />
     </div>
   );
 };
