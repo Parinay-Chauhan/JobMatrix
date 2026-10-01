@@ -17,6 +17,11 @@ import {
   ArrowRight,
   ShieldCheck,
   Building2,
+  HelpCircle,
+  Code2,
+  Terminal,
+  Database,
+  Smartphone,
 } from "lucide-react";
 import type { Job } from "../../types";
 import {
@@ -28,16 +33,48 @@ import {
 import { analyzeJobATS } from "../../utils/atsEngine";
 import { Input, Textarea, Modal } from "../../components/common";
 
+const SAMPLE_PRESETS = [
+  {
+    name: "Full Stack Engineer",
+    icon: Code2,
+    role: "Senior Full Stack Engineer",
+    company: "Stripe / Scale AI",
+    jd: "Looking for a Senior Full Stack Engineer experienced in React, TypeScript, Node.js, Next.js, PostgreSQL, Docker, and AWS. Must have experience architecting scalable REST APIs, microservices, and CI/CD pipelines.",
+  },
+  {
+    name: "Frontend Specialist",
+    icon: Terminal,
+    role: "Lead Frontend Engineer",
+    company: "Vercel / Linear",
+    jd: "Seeking an expert Frontend Engineer proficient in React, Next.js, TypeScript, Tailwind CSS, Redux, WebSockets, and modern web performance optimization (Web Vitals, accessibility).",
+  },
+  {
+    name: "Backend & Cloud",
+    icon: Database,
+    role: "Backend Infrastructure Engineer",
+    company: "Datadog / Uber",
+    jd: "Seeking a Backend Engineer experienced in Node.js, Go (Golang), Python, PostgreSQL, MongoDB, Redis, Docker, Kubernetes, AWS, and distributed systems design.",
+  },
+  {
+    name: "Mobile App Dev",
+    icon: Smartphone,
+    role: "Mobile Applications Engineer",
+    company: "DoorDash / Coinbase",
+    jd: "Looking for a Mobile Developer with strong skills in React Native, Flutter, TypeScript, iOS, Android, REST APIs, and state management.",
+  },
+];
+
 export const ResumeOptimizer: React.FC = () => {
   const { data: profile } = useCandidateProfileQuery();
   const updateProfileMutation = useUpdateCandidateProfileMutation();
   const uploadResumeMutation = useUploadResumeMutation();
-  const { data: jobs = [] } = useJobsQuery();
+  const { data: jobs = [], isLoading: loadingJobs } = useJobsQuery();
 
   // Mode: "platform_job" | "custom_jd"
   const [analysisMode, setAnalysisMode] = useState<"platform_job" | "custom_jd">("platform_job");
   const [selectedJobId, setSelectedJobId] = useState<string>("");
   const [jobSearchTerm, setJobSearchTerm] = useState("");
+  const [showHowItWorks, setShowHowItWorks] = useState(true);
 
   // Custom JD state
   const [customRoleTitle, setCustomRoleTitle] = useState("Senior Full Stack Engineer");
@@ -63,11 +100,11 @@ export const ResumeOptimizer: React.FC = () => {
     return [];
   }, [profile?.skills]);
 
-  // Fallback default job
+  // Fallback default job if jobs list is still loading
   const fallbackJob: Job = useMemo(() => ({
     _id: "demo-job",
-    title: "Senior Full Stack Engineer",
-    companyName: "Tech Innovations Inc.",
+    title: "Full Stack Engineer",
+    companyName: "Tech Innovations",
     description: "Seeking a developer skilled in React, TypeScript, Node.js, REST APIs, PostgreSQL, and Cloud infrastructure.",
     location: "Remote / Hybrid",
     jobType: "Full-time",
@@ -119,7 +156,7 @@ export const ResumeOptimizer: React.FC = () => {
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
     toast.success("Bullet point copied!", {
-      description: "Paste this directly into your resume's experience section.",
+      description: "Paste this directly into your resume under work experience.",
     });
     setTimeout(() => setCopiedIndex(null), 2500);
   };
@@ -130,7 +167,7 @@ export const ResumeOptimizer: React.FC = () => {
     try {
       await updateProfileMutation.mutateAsync({ skills: updated });
       toast.success(`Added "${skillToAdd}" to your Profile!`, {
-        description: "Your ATS Match score has been recalculated live.",
+        description: "ATS Match score updated live.",
       });
     } catch {
       toast.error("Failed to add skill.");
@@ -146,6 +183,16 @@ export const ResumeOptimizer: React.FC = () => {
     } catch {
       toast.error("Failed to upload resume.");
     }
+  };
+
+  const handleApplyPreset = (preset: typeof SAMPLE_PRESETS[0]) => {
+    setAnalysisMode("custom_jd");
+    setCustomRoleTitle(preset.role);
+    setCustomCompanyName(preset.company);
+    setCustomJdText(preset.jd);
+    toast.info(`Loaded preset: ${preset.name}`, {
+      description: "Analysis updated with sample job requirements.",
+    });
   };
 
   // Filtered Jobs for Dropdown / Selector
@@ -166,18 +213,21 @@ export const ResumeOptimizer: React.FC = () => {
       badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
       circleClass: "text-emerald-400 stroke-emerald-400",
       accentBg: "from-emerald-500/10 via-teal-500/5 to-transparent",
+      tip: "High likelihood of passing automated ATS recruiter filters!",
     },
     medium: {
-      text: "Moderate Match (Keywords Needed)",
+      text: "Moderate Match",
       badgeClass: "bg-amber-500/15 text-amber-400 border-amber-500/30",
       circleClass: "text-amber-400 stroke-amber-400",
       accentBg: "from-amber-500/10 via-orange-500/5 to-transparent",
+      tip: "Add missing keywords below to reach 80%+ match rate.",
     },
     low: {
       text: "Optimization Required",
       badgeClass: "bg-rose-500/15 text-rose-400 border-rose-500/30",
       circleClass: "text-rose-400 stroke-rose-400",
       accentBg: "from-rose-500/10 via-orange-500/5 to-transparent",
+      tip: "Major keyword gap. Use 1-click Add buttons to optimize.",
     },
   }[matchBand];
 
@@ -191,23 +241,23 @@ export const ResumeOptimizer: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              <span>AI ATS Resume Optimizer</span>
+              <span>Smart Candidate Tool</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-              Resume Keyword & ATS Scanner
+              AI ATS Resume Optimizer
             </h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-2 max-w-2xl leading-relaxed">
-              Scan your profile against specific job descriptions, identify missing keyword gaps, and generate tailored, high-impact resume bullets to maximize interview callbacks.
+              Match your resume and profile against any job opening, find missing ATS keywords, and generate role-tailored bullet points with 1-click.
             </p>
           </div>
 
           {/* Quick Resume Upload/Status Card */}
-          <div className="flex items-center gap-4 bg-slate-950/70 border border-slate-800 rounded-2xl p-4 shrink-0">
+          <div className="flex items-center gap-4 bg-slate-950/80 border border-slate-800 rounded-2xl p-4 shrink-0 shadow-lg">
             <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <span className="text-[11px] text-slate-400 font-semibold block">Resume Status</span>
+              <span className="text-[11px] text-slate-400 font-semibold block uppercase tracking-wider">Your Attached Resume</span>
               {profile?.resume ? (
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className="text-xs font-bold text-white truncate max-w-[140px]">
@@ -222,9 +272,9 @@ export const ResumeOptimizer: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <label className="text-xs font-bold text-emerald-400 hover:underline cursor-pointer inline-flex items-center gap-1 mt-0.5">
-                  <UploadCloud className="w-3.5 h-3.5" />
-                  <span>Upload PDF</span>
+                <label className="text-xs font-bold text-emerald-400 hover:underline cursor-pointer inline-flex items-center gap-1.5 mt-0.5">
+                  <UploadCloud className="w-4 h-4" />
+                  <span>Upload Resume PDF</span>
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx"
@@ -274,25 +324,86 @@ export const ResumeOptimizer: React.FC = () => {
               <Layers className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-semibold uppercase block">Selected Match</span>
+              <span className="text-[10px] text-slate-400 font-semibold uppercase block">Match for Selected Role</span>
               <span className="text-base font-bold text-white">{analysis.score}%</span>
             </div>
           </div>
         </div>
       </div>
 
+      {/* User-Friendly 3-Step Guided Guide Card */}
+      {showHowItWorks && (
+        <div className="relative rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/90 to-teal-950/40 border border-emerald-500/20 p-5 shadow-lg animate-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+            <div className="flex items-center gap-2 text-emerald-300 font-bold text-xs uppercase tracking-wider">
+              <HelpCircle className="w-4 h-4 text-emerald-400" />
+              <span>How It Works (3 Easy Steps)</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowHowItWorks(false)}
+              className="text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              Dismiss
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div className="flex items-start gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
+              <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center shrink-0">
+                1
+              </span>
+              <div>
+                <h4 className="text-xs font-bold text-white">Choose Target Role</h4>
+                <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                  Select an active job from the left list or paste any job description from LinkedIn/Indeed.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
+              <span className="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 font-black text-xs flex items-center justify-center shrink-0">
+                2
+              </span>
+              <div>
+                <h4 className="text-xs font-bold text-white">Review Keyword Gaps</h4>
+                <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                  See matching keywords (green) and missing keywords (amber) that ATS filters search for.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
+              <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-black text-xs flex items-center justify-center shrink-0">
+                3
+              </span>
+              <div>
+                <h4 className="text-xs font-bold text-white">1-Click Boost & Copy</h4>
+                <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                  Click &quot;+ Add to Profile&quot; to boost your score and copy tailored bullets for your resume.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Dual-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* ========================================================================= */}
-        {/* LEFT COLUMN: Target Job Selector or Custom JD Input                       */}
+        {/* LEFT COLUMN: Step 1 - Target Job Selector / Custom JD                     */}
         {/* ========================================================================= */}
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 shadow-xl space-y-5">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-200">
-                Target Job Source
-              </h2>
-              {/* Toggle Switch */}
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block">Step 1</span>
+                <h2 className="text-sm font-bold text-white">
+                  Select Target Position
+                </h2>
+              </div>
+
+              {/* Mode Toggle Switch */}
               <div className="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800">
                 <button
                   type="button"
@@ -314,7 +425,7 @@ export const ResumeOptimizer: React.FC = () => {
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  Paste Custom JD
+                  Paste JD
                 </button>
               </div>
             </div>
@@ -322,14 +433,18 @@ export const ResumeOptimizer: React.FC = () => {
             {analysisMode === "platform_job" ? (
               <div className="space-y-4">
                 <Input
-                  placeholder="Search available platform jobs..."
+                  placeholder="Search live jobs by title, company, or tech..."
                   value={jobSearchTerm}
                   onChange={(e) => setJobSearchTerm(e.target.value)}
                   leftIcon={<Search className="w-4 h-4 text-slate-400" />}
                 />
 
                 <div className="space-y-2 max-h-[420px] overflow-y-auto custom-scrollbar pr-1">
-                  {filteredJobs.length === 0 ? (
+                  {loadingJobs ? (
+                    <div className="p-8 text-center text-slate-400 text-xs">
+                      Loading available openings...
+                    </div>
+                  ) : filteredJobs.length === 0 ? (
                     <div className="p-6 text-center text-slate-400 text-xs bg-slate-950/40 rounded-xl border border-slate-800">
                       No jobs match your search keywords.
                     </div>
@@ -347,7 +462,7 @@ export const ResumeOptimizer: React.FC = () => {
                           onClick={() => setSelectedJobId(j._id)}
                           className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                             isSelected
-                              ? "bg-emerald-500/10 border-emerald-500/40 shadow-md"
+                              ? "bg-emerald-500/10 border-emerald-500/50 shadow-md ring-1 ring-emerald-500/20"
                               : "bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-950"
                           }`}
                         >
@@ -372,9 +487,34 @@ export const ResumeOptimizer: React.FC = () => {
                 </div>
               </div>
             ) : (
-              /* Custom JD Form */
+              /* Custom JD Form with 1-Click Role Presets */
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+                {/* 1-Click Sample Presets */}
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                    ⚡ Quick Test with Sample Role:
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {SAMPLE_PRESETS.map((preset) => {
+                      const Icon = preset.icon;
+                      return (
+                        <button
+                          key={preset.name}
+                          type="button"
+                          onClick={() => handleApplyPreset(preset)}
+                          className="p-2 rounded-xl bg-slate-950 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/30 text-left transition-all cursor-pointer group"
+                        >
+                          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-200 group-hover:text-emerald-300">
+                            <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span className="truncate">{preset.name}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 pt-2">
                   <Input
                     label="Target Job Title"
                     value={customRoleTitle}
@@ -391,11 +531,11 @@ export const ResumeOptimizer: React.FC = () => {
 
                 <Textarea
                   label="Paste Job Description (Requirements & Responsibilities)"
-                  rows={8}
+                  rows={6}
                   value={customJdText}
                   onChange={(e) => setCustomJdText(e.target.value)}
                   placeholder="Paste the full job description text here..."
-                  helperText="Our NLP keyword engine will extract skills and benchmark your profile."
+                  helperText="Our ATS keyword parser will instantly extract required skills."
                 />
               </div>
             )}
@@ -404,9 +544,12 @@ export const ResumeOptimizer: React.FC = () => {
           {/* Current Profile Skills Manager */}
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Your Profile Skills ({candidateSkills.length})
-              </h3>
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-400 block">Your Profile</span>
+                <h3 className="text-xs font-bold text-white">
+                  Active Skills ({candidateSkills.length})
+                </h3>
+              </div>
               <Link
                 to="/candidate/profile"
                 className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
@@ -427,7 +570,7 @@ export const ResumeOptimizer: React.FC = () => {
               ))}
               {candidateSkills.length === 0 && (
                 <p className="text-xs text-slate-500 italic">
-                  No skills added yet. Add skills to increase ATS score.
+                  No skills listed. Add skills through the edit profile view.
                 </p>
               )}
             </div>
@@ -435,7 +578,7 @@ export const ResumeOptimizer: React.FC = () => {
         </div>
 
         {/* ========================================================================= */}
-        {/* RIGHT COLUMN: Live Score & Diagnostic Workspace                           */}
+        {/* RIGHT COLUMN: Step 2 & 3 - Live ATS Analysis & 1-Click Optimizer          */}
         {/* ========================================================================= */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 shadow-xl overflow-hidden">
@@ -443,7 +586,7 @@ export const ResumeOptimizer: React.FC = () => {
             <div className={`p-6 border-b border-slate-800 bg-gradient-to-r ${bandConfig.accentBg} flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
               <div>
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block mb-1">
-                  Analyzing Role
+                  Step 2 & 3: Live Scan Result
                 </span>
                 <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                   {currentJob.title}
@@ -455,10 +598,16 @@ export const ResumeOptimizer: React.FC = () => {
                       currentJob.companyName ||
                       "Organization"}
                   </span>
+                  <span className="text-slate-600">&bull;</span>
+                  <span className="text-slate-400">{currentJob.location || "Remote"}</span>
+                </p>
+                <p className="text-xs text-slate-400 mt-2">
+                  {bandConfig.tip}
                 </p>
               </div>
 
-              <div className="flex items-center gap-3">
+              {/* Gauge Meter */}
+              <div className="flex items-center gap-3 bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 shrink-0">
                 <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                     <path
@@ -487,24 +636,24 @@ export const ResumeOptimizer: React.FC = () => {
                     {bandConfig.text}
                   </span>
                   <span className="text-[10px] text-slate-400 mt-1 block">
-                    {analysis.matchedSkills.length} of {analysis.allRequiredSkills.length} required skills
+                    {analysis.matchedSkills.length} of {analysis.allRequiredSkills.length} skills matched
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex items-center gap-2 p-4 border-b border-slate-800 bg-slate-950/40">
+            <div className="flex items-center gap-2 p-3 sm:p-4 border-b border-slate-800 bg-slate-950/40 overflow-x-auto">
               <button
                 type="button"
                 onClick={() => setActiveTab("skills")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                   activeTab === "skills"
                     ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
                     : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
                 }`}
               >
-                <span>Skills Gap Breakdown</span>
+                <span>1. Skills Gap Breakdown</span>
                 <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
                   {analysis.allRequiredSkills.length}
                 </span>
@@ -513,13 +662,13 @@ export const ResumeOptimizer: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("bullets")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                   activeTab === "bullets"
                     ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
                     : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
                 }`}
               >
-                <span>Tailored Resume Bullets</span>
+                <span>2. Tailored Resume Bullets</span>
                 <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
                   {analysis.suggestedBullets.length}
                 </span>
@@ -528,13 +677,13 @@ export const ResumeOptimizer: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("checklist")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                   activeTab === "checklist"
                     ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
                     : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
                 }`}
               >
-                <span>ATS Checklist</span>
+                <span>3. ATS Health Checklist</span>
                 <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
                   {analysis.formattingTips.length}
                 </span>
@@ -547,21 +696,56 @@ export const ResumeOptimizer: React.FC = () => {
                 <div className="space-y-6">
                   {/* Diagnostic Advice */}
                   <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 leading-relaxed">
-                    <p className="font-semibold text-emerald-400 mb-1">ATS Diagnostic Advice:</p>
+                    <p className="font-semibold text-emerald-400 mb-1">ATS Diagnostic Recommendation:</p>
                     {analysis.keywordDensityAdvice}
                   </div>
 
+                  {/* Missing Skills with 1-Click Add (TOP PRIORITY) */}
+                  <div className="space-y-3 bg-amber-500/5 border border-amber-500/20 rounded-2xl p-4.5">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                        <AlertTriangle className="w-4 h-4 text-amber-400" />
+                        <span>Missing Target Keywords ({analysis.missingSkills.length})</span>
+                      </h4>
+                      <span className="text-[11px] text-amber-400/80 font-medium">Click &quot;+ Add&quot; to update profile instantly</span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {analysis.missingSkills.map((sk) => (
+                        <button
+                          key={sk}
+                          type="button"
+                          onClick={() => handleAddSkillToProfile(sk)}
+                          className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-500/20 border border-amber-500/30 hover:border-emerald-500/40 text-amber-300 hover:text-emerald-300 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer group shadow-xs active:scale-95"
+                          title={`Click to add "${sk}" to your profile skills`}
+                        >
+                          <Plus className="w-3.5 h-3.5 text-amber-400 group-hover:text-emerald-300 transition-colors" />
+                          <span>{sk}</span>
+                          <span className="text-[10px] text-slate-400 font-normal group-hover:text-emerald-400">
+                            (+Add)
+                          </span>
+                        </button>
+                      ))}
+                      {analysis.missingSkills.length === 0 && (
+                        <p className="text-xs text-emerald-400 font-semibold flex items-center gap-1 py-1">
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>All detected required keywords are present in your profile!</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Matched Skills */}
-                  <div className="space-y-3">
+                  <div className="space-y-3 bg-slate-950/60 border border-slate-800 rounded-2xl p-4.5">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                         <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                        <span>Matching Skills in Profile ({analysis.matchedSkills.length})</span>
+                        <span>Matching Skills Found ({analysis.matchedSkills.length})</span>
                       </h4>
-                      <span className="text-[11px] text-slate-500">Will pass keyword filters</span>
+                      <span className="text-[11px] text-slate-500">Will pass ATS filters</span>
                     </div>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 pt-1">
                       {analysis.matchedSkills.map((sk) => (
                         <span
                           key={sk}
@@ -572,40 +756,8 @@ export const ResumeOptimizer: React.FC = () => {
                         </span>
                       ))}
                       {analysis.matchedSkills.length === 0 && (
-                        <p className="text-xs text-slate-500 italic">
-                          No matching skills found yet. Review missing skills below.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Missing Skills with 1-Click Add */}
-                  <div className="space-y-3 border-t border-slate-800 pt-5">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                        <AlertTriangle className="w-4 h-4 text-amber-400" />
-                        <span>Missing Keywords to Add ({analysis.missingSkills.length})</span>
-                      </h4>
-                      <span className="text-[11px] text-slate-500">Click &quot;+&quot; to add to profile</span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {analysis.missingSkills.map((sk) => (
-                        <button
-                          key={sk}
-                          type="button"
-                          onClick={() => handleAddSkillToProfile(sk)}
-                          className="px-3 py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer group"
-                          title={`Add "${sk}" to your profile skills`}
-                        >
-                          <Plus className="w-3.5 h-3.5 text-amber-400 group-hover:scale-125 transition-transform" />
-                          <span>{sk}</span>
-                        </button>
-                      ))}
-                      {analysis.missingSkills.length === 0 && (
-                        <p className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Fantastic! Your profile covers all detected required skills for this job.</span>
+                        <p className="text-xs text-slate-500 italic py-1">
+                          No matching skills found yet. Click &quot;+ Add&quot; on missing keywords above.
                         </p>
                       )}
                     </div>
@@ -615,15 +767,16 @@ export const ResumeOptimizer: React.FC = () => {
 
               {activeTab === "bullets" && (
                 <div className="space-y-4">
-                  <p className="text-xs text-slate-400">
-                    Copy these ATS-optimized accomplishment statements tailored to this position. Paste them directly into your resume under your relevant work experience entries.
-                  </p>
+                  <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs text-emerald-300 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Copy these bullet points directly into your resume under your relevant work experience entries:</span>
+                  </div>
 
                   <div className="space-y-3">
                     {analysis.suggestedBullets.map((bullet, idx) => (
                       <div
                         key={idx}
-                        className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 flex items-start justify-between gap-3 transition-colors"
+                        className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 flex items-start justify-between gap-3 transition-colors group"
                       >
                         <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
                           &bull; {bullet}
@@ -631,8 +784,8 @@ export const ResumeOptimizer: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleCopyBullet(bullet, idx)}
-                          className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 transition-colors shrink-0 cursor-pointer"
-                          title="Copy bullet point"
+                          className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 hover:border-emerald-500/40 transition-all shrink-0 cursor-pointer"
+                          title="Copy bullet point to clipboard"
                         >
                           {copiedIndex === idx ? (
                             <Check className="w-4 h-4 text-emerald-400" />
@@ -668,7 +821,7 @@ export const ResumeOptimizer: React.FC = () => {
                         <div className="flex items-center gap-2">
                           <h5 className="text-xs font-bold text-white">{tip.title}</h5>
                           <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${tip.passed ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"}`}>
-                            {tip.passed ? "Optimized" : "Action Needed"}
+                            {tip.passed ? "OPTIMIZED" : "ACTION NEEDED"}
                           </span>
                         </div>
                         <p className="text-xs text-slate-400 mt-1 leading-relaxed">
@@ -689,7 +842,7 @@ export const ResumeOptimizer: React.FC = () => {
         <Modal
           isOpen={isResumeModalOpen}
           onClose={() => setIsResumeModalOpen(false)}
-          title="Candidate Resume Document"
+          title="Attached Resume Document"
           size="xl"
         >
           <div className="space-y-4">
