@@ -11,8 +11,6 @@ import {
   Check,
   Building2,
   FileText,
-  Briefcase,
-  ChevronRight,
   ExternalLink,
 } from "lucide-react";
 import type { Job } from "../../types";

@@ -21,7 +21,6 @@ import {
   Calendar,
   Sparkles,
   CheckCircle2,
-  ArrowRight,
 } from "lucide-react";
 import type {
   CandidateProfile as CandidateProfileType,
