@@ -13,6 +13,7 @@ const Register = lazy(() => import("../pages/Register"));
 const FindJobs = lazy(() => import("../pages/candidate/FindJobs"));
 const MyApplications = lazy(() => import("../pages/candidate/MyApplications"));
 const CandidateProfile = lazy(() => import("../pages/candidate/CandidateProfile"));
+const ResumeOptimizer = lazy(() => import("../pages/candidate/ResumeOptimizer"));
 const RecruiterProfile = lazy(() => import("../pages/recruiter/RecruiterProfile"));
 const RecruiterDashboard = lazy(() => import("../pages/recruiter/RecruiterDashboard"));
 const PostJob = lazy(() => import("../pages/recruiter/PostJob"));
@@ -91,6 +92,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="/candidate/find-jobs" element={<FindJobs />} />
             <Route path="/candidate/applications" element={<MyApplications />} />
             <Route path="/candidate/profile" element={<CandidateProfile />} />
+            <Route path="/candidate/resume-optimizer" element={<ResumeOptimizer />} />
           </Route>
         </Route>
 

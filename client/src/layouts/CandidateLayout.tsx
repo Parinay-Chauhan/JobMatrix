@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useCandidateProfileQuery } from "../hooks/queries";
 import { NotificationBell } from "../components/NotificationBell";
@@ -130,7 +131,7 @@ export const CandidateLayout: React.FC = () => {
             {/* Navigation Center Links */}
             <nav
               ref={navLinksRef}
-              className="hidden md:flex items-center space-x-7"
+              className="hidden md:flex items-center space-x-6"
             >
               <NavLink
                 to="/candidate/find-jobs"
@@ -155,6 +156,19 @@ export const CandidateLayout: React.FC = () => {
                 }
               >
                 My Applications
+              </NavLink>
+              <NavLink
+                to="/candidate/resume-optimizer"
+                className={({ isActive }) =>
+                  `text-sm font-semibold transition-all relative py-1 px-3 rounded-full flex items-center gap-1.5 ${
+                    isActive
+                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20"
+                      : "text-slate-300 hover:text-emerald-300 bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
+                  }`
+                }
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>ATS Optimizer</span>
               </NavLink>
             </nav>
 
@@ -256,6 +270,16 @@ export const CandidateLayout: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 My Applications
+              </NavLink>
+              <NavLink
+                to="/candidate/resume-optimizer"
+                className={mobileNavLinkClass}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-emerald-400" />
+                  <span>ATS Resume Optimizer</span>
+                </div>
               </NavLink>
               <NavLink
                 to="/candidate/profile"
