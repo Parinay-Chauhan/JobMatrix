@@ -836,7 +836,6 @@ export const ResumeOptimizer: React.FC = () => {
           </div>
         </div>
       </div>
-      </div>
 
       {/* Resume Viewer Modal */}
       {isResumeModalOpen && profile?.resume && (
