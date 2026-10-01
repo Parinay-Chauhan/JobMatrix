@@ -75,6 +75,16 @@ if (fs.existsSync(clientDistPath)) {
     }
     next();
   });
+} else {
+  app.get("/", (req, res) => {
+    res.status(200).json({
+      success: true,
+      message:
+        "JobMatrix Backend API server is running. (Frontend dist not built. In development, open Vite dev server on port 5173).",
+      health: "/api/v1/health",
+      docs: "https://github.com/Parinay-Chauhan/JobMatrix",
+    });
+  });
 }
 
 // Global Error Handler Middleware
