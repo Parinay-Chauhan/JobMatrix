@@ -290,42 +290,42 @@ export const ResumeOptimizer: React.FC = () => {
         {/* 4 Summary Stat Tiles */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mt-7 pt-6 border-t border-slate-800">
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-              <ShieldCheck className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+              <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-semibold uppercase block">ATS Readiness</span>
-              <span className="text-base font-bold text-emerald-400">{overallAtsReadiness}%</span>
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">ATS Readiness</span>
+              <span className="text-lg sm:text-xl font-black text-emerald-400">{overallAtsReadiness}%</span>
             </div>
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shrink-0">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shrink-0">
+              <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-semibold uppercase block">Profile Keywords</span>
-              <span className="text-base font-bold text-white">{candidateSkills.length}</span>
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Profile Keywords</span>
+              <span className="text-lg sm:text-xl font-black text-white">{candidateSkills.length}</span>
             </div>
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
-              <Briefcase className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+              <Briefcase className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-semibold uppercase block">Active Roles</span>
-              <span className="text-base font-bold text-cyan-300">{jobs.length}</span>
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Active Roles</span>
+              <span className="text-lg sm:text-xl font-black text-cyan-300">{jobs.length}</span>
             </div>
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-              <Layers className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+              <Layers className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-semibold uppercase block">Match for Selected Role</span>
-              <span className="text-base font-bold text-white">{analysis.score}%</span>
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Target Role Match</span>
+              <span className="text-lg sm:text-xl font-black text-white">{analysis.score}%</span>
             </div>
           </div>
         </div>
@@ -333,54 +333,54 @@ export const ResumeOptimizer: React.FC = () => {
 
       {/* User-Friendly 3-Step Guided Guide Card */}
       {showHowItWorks && (
-        <div className="relative rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/90 to-teal-950/40 border border-emerald-500/20 p-5 shadow-lg animate-in slide-in-from-top-2 duration-200">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
-            <div className="flex items-center gap-2 text-emerald-300 font-bold text-xs uppercase tracking-wider">
-              <HelpCircle className="w-4 h-4 text-emerald-400" />
+        <div className="relative rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/90 to-teal-950/40 border border-emerald-500/30 p-5 sm:p-6 shadow-xl animate-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80">
+            <div className="flex items-center gap-2.5 text-emerald-300 font-extrabold text-sm sm:text-base uppercase tracking-wider">
+              <HelpCircle className="w-5 h-5 text-emerald-400 shrink-0" />
               <span>How It Works (3 Easy Steps)</span>
             </div>
             <button
               type="button"
               onClick={() => setShowHowItWorks(false)}
-              className="text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer px-3 py-1.5 rounded-lg hover:bg-slate-800"
             >
               Dismiss
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div className="flex items-start gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
-              <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center shrink-0">
+            <div className="flex items-start gap-3.5 bg-slate-950/80 p-4.5 rounded-xl border border-slate-800/90 shadow-sm">
+              <span className="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-300 font-black text-base flex items-center justify-center shrink-0 border border-emerald-500/30">
                 1
               </span>
               <div>
-                <h4 className="text-xs font-bold text-white">Choose Target Role</h4>
-                <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                <h4 className="text-base sm:text-lg font-bold text-white">Choose Target Role</h4>
+                <p className="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed font-medium">
                   Select an active job from the left list or paste any job description from LinkedIn/Indeed.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
-              <span className="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 font-black text-xs flex items-center justify-center shrink-0">
+            <div className="flex items-start gap-3.5 bg-slate-950/80 p-4.5 rounded-xl border border-slate-800/90 shadow-sm">
+              <span className="w-9 h-9 rounded-full bg-teal-500/20 text-teal-300 font-black text-base flex items-center justify-center shrink-0 border border-teal-500/30">
                 2
               </span>
               <div>
-                <h4 className="text-xs font-bold text-white">Review Keyword Gaps</h4>
-                <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                <h4 className="text-base sm:text-lg font-bold text-white">Review Keyword Gaps</h4>
+                <p className="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed font-medium">
                   See matching keywords (green) and missing keywords (amber) that ATS filters search for.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
-              <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-black text-xs flex items-center justify-center shrink-0">
+            <div className="flex items-start gap-3.5 bg-slate-950/80 p-4.5 rounded-xl border border-slate-800/90 shadow-sm">
+              <span className="w-9 h-9 rounded-full bg-cyan-500/20 text-cyan-300 font-black text-base flex items-center justify-center shrink-0 border border-cyan-500/30">
                 3
               </span>
               <div>
-                <h4 className="text-xs font-bold text-white">1-Click Boost & Copy</h4>
-                <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
-                  Click &quot;+ Add to Profile&quot; to boost your score and copy tailored bullets for your resume.
+                <h4 className="text-base sm:text-lg font-bold text-white">1-Click Boost & Copy</h4>
+                <p className="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed font-medium">
+                  Click &quot;+ Add&quot; to boost your score and copy tailored bullets directly into your resume.
                 </p>
               </div>
             </div>
@@ -397,8 +397,8 @@ export const ResumeOptimizer: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 shadow-xl space-y-5">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block">Step 1</span>
-                <h2 className="text-sm font-bold text-white">
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-400 block">Step 1</span>
+                <h2 className="text-base sm:text-lg font-bold text-white">
                   Select Target Position
                 </h2>
               </div>
@@ -408,7 +408,7 @@ export const ResumeOptimizer: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setAnalysisMode("platform_job")}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     analysisMode === "platform_job"
                       ? "bg-emerald-500 text-slate-950 shadow-md"
                       : "text-slate-400 hover:text-white"
@@ -419,7 +419,7 @@ export const ResumeOptimizer: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setAnalysisMode("custom_jd")}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     analysisMode === "custom_jd"
                       ? "bg-emerald-500 text-slate-950 shadow-md"
                       : "text-slate-400 hover:text-white"
@@ -460,22 +460,22 @@ export const ResumeOptimizer: React.FC = () => {
                         <div
                           key={j._id}
                           onClick={() => setSelectedJobId(j._id)}
-                          className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                          className={`p-4 rounded-xl border transition-all cursor-pointer ${
                             isSelected
                               ? "bg-emerald-500/10 border-emerald-500/50 shadow-md ring-1 ring-emerald-500/20"
                               : "bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-950"
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
-                            <h4 className={`text-xs sm:text-sm font-bold line-clamp-1 ${isSelected ? "text-emerald-300" : "text-white"}`}>
+                            <h4 className={`text-sm sm:text-base font-bold line-clamp-1 ${isSelected ? "text-emerald-300" : "text-white"}`}>
                               {j.title}
                             </h4>
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 shrink-0 font-medium">
+                            <span className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 shrink-0 font-semibold">
                               {j.jobType || "Full-time"}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
-                            <Building2 className="w-3.5 h-3.5 text-slate-500" />
+                          <p className="text-xs sm:text-[13px] text-slate-300 mt-1.5 flex items-center gap-1.5 font-medium">
+                            <Building2 className="w-3.5 h-3.5 text-slate-400" />
                             <span>{comp}</span>
                             <span className="text-slate-600">&bull;</span>
                             <span>{j.location || "Remote"}</span>
@@ -491,10 +491,10 @@ export const ResumeOptimizer: React.FC = () => {
               <div className="space-y-4">
                 {/* 1-Click Sample Presets */}
                 <div>
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                  <span className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
                     ⚡ Quick Test with Sample Role:
                   </span>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2.5">
                     {SAMPLE_PRESETS.map((preset) => {
                       const Icon = preset.icon;
                       return (
@@ -502,10 +502,10 @@ export const ResumeOptimizer: React.FC = () => {
                           key={preset.name}
                           type="button"
                           onClick={() => handleApplyPreset(preset)}
-                          className="p-2 rounded-xl bg-slate-950 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/30 text-left transition-all cursor-pointer group"
+                          className="p-2.5 rounded-xl bg-slate-950 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/30 text-left transition-all cursor-pointer group"
                         >
-                          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-200 group-hover:text-emerald-300">
-                            <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <div className="flex items-center gap-2 text-xs sm:text-[13px] font-semibold text-slate-200 group-hover:text-emerald-300">
+                            <Icon className="w-4 h-4 text-emerald-400 shrink-0" />
                             <span className="truncate">{preset.name}</span>
                           </div>
                         </button>
@@ -545,31 +545,31 @@ export const ResumeOptimizer: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-400 block">Your Profile</span>
-                <h3 className="text-xs font-bold text-white">
+                <span className="text-xs font-black uppercase tracking-wider text-teal-400 block">Your Profile</span>
+                <h3 className="text-sm sm:text-base font-bold text-white">
                   Active Skills ({candidateSkills.length})
                 </h3>
               </div>
               <Link
                 to="/candidate/profile"
-                className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+                className="text-xs sm:text-sm font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
               >
                 <span>Edit Profile</span>
-                <ArrowRight className="w-3 h-3" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto custom-scrollbar">
+            <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto custom-scrollbar pt-1">
               {candidateSkills.map((sk) => (
                 <span
                   key={sk}
-                  className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-xs font-medium"
+                  className="px-3 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs sm:text-[13px] font-medium"
                 >
                   {sk}
                 </span>
               ))}
               {candidateSkills.length === 0 && (
-                <p className="text-xs text-slate-500 italic">
+                <p className="text-xs sm:text-sm text-slate-400 italic">
                   No skills listed. Add skills through the edit profile view.
                 </p>
               )}
@@ -585,30 +585,30 @@ export const ResumeOptimizer: React.FC = () => {
             {/* Header Strip with Glowing Gradient */}
             <div className={`p-6 border-b border-slate-800 bg-gradient-to-r ${bandConfig.accentBg} flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block mb-1">
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-400 block mb-1">
                   Step 2 & 3: Live Scan Result
                 </span>
-                <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                <h2 className="text-xl sm:text-3xl font-black text-white tracking-tight">
                   {currentJob.title}
                 </h2>
-                <p className="text-xs text-slate-300 flex items-center gap-1.5 mt-1 font-medium">
-                  <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+                <p className="text-xs sm:text-sm text-slate-300 flex items-center gap-2 mt-1.5 font-semibold">
+                  <Building2 className="w-4 h-4 text-emerald-400" />
                   <span>
                     {(typeof currentJob.recruiter === "object" ? currentJob.recruiter?.companyName : undefined) ||
                       currentJob.companyName ||
                       "Organization"}
                   </span>
                   <span className="text-slate-600">&bull;</span>
-                  <span className="text-slate-400">{currentJob.location || "Remote"}</span>
+                  <span className="text-slate-300 font-normal">{currentJob.location || "Remote"}</span>
                 </p>
-                <p className="text-xs text-slate-400 mt-2">
+                <p className="text-xs sm:text-sm text-slate-300 mt-2.5 font-medium leading-relaxed">
                   {bandConfig.tip}
                 </p>
               </div>
 
               {/* Gauge Meter */}
-              <div className="flex items-center gap-3 bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 shrink-0">
-                <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3.5 bg-slate-950/85 p-4 rounded-2xl border border-slate-800 shrink-0 shadow-lg">
+                <div className="relative w-18 h-18 flex items-center justify-center shrink-0">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                     <path
                       className="text-slate-800"
@@ -628,14 +628,14 @@ export const ResumeOptimizer: React.FC = () => {
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span className="text-base font-black text-white">{analysis.score}%</span>
+                    <span className="text-lg font-black text-white">{analysis.score}%</span>
                   </div>
                 </div>
                 <div>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${bandConfig.badgeClass} block text-center`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-extrabold border ${bandConfig.badgeClass} block text-center`}>
                     {bandConfig.text}
                   </span>
-                  <span className="text-[10px] text-slate-400 mt-1 block">
+                  <span className="text-xs text-slate-300 mt-1.5 block font-medium">
                     {analysis.matchedSkills.length} of {analysis.allRequiredSkills.length} skills matched
                   </span>
                 </div>
@@ -647,14 +647,14 @@ export const ResumeOptimizer: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("skills")}
-                className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "skills"
-                    ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                 }`}
               >
                 <span>1. Skills Gap Breakdown</span>
-                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
+                <span className="px-2 py-0.5 rounded-full bg-slate-800 text-xs font-extrabold text-slate-200">
                   {analysis.allRequiredSkills.length}
                 </span>
               </button>
@@ -662,14 +662,14 @@ export const ResumeOptimizer: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("bullets")}
-                className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "bullets"
-                    ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                 }`}
               >
                 <span>2. Tailored Resume Bullets</span>
-                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
+                <span className="px-2 py-0.5 rounded-full bg-slate-800 text-xs font-extrabold text-slate-200">
                   {analysis.suggestedBullets.length}
                 </span>
               </button>
@@ -677,14 +677,14 @@ export const ResumeOptimizer: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("checklist")}
-                className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "checklist"
-                    ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                 }`}
               >
                 <span>3. ATS Health Checklist</span>
-                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] font-extrabold text-slate-300">
+                <span className="px-2 py-0.5 rounded-full bg-slate-800 text-xs font-extrabold text-slate-200">
                   {analysis.formattingTips.length}
                 </span>
               </button>
@@ -695,39 +695,39 @@ export const ResumeOptimizer: React.FC = () => {
               {activeTab === "skills" && (
                 <div className="space-y-6">
                   {/* Diagnostic Advice */}
-                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 leading-relaxed">
-                    <p className="font-semibold text-emerald-400 mb-1">ATS Diagnostic Recommendation:</p>
+                  <div className="p-4.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs sm:text-sm text-slate-200 leading-relaxed">
+                    <p className="font-bold text-emerald-400 mb-1">ATS Diagnostic Recommendation:</p>
                     {analysis.keywordDensityAdvice}
                   </div>
 
                   {/* Missing Skills with 1-Click Add (TOP PRIORITY) */}
-                  <div className="space-y-3 bg-amber-500/5 border border-amber-500/20 rounded-2xl p-4.5">
+                  <div className="space-y-3 bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                      <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-300 flex items-center gap-2">
                         <AlertTriangle className="w-4 h-4 text-amber-400" />
                         <span>Missing Target Keywords ({analysis.missingSkills.length})</span>
                       </h4>
-                      <span className="text-[11px] text-amber-400/80 font-medium">Click &quot;+ Add&quot; to update profile instantly</span>
+                      <span className="text-xs text-amber-300/90 font-medium">Click &quot;+ Add&quot; to update profile instantly</span>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 pt-1">
+                    <div className="flex flex-wrap gap-2.5 pt-1">
                       {analysis.missingSkills.map((sk) => (
                         <button
                           key={sk}
                           type="button"
                           onClick={() => handleAddSkillToProfile(sk)}
-                          className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-500/20 border border-amber-500/30 hover:border-emerald-500/40 text-amber-300 hover:text-emerald-300 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer group shadow-xs active:scale-95"
+                          className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-emerald-500/20 border border-amber-500/40 hover:border-emerald-500/50 text-amber-200 hover:text-emerald-300 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer group shadow-sm active:scale-95"
                           title={`Click to add "${sk}" to your profile skills`}
                         >
-                          <Plus className="w-3.5 h-3.5 text-amber-400 group-hover:text-emerald-300 transition-colors" />
+                          <Plus className="w-4 h-4 text-amber-400 group-hover:text-emerald-300 transition-colors" />
                           <span>{sk}</span>
-                          <span className="text-[10px] text-slate-400 font-normal group-hover:text-emerald-400">
+                          <span className="text-xs text-slate-400 font-normal group-hover:text-emerald-400">
                             (+Add)
                           </span>
                         </button>
                       ))}
                       {analysis.missingSkills.length === 0 && (
-                        <p className="text-xs text-emerald-400 font-semibold flex items-center gap-1 py-1">
+                        <p className="text-xs sm:text-sm text-emerald-400 font-bold flex items-center gap-2 py-1">
                           <CheckCircle2 className="w-4 h-4" />
                           <span>All detected required keywords are present in your profile!</span>
                         </p>
@@ -736,27 +736,27 @@ export const ResumeOptimizer: React.FC = () => {
                   </div>
 
                   {/* Matched Skills */}
-                  <div className="space-y-3 bg-slate-950/60 border border-slate-800 rounded-2xl p-4.5">
+                  <div className="space-y-3 bg-slate-950/60 border border-slate-800 rounded-2xl p-5">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                      <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                         <span>Matching Skills Found ({analysis.matchedSkills.length})</span>
                       </h4>
-                      <span className="text-[11px] text-slate-500">Will pass ATS filters</span>
+                      <span className="text-xs text-slate-400">Will pass ATS filters</span>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 pt-1">
+                    <div className="flex flex-wrap gap-2.5 pt-1">
                       {analysis.matchedSkills.map((sk) => (
                         <span
                           key={sk}
-                          className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-1.5"
+                          className="px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm font-bold flex items-center gap-2"
                         >
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <Check className="w-4 h-4 text-emerald-400" />
                           <span>{sk}</span>
                         </span>
                       ))}
                       {analysis.matchedSkills.length === 0 && (
-                        <p className="text-xs text-slate-500 italic py-1">
+                        <p className="text-xs sm:text-sm text-slate-400 italic py-1">
                           No matching skills found yet. Click &quot;+ Add&quot; on missing keywords above.
                         </p>
                       )}
@@ -767,7 +767,7 @@ export const ResumeOptimizer: React.FC = () => {
 
               {activeTab === "bullets" && (
                 <div className="space-y-4">
-                  <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs text-emerald-300 flex items-center gap-2">
+                  <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs sm:text-sm text-emerald-300 flex items-center gap-2.5">
                     <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>Copy these bullet points directly into your resume under your relevant work experience entries:</span>
                   </div>
@@ -776,15 +776,15 @@ export const ResumeOptimizer: React.FC = () => {
                     {analysis.suggestedBullets.map((bullet, idx) => (
                       <div
                         key={idx}
-                        className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 flex items-start justify-between gap-3 transition-colors group"
+                        className="p-4.5 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 flex items-start justify-between gap-3.5 transition-colors group"
                       >
-                        <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal">
                           &bull; {bullet}
                         </p>
                         <button
                           type="button"
                           onClick={() => handleCopyBullet(bullet, idx)}
-                          className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 hover:border-emerald-500/40 transition-all shrink-0 cursor-pointer"
+                          className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-emerald-300 hover:border-emerald-500/40 transition-all shrink-0 cursor-pointer"
                           title="Copy bullet point to clipboard"
                         >
                           {copiedIndex === idx ? (
@@ -804,27 +804,27 @@ export const ResumeOptimizer: React.FC = () => {
                   {analysis.formattingTips.map((tip, idx) => (
                     <div
                       key={idx}
-                      className={`p-4 rounded-xl border flex items-start gap-3.5 ${
+                      className={`p-4.5 rounded-xl border flex items-start gap-4 ${
                         tip.passed
-                          ? "bg-emerald-500/5 border-emerald-500/20"
+                          ? "bg-emerald-500/5 border-emerald-500/25"
                           : "bg-slate-950/80 border-slate-800"
                       }`}
                     >
                       <div className="mt-0.5 shrink-0">
                         {tip.passed ? (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                         ) : (
-                          <AlertTriangle className="w-4 h-4 text-amber-400" />
+                          <AlertTriangle className="w-5 h-5 text-amber-400" />
                         )}
                       </div>
                       <div>
-                        <div className="flex items-center gap-2">
-                          <h5 className="text-xs font-bold text-white">{tip.title}</h5>
-                          <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${tip.passed ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"}`}>
+                        <div className="flex items-center gap-2.5">
+                          <h5 className="text-sm sm:text-base font-bold text-white">{tip.title}</h5>
+                          <span className={`text-xs font-bold px-2 py-0.5 rounded-md uppercase ${tip.passed ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"}`}>
                             {tip.passed ? "OPTIMIZED" : "ACTION NEEDED"}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                        <p className="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
                           {tip.description}
                         </p>
                       </div>
@@ -835,6 +835,7 @@ export const ResumeOptimizer: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Resume Viewer Modal */}
