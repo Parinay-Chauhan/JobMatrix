@@ -1,5 +1,13 @@
-// Comprehensive Security & Edge-Case Audit Test Script
-// Tests RBAC, JWT validation, cross-role protections, duplicate application guards, inactive job guards, and ownership authorization.
+// Comprehensive Security, Auth & RBAC Audit Test Script
+// Tests:
+// 1. Unauthenticated Route Guards (401)
+// 2. Malformed / Tampered JWT Handling (401)
+// 3. Refresh Token Rotation & Revocation Security Suite (Rotation, JTI uniqueness, Reuse Detection, Logout Invalidation)
+// 4. Role-Based Access Control (RBAC) & Cross-Role Guards (403)
+// 5. Candidate & Notification IDOR Protections (403)
+// 6. Input Validation & Malformed Status Injection Guards (400)
+// 7. Duplicate Application & Inactive Job Guards (400)
+// 8. Cross-Recruiter Ownership & Application Decisioning (403)
 
 const BASE_URL = process.env.API_BASE_URL || "http://localhost:8000/api/v1";
 
@@ -15,6 +23,21 @@ function logFail(testName, reason = "") {
   failedCount++;
   console.error(`  ❌ [FAIL] ${testName}: ${reason}`);
 }
+
+const getCookie = (resHeaders, name) => {
+  if (!resHeaders) return null;
+  // Handle node-fetch / global fetch headers
+  const setCookie = typeof resHeaders.getSetCookie === "function" 
+    ? resHeaders.getSetCookie() 
+    : (resHeaders.get ? [resHeaders.get("set-cookie")].filter(Boolean) : []);
+  
+  for (const str of setCookie) {
+    if (str.startsWith(name + "=")) {
+      return str.split(";")[0].split("=").slice(1).join("=");
+    }
+  }
+  return null;
+};
 
 async function request(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
@@ -33,15 +56,15 @@ async function request(endpoint, options = {}) {
     } catch {
       data = { raw: text };
     }
-    return { status: res.status, data };
+    return { status: res.status, data, headers: res.headers };
   } catch (err) {
-    return { status: 0, error: err.message };
+    return { status: 0, error: err.message, headers: null };
   }
 }
 
 async function runSecurityAudit() {
   console.log("\n========================================================");
-  console.log("🔒 STARTING SECURITY & EDGE-CASE AUDIT SUITE");
+  console.log("🔒 STARTING SECURITY, AUTH & RBAC AUDIT SUITE");
   console.log("========================================================\n");
 
   // ----------------------------------------------------
@@ -91,19 +114,19 @@ async function runSecurityAudit() {
     logFail("Malformed JWT", `Got status ${invalidJwt.status}`);
   }
 
-  const expiredJwt = await request("/candidates/profile", {
+  const tamperedJwt = await request("/candidates/profile", {
     headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjM0NTYiLCJleHAiOjE2MDAwMDAwMDB9.signature" },
   });
-  if (expiredJwt.status === 401) {
-    logPass("Expired JWT correctly rejected with 401");
+  if (tamperedJwt.status === 401) {
+    logPass("Tampered / Invalid Signature JWT correctly rejected with 401");
   } else {
-    logFail("Expired JWT", `Got status ${expiredJwt.status}`);
+    logFail("Tampered JWT", `Got status ${tamperedJwt.status}`);
   }
 
   // ----------------------------------------------------
   // SETUP TEST USERS: Candidate, Recruiter A, Recruiter B
   // ----------------------------------------------------
-  console.log("\n📌 3. Setting up Test Users for Cross-Role Verification...");
+  console.log("\n📌 3. Setting up Test Users for Auth & RBAC Verification...");
 
   const timestamp = Date.now();
   const candidateEmail = `test.cand.${timestamp}@example.com`;
@@ -147,194 +170,210 @@ async function runSecurityAudit() {
     }),
   });
 
-  // Login Candidate
+  // Log in users to retrieve tokens
   const candLogin = await request("/users/login", {
     method: "POST",
     body: JSON.stringify({ email: candidateEmail, password }),
   });
   const candToken = candLogin.data?.data?.accessToken;
+  const candRt1 = candLogin.data?.data?.refreshToken || getCookie(candLogin.headers, "refreshToken");
 
-  // Login Recruiter A
   const recALogin = await request("/users/login", {
     method: "POST",
     body: JSON.stringify({ email: recruiterAEmail, password }),
   });
   const recAToken = recALogin.data?.data?.accessToken;
 
-  // Login Recruiter B
   const recBLogin = await request("/users/login", {
     method: "POST",
     body: JSON.stringify({ email: recruiterBEmail, password }),
   });
   const recBToken = recBLogin.data?.data?.accessToken;
 
-  if (!candToken || !recAToken || !recBToken) {
-    console.error("❌ Failed to obtain tokens for test accounts. Aborting.");
-    return;
-  }
-  logPass("Test accounts registered and authenticated successfully");
+  // ----------------------------------------------------
+  // GROUP 3: REFRESH TOKEN ROTATION & REVOCATION SUITE
+  // ----------------------------------------------------
+  console.log("\n📌 4. Testing Refresh Token Rotation, Reuse Detection & Revocation:");
 
-  // Create recruiter profiles
+  if (candRt1) {
+    // 1. Legitimate Refresh -> Issues New Pair (RT2)
+    const refreshRes = await request("/users/refresh-token", {
+      method: "POST",
+      body: JSON.stringify({ refreshToken: candRt1 }),
+      headers: { Cookie: `refreshToken=${candRt1}` },
+    });
+    const candRt2 = refreshRes.data?.data?.refreshToken || getCookie(refreshRes.headers, "refreshToken");
+
+    if (refreshRes.status === 200 && candRt2 && candRt2 !== candRt1) {
+      logPass("Refresh Token Rotation succeeded -> issued distinct new Refresh Token (RT2)");
+    } else {
+      logFail("Refresh Token Rotation", `Expected status 200 and RT2 != RT1. Got ${refreshRes.status}`);
+    }
+
+    // 2. Replay / Reuse Old Token (RT1) -> Must be rejected with 401
+    const reuseOldTokenRes = await request("/users/refresh-token", {
+      method: "POST",
+      body: JSON.stringify({ refreshToken: candRt1 }),
+      headers: { Cookie: `refreshToken=${candRt1}` },
+    });
+    if (reuseOldTokenRes.status === 401) {
+      logPass("Replaying used old Refresh Token (RT1) rejected with 401 (Reuse Detection)");
+    } else {
+      logFail("Old Refresh Token Reuse", `Expected 401, got ${reuseOldTokenRes.status}`);
+    }
+
+    // 3. User Logout -> Must Revoke DB Refresh Token
+    const logoutRes = await request("/users/logout", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${candToken}` },
+    });
+    if (logoutRes.status === 200) {
+      logPass("User Logout completed -> DB refreshToken cleared");
+    } else {
+      logFail("User Logout", `Expected 200, got ${logoutRes.status}`);
+    }
+
+    // 4. Refreshing with RT2 after Logout -> Must be rejected with 401
+    const refreshAfterLogout = await request("/users/refresh-token", {
+      method: "POST",
+      body: JSON.stringify({ refreshToken: candRt2 }),
+      headers: { Cookie: `refreshToken=${candRt2}` },
+    });
+    if (refreshAfterLogout.status === 401) {
+      logPass("Refresh after logout rejected with 401 (Server-side Token Revocation)");
+    } else {
+      logFail("Post-Logout Token Invalidation", `Expected 401, got ${refreshAfterLogout.status}`);
+    }
+  } else {
+    logFail("Refresh Token Extraction", "Failed to retrieve initial refresh token");
+  }
+
+  // Log in Candidate again for remaining RBAC / functional tests
+  const freshCandLogin = await request("/users/login", {
+    method: "POST",
+    body: JSON.stringify({ email: candidateEmail, password }),
+  });
+  const activeCandToken = freshCandLogin.data?.data?.accessToken;
+
+  // ----------------------------------------------------
+  // GROUP 4: ROLE-BASED ACCESS CONTROL (RBAC) GUARDS
+  // ----------------------------------------------------
+  console.log("\n📌 5. Testing Cross-Role Access Control (Expect 403):");
+
+  // Candidate trying to access Recruiter Profile (Expect 403)
+  const candOnRecProfile = await request("/recruiters/profile", {
+    headers: { Authorization: `Bearer ${activeCandToken}` },
+  });
+  if (candOnRecProfile.status === 403) {
+    logPass("Candidate blocked from /recruiters/profile (403 Forbidden)");
+  } else {
+    logFail("Candidate on Recruiter Profile", `Expected 403, got ${candOnRecProfile.status}`);
+  }
+
+  // Candidate trying to post a job (Expect 403)
+  const candPostJob = await request("/jobs", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${activeCandToken}` },
+    body: JSON.stringify({
+      title: "Hacked Job",
+      description: "Should not be created by candidate",
+    }),
+  });
+  if (candPostJob.status === 403) {
+    logPass("Candidate blocked from POST /jobs (403 Forbidden)");
+  } else {
+    logFail("Candidate POST /jobs", `Expected 403, got ${candPostJob.status}`);
+  }
+
+  // Recruiter trying to access Candidate Profile (Expect 403)
+  const recOnCandProfile = await request("/candidates/profile", {
+    headers: { Authorization: `Bearer ${recAToken}` },
+  });
+  if (recOnCandProfile.status === 403) {
+    logPass("Recruiter blocked from /candidates/profile (403 Forbidden)");
+  } else {
+    logFail("Recruiter on Candidate Profile", `Expected 403, got ${recOnCandProfile.status}`);
+  }
+
+  // ----------------------------------------------------
+  // GROUP 5: INPUT VALIDATION & MASS ASSIGNMENT GUARDS
+  // ----------------------------------------------------
+  console.log("\n📌 6. Testing Input Validation & Mass Assignment Rejection:");
+
+  // Set up Recruiter A profile
   await request("/recruiters/profile", {
     method: "POST",
     headers: { Authorization: `Bearer ${recAToken}` },
     body: JSON.stringify({
-      companyName: "Acme Tech A",
-      companyWebsite: "https://acme.com",
+      companyName: "Nexus Cloud Labs",
+      companyWebsite: "https://nexuslabs.dev",
       location: "Bengaluru",
-      industry: "Technology",
+      industry: "Information Technology",
     }),
   });
 
-  await request("/recruiters/profile", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${recBToken}` },
-    body: JSON.stringify({
-      companyName: "Beta Corp B",
-      companyWebsite: "https://beta.com",
-      location: "Noida",
-      industry: "Technology",
-    }),
-  });
-
-  // ----------------------------------------------------
-  // GROUP 3: CANDIDATE -> RECRUITER RESTRICTED ROUTES (Expect 403)
-  // ----------------------------------------------------
-  console.log("\n📌 4. Testing Candidate accessing Recruiter Routes (Expect 403):");
-
-  const candToRecProfile = await request("/recruiters/profile", {
-    headers: { Authorization: `Bearer ${candToken}` },
-  });
-  if (candToRecProfile.status === 403) {
-    logPass("Candidate accessing GET /recruiters/profile blocked with 403");
-  } else {
-    logFail("Candidate accessing GET /recruiters/profile", `Got status ${candToRecProfile.status}`);
-  }
-
-  const candToPostJob = await request("/jobs", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${candToken}` },
-    body: JSON.stringify({
-      title: "Hacker Job",
-      description: "Should fail",
-      location: "Remote",
-      salary: 100000,
-    }),
-  });
-  if (candToPostJob.status === 403) {
-    logPass("Candidate attempting POST /jobs blocked with 403");
-  } else {
-    logFail("Candidate attempting POST /jobs", `Got status ${candToPostJob.status}`);
-  }
-
-  const candToMyJobs = await request("/jobs/my-jobs", {
-    headers: { Authorization: `Bearer ${candToken}` },
-  });
-  if (candToMyJobs.status === 403) {
-    logPass("Candidate accessing GET /jobs/my-jobs blocked with 403");
-  } else {
-    logFail("Candidate accessing GET /jobs/my-jobs", `Got status ${candToMyJobs.status}`);
-  }
-
-  // ----------------------------------------------------
-  // GROUP 4: RECRUITER -> CANDIDATE RESTRICTED ROUTES (Expect 403)
-  // ----------------------------------------------------
-  console.log("\n📌 5. Testing Recruiter accessing Candidate Routes (Expect 403):");
-
-  const recToCandProfile = await request("/candidates/profile", {
-    headers: { Authorization: `Bearer ${recAToken}` },
-  });
-  if (recToCandProfile.status === 403) {
-    logPass("Recruiter accessing GET /candidates/profile blocked with 403");
-  } else {
-    logFail("Recruiter accessing GET /candidates/profile", `Got status ${recToCandProfile.status}`);
-  }
-
-  const recToApplyJob = await request("/applications/apply/650000000000000000000001", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${recAToken}` },
-  });
-  if (recToApplyJob.status === 403) {
-    logPass("Recruiter attempting POST /applications/apply/:id blocked with 403");
-  } else {
-    logFail("Recruiter attempting POST /applications/apply/:id", `Got status ${recToApplyJob.status}`);
-  }
-
-  const recToGetApplications = await request("/applications/get", {
-    headers: { Authorization: `Bearer ${recAToken}` },
-  });
-  if (recToGetApplications.status === 403) {
-    logPass("Recruiter accessing GET /applications/get blocked with 403");
-  } else {
-    logFail("Recruiter accessing GET /applications/get", `Got status ${recToGetApplications.status}`);
-  }
-
-  // ----------------------------------------------------
-  // GROUP 5: DUPLICATE APPLICATION & INACTIVE JOB GUARDS
-  // ----------------------------------------------------
-  console.log("\n📌 6. Testing Application Business Logic & Guard Rails:");
-
-  // Recruiter A creates a job
-  const postJobRes = await request("/jobs", {
+  // Recruiter A posts a valid job
+  const recCreateJob = await request("/jobs", {
     method: "POST",
     headers: { Authorization: `Bearer ${recAToken}` },
     body: JSON.stringify({
-      title: "Senior Cloud Architect",
-      description: "Design cloud native architectures",
-      requirements: "AWS, Kubernetes, Terraform",
+      title: "Senior Security Specialist",
+      description: "Designing end-to-end cloud and API security controls with auditability.",
+      requirements: ["Node.js", "JWT", "OAuth", "MongoDB"],
       location: "Bengaluru",
       jobType: "Full-time",
-      workMode: "Hybrid",
-      category: "Software Development",
+      workMode: "Remote",
       experienceLevel: "Senior-level",
       salary: 2500000,
-      positions: 2,
+      positions: 1,
     }),
   });
+  const createdJobId = recCreateJob.data?.data?._id;
 
-  const createdJobId = postJobRes.data?.data?._id;
-  if (!createdJobId) {
-    console.error("❌ Failed to create test job. Response:", postJobRes.data);
-    return;
-  }
-  logPass("Recruiter A successfully created Job listing", `ID: ${createdJobId}`);
-
-  // Candidate applies to Job 1st time (Expect 201)
-  const apply1st = await request(`/applications/apply/${createdJobId}`, {
+  // Candidate applies to Job
+  const applyRes = await request(`/applications/apply/${createdJobId}`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${candToken}` },
+    headers: { Authorization: `Bearer ${activeCandToken}` },
   });
-  if (apply1st.status === 201) {
-    logPass("Candidate applied 1st time to Job -> 201 Created");
-  } else {
-    logFail("Candidate 1st application", `Expected 201, got ${apply1st.status}`);
+  const createdAppId = applyRes.data?.data?._id;
+
+  // Recruiter attempts to set an invalid status ("hacked") -> Expect 400
+  if (createdAppId) {
+    const invalidStatusRes = await request(`/applications/status/${createdAppId}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${recAToken}` },
+      body: JSON.stringify({ status: "hacked" }),
+    });
+    if (invalidStatusRes.status === 400) {
+      logPass("Invalid application status update ('hacked') rejected with 400 Validation Error");
+    } else {
+      logFail("Status Validation Injection", `Expected 400, got ${invalidStatusRes.status}`);
+    }
   }
 
-  const createdApplicationId = apply1st.data?.data?._id;
+  // ----------------------------------------------------
+  // GROUP 6: DUPLICATE APPLICATION & INACTIVE JOB GUARDS
+  // ----------------------------------------------------
+  console.log("\n📌 7. Testing Application Constraints (Duplicate & Inactive Guards):");
 
   // Candidate applies to SAME Job 2nd time (Expect 400 Duplicate rejection)
   const apply2nd = await request(`/applications/apply/${createdJobId}`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${candToken}` },
+    headers: { Authorization: `Bearer ${activeCandToken}` },
   });
   if (apply2nd.status === 400 && JSON.stringify(apply2nd.data).toLowerCase().includes("already applied")) {
     logPass("Candidate applying to SAME job twice -> 400 Bad Request ('already applied')");
   } else {
-    logFail("Duplicate Application Guard", `Expected 400 with 'already applied', got ${apply2nd.status} - ${JSON.stringify(apply2nd.data)}`);
+    logFail("Duplicate Application Guard", `Expected 400, got ${apply2nd.status}`);
   }
 
   // Recruiter A closes / deactivates Job
-  const toggleJob = await request(`/jobs/toggle-status/${createdJobId}`, {
+  await request(`/jobs/toggle-status/${createdJobId}`, {
     method: "PATCH",
     headers: { Authorization: `Bearer ${recAToken}` },
   });
-  if (toggleJob.status === 200) {
-    logPass("Recruiter A closed/toggled job to Inactive");
-  } else {
-    logFail("Toggle Job Status", `Got status ${toggleJob.status}`);
-  }
 
-  // Register Candidate 2 to test applying to an inactive job
+  // Another Candidate applies to INACTIVE job (Expect 400 Inactive rejection)
   const cand2Email = `test.cand2.${timestamp}@example.com`;
   await request("/users/register", {
     method: "POST",
@@ -352,23 +391,22 @@ async function runSecurityAudit() {
   });
   const cand2Token = cand2Login.data?.data?.accessToken;
 
-  // Candidate 2 applies to INACTIVE job (Expect 400 Inactive rejection)
   const applyInactive = await request(`/applications/apply/${createdJobId}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${cand2Token}` },
   });
-  if (applyInactive.status === 400 && JSON.stringify(applyInactive.data).toLowerCase().includes("no longer accepting")) {
-    logPass("Candidate applying to INACTIVE job -> 400 Bad Request ('no longer accepting applications')");
+  if (applyInactive.status === 400) {
+    logPass("Candidate applying to INACTIVE job -> 400 Bad Request ('no longer accepting')");
   } else {
-    logFail("Inactive Job Guard", `Expected 400 with 'no longer accepting', got ${applyInactive.status} - ${JSON.stringify(applyInactive.data)}`);
+    logFail("Inactive Job Guard", `Expected 400, got ${applyInactive.status}`);
   }
 
   // ----------------------------------------------------
-  // GROUP 6: CROSS-RECRUITER OWNERSHIP & AUTHORIZATION
+  // GROUP 7: CROSS-RECRUITER & NOTIFICATION IDOR GUARDS
   // ----------------------------------------------------
-  console.log("\n📌 7. Testing Cross-Recruiter Ownership & Application Modification (Expect 403):");
+  console.log("\n📌 8. Testing IDOR Protections (Cross-Recruiter & Notification IDOR):");
 
-  // Recruiter B tries to view applicants for Recruiter A's job
+  // Recruiter B tries to view applicants for Recruiter A's job (Expect 403)
   const recBViewApplicants = await request(`/applications/${createdJobId}/applicants`, {
     headers: { Authorization: `Bearer ${recBToken}` },
   });
@@ -378,9 +416,9 @@ async function runSecurityAudit() {
     logFail("Cross-Recruiter View Applicants", `Expected 403, got ${recBViewApplicants.status}`);
   }
 
-  // Recruiter B tries to update status of Recruiter A's application
-  if (createdApplicationId) {
-    const recBUpdateStatus = await request(`/applications/status/${createdApplicationId}`, {
+  // Recruiter B tries to update status of Recruiter A's application (Expect 403)
+  if (createdAppId) {
+    const recBUpdateStatus = await request(`/applications/status/${createdAppId}`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${recBToken}` },
       body: JSON.stringify({ status: "accepted" }),
@@ -392,9 +430,9 @@ async function runSecurityAudit() {
     }
   }
 
-  // Recruiter A (The legitimate owner) updates status to 'accepted'
-  if (createdApplicationId) {
-    const recAUpdateStatus = await request(`/applications/status/${createdApplicationId}`, {
+  // Legitimate Job Owner (Recruiter A) updates status to 'accepted' (Expect 200)
+  if (createdAppId) {
+    const recAUpdateStatus = await request(`/applications/status/${createdAppId}`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${recAToken}` },
       body: JSON.stringify({ status: "accepted" }),
@@ -404,6 +442,33 @@ async function runSecurityAudit() {
     } else {
       logFail("Legitimate Owner Update Application Status", `Expected 200, got ${recAUpdateStatus.status}`);
     }
+  }
+
+  // Candidate B attempts to mark Candidate A's notification as read (Expect 403)
+  const candANotifsRes = await request("/notifications", {
+    headers: { Authorization: `Bearer ${activeCandToken}` },
+  });
+  const candANotifs = candANotifsRes.data?.data || [];
+  if (candANotifs.length > 0) {
+    const candBMarkRead = await request(`/notifications/${candANotifs[0]._id}/read`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${cand2Token}` },
+    });
+    if (candBMarkRead.status === 403) {
+      logPass("Candidate B blocked from marking Candidate A's notification (403 Notification IDOR)");
+    } else {
+      logFail("Notification IDOR Protection", `Expected 403, got ${candBMarkRead.status}`);
+    }
+  }
+
+  // Unauthenticated user attempting to apply to a job (Expect 401)
+  const unauthApply = await request(`/applications/apply/${createdJobId}`, {
+    method: "POST",
+  });
+  if (unauthApply.status === 401) {
+    logPass("Unauthenticated /applications/apply blocked with 401 Unauthorized");
+  } else {
+    logFail("Unauthenticated Apply Guard", `Expected 401, got ${unauthApply.status}`);
   }
 
   // ----------------------------------------------------

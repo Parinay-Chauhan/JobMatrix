@@ -72,16 +72,18 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
-// ✅ Refresh Token
+import crypto from "crypto";
 
+// ✅ Refresh Token with unique JTI to guarantee sub-second token uniqueness
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
+      jti: crypto.randomUUID(),
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION || "7d",
     },
   );
 };

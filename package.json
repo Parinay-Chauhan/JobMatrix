@@ -9,7 +9,7 @@
     "start": "node server/src/index.js",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
-    "test:flow": "node test-frontend-flow.js",
+    "test:flow": "node test-api-flow.js",
     "test:security": "node server/test-security-audit.js"
   },
   "keywords": [

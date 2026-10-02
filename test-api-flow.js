@@ -13,9 +13,9 @@ function logFail(msg, err) {
   failedCount++;
 }
 
-async function runE2ETests() {
+async function runAPIFlowTests() {
   console.log("\n========================================================");
-  console.log("🧪 STARTING FRONTEND & API E2E TESTING SUITE");
+  console.log("🧪 STARTING API INTEGRATION TESTING SUITE");
   console.log("========================================================\n");
 
   const timestamp = Date.now();
@@ -136,8 +136,8 @@ async function runE2ETests() {
         Authorization: `Bearer ${recruiterToken}`,
       },
       body: JSON.stringify({
-        companyName: "InnovateTech Inc",
-        companyWebsite: "https://innovatetech.dev",
+        companyName: "Nexus Cloud Labs",
+        companyWebsite: "https://nexuslabs.dev",
         location: "Bengaluru",
         industry: "Information Technology",
       }),
@@ -318,10 +318,10 @@ async function runE2ETests() {
   }
 
   console.log("\n========================================================");
-  console.log(`📊 E2E TESTING COMPLETED: ${passedCount} PASSED, ${failedCount} FAILED`);
+  console.log(`📊 API INTEGRATION TESTING COMPLETED: ${passedCount} PASSED, ${failedCount} FAILED`);
   console.log("========================================================\n");
 
   process.exit(failedCount > 0 ? 1 : 0);
 }
 
-runE2ETests();
+runAPIFlowTests();
