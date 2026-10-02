@@ -1,4 +1,4 @@
-# 💼 JobMatrix — Next-Gen Full-Stack Hiring & Talent Intelligence Platform
+# 💼 JobMatrix — Next-Gen Full-Stack Hiring & AI Talent Intelligence Platform
 
 [![React](https://img.shields.io/badge/React-19.0-61dafb?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -8,42 +8,53 @@
 [![TanStack Query](https://img.shields.io/badge/TanStack_Query-v5-FF4154?logo=react-query&logoColor=white)](https://tanstack.com/query/latest)
 [![Socket.IO](https://img.shields.io/badge/Socket.IO-4.8-010101?logo=socket.io&logoColor=white)](https://socket.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![UptimeRobot](https://img.shields.io/badge/Uptime-24%2F7%20Monitored-2ecc71?logo=uptimerobot&logoColor=white)](https://uptimerobot.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A modern, production-grade hiring ecosystem built with the **MERN** stack (MongoDB, Express, React, Node.js) and **TypeScript**. Features a dark glassmorphic design system, real-time WebSocket notifications, an intelligent applicant pipeline, and a resilient multi-token auth architecture with silent session recovery.
+A modern, production-grade hiring ecosystem built with the **MERN** stack (MongoDB, Express, React, Node.js) and **TypeScript**. Features a dark glassmorphic design system, an **AI ATS Resume Optimizer & Skill Match Helper**, real-time WebSocket notifications, an intelligent applicant tracking pipeline, and a resilient multi-token auth architecture with silent session recovery.
 
 ---
 
 ## 🌐 Live Production Deployment
 
-- **Live URL:** [https://project-job-portal-ytq3.onrender.com](https://project-job-portal-ytq3.onrender.com)
-- **Deployment Model:** Single-Service Full Stack (SPA + REST API + Socket.IO under one unified domain on Render).
+- **Live Platform URL:** [https://project-job-portal-ytq3.onrender.com](https://project-job-portal-ytq3.onrender.com)
+- **Health Check Endpoint:** [https://project-job-portal-ytq3.onrender.com/health](https://project-job-portal-ytq3.onrender.com/health)
+- **Deployment Architecture:** Single-Service Full Stack (React 19 Vite SPA + Express 5 REST API + Socket.IO under one unified domain on Render).
 
 ---
 
 ## ✨ Key Features & Capabilities
 
-### 👨‍💼 1. Candidate Experience
+### ⚡ 1. AI ATS Resume Optimizer & Skill Match Helper *(New)*
+- **Dual Analysis Engine:** Match candidate profile & resume against live platform jobs OR custom pasted job descriptions from LinkedIn/Indeed.
+- **NLP Keyword & Skill Extraction:** Automatically detects core technical competencies, libraries, frameworks, cloud stacks, and soft skills from any JD.
+- **Weighted Match Scoring (0-100%):** Categorizes candidates into distinct readiness bands (`Excellent Match`, `Strong Match`, `Good Match`, `Optimization Required`).
+- **1-Click Skill Boosting:** Add missing ATS keywords directly into candidate profile with a single click.
+- **1-Click Sample Role Presets:** Instantly test match rates for Full Stack Engineer, Frontend Specialist, Backend & Cloud Architect, or Mobile App Developer.
+- **Tailored Resume Bullets Generator:** Generates high-impact, quantifiable bullet points aligned with the target position for direct resume pasting.
+- **5-Point ATS Health Checklist:** Evaluates keyword density, verified PDF attachment, work history metrics, contact details, and education accreditation.
+
+### 👨‍💼 2. Candidate Experience
 - **Explore & Filter Jobs:** Search active openings with instant keyword queries, experience level filters (`Entry-level`, `Mid-level`, `Senior-level`), work modes (`Remote`, `Hybrid`, `On-site`), and employment categories.
 - **One-Click Application:** Seamless job application workflow with duplicate submission prevention.
 - **Live Status Tracker:** Monitor application progress across pipeline stages (`Under Review`, `Shortlisted / Offered`, `Archived / Rejected`).
-- **Comprehensive Profile & Timelines:** Manage work experience, education history, technical skills, and candidate summary.
+- **Comprehensive Profile & Timelines:** Manage work experience, education history, technical skills, and candidate bio.
 - **Interactive Resume Viewer:** In-browser modal for PDF resumes with fallback direct downloads and multi-mode rendering.
 - **Real-Time WebSocket Alerts:** Instant notifications whenever an employer reviews or updates application status.
 
-### 🏢 2. Recruiter & Employer Hub
+### 🏢 3. Recruiter & Employer Hub
 - **Recruiter Analytics Dashboard:** Stat cards tracking active job inventory, total applicant volume, and hiring status.
 - **Job Posting Lifecycle:** Multi-section glassmorphic form for role specifications, requirements, salary budgeting (INR), and headcount.
 - **Job Inventory Management:** Search, pagination, and quick navigation across all company postings.
-- **Applicant Pipeline & Decisioning:** Filter applicants by status tab (`All`, `Under Review`, `Shortlisted`, `Rejected`), inspect resumes, and update candidate stages with safety confirmation dialogs.
+- **Applicant Pipeline & Decisioning:** Filter applicants by status tab (`All`, `Under Review`, `Shortlisted`, `Rejected`), inspect candidate profiles, view attached resumes, and update stages with safety confirmation dialogs.
 - **Company Branding Profile:** Upload verified company logos, office headquarters, industry tags, and public organization descriptions.
 
-### 🛡️ 3. Security & Session Architecture
+### 🛡️ 4. Security & Session Architecture
 - **Dual-Token Authentication:** Secure JWT Access Tokens (short-lived) and Refresh Tokens (long-lived) with HTTP-only cookies and automatic multi-mode fallback.
 - **Silent Refresh Interceptor:** Axios response interceptor that transparently refreshes expired sessions and replays pending requests without interrupting the user.
 - **Role-Based Access Control (RBAC):** Server-side middleware isolating candidate routes from recruiter management tools.
 
-### 🎨 4. Design System & Aesthetics
+### 🎨 5. Design System & Aesthetics
 - **Dark Glassmorphism Theme:** Custom palette featuring deep slate (`#020617`), glowing emerald accents (`#10b981`), and subtle border glass effects.
 - **Floating Header Navigation:** GSAP-animated floating pill navigation with dynamic scroll blur, notifications bell, and quick avatar routing.
 - **Responsive Architecture:** Tailored desktop tables, mobile cards, and touch-friendly drawers.
@@ -79,7 +90,9 @@ A modern, production-grade hiring ecosystem built with the **MERN** stack (Mongo
 | **Frontend** | React 19, TypeScript, Vite, TanStack Query v5, GSAP, Lucide React, Sonner Toasts, React Router v7 |
 | **Styling** | Tailwind CSS, Custom Glassmorphic Utilities, Responsive Dark Mode Palette |
 | **Backend** | Node.js (ES Modules), Express 5, MongoDB, Mongoose 9, Socket.IO 4.8, Multer, Cloudinary SDK |
+| **NLP & ATS Engine** | Custom Pattern-Matching & Frequency Heuristics, Dynamic Bullet Generator, Match Scorer |
 | **Security** | JSON Web Tokens (JWT), Bcrypt.js, CORS, Cookie-Parser, RBAC Guards |
+| **Monitoring** | Dedicated `/health` endpoint, UptimeRobot 5-minute automated ping keep-alive |
 | **Testing** | Automated Security & RBAC Test Suite, E2E Flow Assertion Suite |
 
 ---
@@ -91,24 +104,26 @@ Job-portal/
 ├── client/                     # Frontend Vite + React SPA
 │   ├── src/
 │   │   ├── components/         # Reusable glassmorphic UI components & modals
-│   │   │   ├── common/         # Button, Input, Select, Dialogs, Badges
+│   │   │   ├── candidate/      # ATSAnalyzerModal, CandidateProfile widgets
+│   │   │   ├── common/         # Button, Input, Select, Dialogs, Badges, JobCard
 │   │   │   └── home/           # FloatingHeader, Hero, JobGrid
 │   │   ├── context/            # AuthContext, JobContext, SocketContext
 │   │   ├── hooks/              # Custom React & TanStack Query hooks
 │   │   ├── layouts/            # CandidateLayout, RecruiterLayout
-│   │   ├── pages/              # Candidate, Recruiter, Login, Register
+│   │   ├── pages/              # ResumeOptimizer, CandidateProfile, RecruiterDashboard
 │   │   ├── services/           # Axios API clients & interceptors
+│   │   ├── utils/              # atsEngine.ts (NLP Keyword Scanner, Match Scorer)
 │   │   └── types/              # Full TypeScript interface definitions
 │   ├── package.json
 │   └── vite.config.ts
 ├── server/                     # Backend Express REST API + WebSocket
 │   ├── src/
 │   │   ├── controllers/        # Auth, Job, Application, Profile controllers
-│   │   ├── middlewares/        # Auth, Role guards, Multer file upload
+│   │   ├── middlewares/        # Auth, Role guards, Multer file upload, ErrorHandler
 │   │   ├── models/             # User, Job, Application, RecruiterProfile, CandidateProfile
 │   │   ├── routes/             # Versioned REST endpoints (/api/v1/*)
 │   │   ├── utils/              # ApiResponse, ApiError, AsyncHandler, Cloudinary
-│   │   ├── app.js              # Express app configuration & static SPA serving
+│   │   ├── app.js              # Express app configuration, /health endpoint & static SPA serving
 │   │   └── index.js            # Server entry point & Socket.IO server
 │   ├── seed-jobs.js            # Industry-standard job seeding script
 │   └── package.json
@@ -121,7 +136,7 @@ Job-portal/
 ## ⚙️ Local Development Setup
 
 ### 1. Prerequisites
-- **Node.js:** v18.0 or higher
+- **Node.js:** v20.0 or higher
 - **npm:** v9.0 or higher
 - **MongoDB Atlas** or local MongoDB instance
 
@@ -200,9 +215,15 @@ npm run test:flow
    - `CLOUDINARY_CLOUD_NAME`: `<Cloud Name>`
    - `CLOUDINARY_API_KEY`: `<API Key>`
    - `CLOUDINARY_API_SECRET`: `<API Secret>`
-   - `CORS_ORIGIN`: `https://<your-service-name>.onrender.com`
+   - `CORS_ORIGIN`: `https://project-job-portal-ytq3.onrender.com`
    - `VITE_API_BASE_URL`: `/api/v1`
 5. Click **Deploy**. Both the client frontend and backend REST API will be served from your single live Render domain.
+
+### ⏱️ 24/7 Keep-Alive Setup (UptimeRobot)
+To prevent Render Free Tier instances from sleeping after inactivity:
+- **Monitor Type:** `HTTP(s)`
+- **URL to Monitor:** `https://project-job-portal-ytq3.onrender.com/health`
+- **Monitoring Interval:** `Every 5 minutes`
 
 ---
 
