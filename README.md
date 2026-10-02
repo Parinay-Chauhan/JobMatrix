@@ -202,10 +202,10 @@ npm run dev:client
 ## 🧪 Testing & Verification
 
 ```bash
-# Run security & RBAC verification script
+# Run Security, Auth & RBAC audit test suite (26 assertions)
 npm run test:security
 
-# Run end-to-end user workflow test script
+# Run API integration workflow test suite (16 assertions)
 npm run test:flow
 ```
 

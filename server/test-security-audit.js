@@ -285,6 +285,29 @@ async function runSecurityAudit() {
     logFail("Candidate POST /jobs", `Expected 403, got ${candPostJob.status}`);
   }
 
+  // Candidate trying to update a job (Expect 403)
+  const candUpdateJob = await request("/jobs/65f000000000000000000000", {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${activeCandToken}` },
+    body: JSON.stringify({ title: "Unauthorized Edit" }),
+  });
+  if (candUpdateJob.status === 403) {
+    logPass("Candidate blocked from PATCH /jobs/:id (403 Forbidden)");
+  } else {
+    logFail("Candidate PATCH /jobs/:id", `Expected 403, got ${candUpdateJob.status}`);
+  }
+
+  // Candidate trying to delete a job (Expect 403)
+  const candDeleteJob = await request("/jobs/65f000000000000000000000", {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${activeCandToken}` },
+  });
+  if (candDeleteJob.status === 403) {
+    logPass("Candidate blocked from DELETE /jobs/:id (403 Forbidden)");
+  } else {
+    logFail("Candidate DELETE /jobs/:id", `Expected 403, got ${candDeleteJob.status}`);
+  }
+
   // Recruiter trying to access Candidate Profile (Expect 403)
   const recOnCandProfile = await request("/candidates/profile", {
     headers: { Authorization: `Bearer ${recAToken}` },
@@ -293,6 +316,42 @@ async function runSecurityAudit() {
     logPass("Recruiter blocked from /candidates/profile (403 Forbidden)");
   } else {
     logFail("Recruiter on Candidate Profile", `Expected 403, got ${recOnCandProfile.status}`);
+  }
+
+  // Recruiter trying to apply to a job (Expect 403)
+  const recApplyJob = await request("/applications/apply/65f000000000000000000000", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${recAToken}` },
+  });
+  if (recApplyJob.status === 403) {
+    logPass("Recruiter blocked from POST /applications/apply/:id (403 Forbidden)");
+  } else {
+    logFail("Recruiter POST /applications/apply", `Expected 403, got ${recApplyJob.status}`);
+  }
+
+  // Recruiter trying to access Candidate's /applications/get (Expect 403)
+  const recGetApps = await request("/applications/get", {
+    headers: { Authorization: `Bearer ${recAToken}` },
+  });
+  if (recGetApps.status === 403) {
+    logPass("Recruiter blocked from GET /applications/get (403 Forbidden)");
+  } else {
+    logFail("Recruiter GET /applications/get", `Expected 403, got ${recGetApps.status}`);
+  }
+
+  // Privilege Escalation / Mass Assignment: Candidate trying to change role to recruiter
+  const roleMutation = await request("/users/update-account", {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${activeCandToken}` },
+    body: JSON.stringify({ role: "recruiter" }),
+  });
+  const candCheckMe = await request("/users/current-user", {
+    headers: { Authorization: `Bearer ${activeCandToken}` },
+  });
+  if (candCheckMe.data?.data?.role === "candidate") {
+    logPass("Role field protected from mass-assignment mutation (Role remains 'candidate')");
+  } else {
+    logFail("Role Mass-Assignment Guard", `Role changed to: ${candCheckMe.data?.data?.role}`);
   }
 
   // ----------------------------------------------------
