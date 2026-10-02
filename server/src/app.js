@@ -12,6 +12,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Trust reverse proxy headers (Render, Cloudflare, AWS ALB) for accurate client IP in rate-limit
+app.set("trust proxy", 1);
+
 // Security HTTP Headers with Helmet
 app.use(
   helmet({

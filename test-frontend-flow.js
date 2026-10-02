@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000/api/v1";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:8000/api/v1";
 
 let passedCount = 0;
 let failedCount = 0;

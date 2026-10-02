@@ -1,7 +1,7 @@
 // Comprehensive Security & Edge-Case Audit Test Script
 // Tests RBAC, JWT validation, cross-role protections, duplicate application guards, inactive job guards, and ownership authorization.
 
-const BASE_URL = "http://localhost:8000/api/v1";
+const BASE_URL = process.env.API_BASE_URL || "http://localhost:8000/api/v1";
 
 let passedCount = 0;
 let failedCount = 0;

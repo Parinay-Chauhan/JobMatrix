@@ -38,12 +38,24 @@ jobs:
       - name: Install Server Dependencies
         run: npm ci --prefix server
 
-      - name: Run Backend Security & Route Verification
+      - name: Start Server & Wait for Health Check
         env:
           PORT: 8000
+          NODE_ENV: test
           MONGODB_URI: mongodb://localhost:27017/jobmatrix_ci
           ACCESS_TOKEN_SECRET: ci_test_access_token_secret_32_chars_min
           REFRESH_TOKEN_SECRET: ci_test_refresh_token_secret_32_chars_min
           CORS_ORIGIN: http://localhost:5173
         run: |
-          node -e "console.log('✅ Server modules, Zod validation, and routes imported cleanly');"
+          node server/src/index.js &
+          npx --yes wait-on http://localhost:8000/health -t 30000
+
+      - name: Run Security & RBAC Audit Tests
+        env:
+          API_BASE_URL: http://localhost:8000/api/v1
+        run: npm run test:security
+
+      - name: Run E2E Application Flow Tests
+        env:
+          API_BASE_URL: http://localhost:8000/api/v1
+        run: npm run test:flow
