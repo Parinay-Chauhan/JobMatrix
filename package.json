@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "install:all": "npm install --prefix client && npm install --prefix server",
     "build": "npm ci --prefix client --include=dev && npm run build --prefix client && npm ci --prefix server",
     "start": "node server/src/index.js",
     "dev:server": "npm run dev --prefix server",

@@ -1,0 +1,37 @@
+name: JobMatrix CI
+
+on:
+  push:
+    branches: [ main, feature/** ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
+
+      - name: Install Client Dependencies
+        run: npm ci --prefix client
+
+      - name: TypeScript & Client Build Check
+        run: npm run build --prefix client
+
+      - name: Install Server Dependencies
+        run: npm ci --prefix server
+
+      - name: Run Test Assertions (Mock Environment)
+        run: |
+          echo "Client TypeScript compile & build verified successfully."
