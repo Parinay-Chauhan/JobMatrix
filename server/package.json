@@ -7,7 +7,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon src/index.js",
-    "clean:tests": "node cleanup-tests.js"
+    "clean:tests": "node cleanup-tests.js",
+    "test:security": "node test-security-audit.js",
+    "test:flow": "node ../test-api-flow.js"
   },
   "keywords": [],
   "author": "",
