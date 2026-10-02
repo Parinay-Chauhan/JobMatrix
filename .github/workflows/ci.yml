@@ -15,6 +15,11 @@ jobs:
         image: mongo:7.0
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd mongosh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout Repository
@@ -38,24 +43,24 @@ jobs:
       - name: Install Server Dependencies
         run: npm ci --prefix server
 
-      - name: Start Server & Wait for Health Check
+      - name: Start Server & Run Verification Suites
         env:
           PORT: 8000
           NODE_ENV: test
-          MONGODB_URI: mongodb://localhost:27017/jobmatrix_ci
+          MONGODB_URI: mongodb://127.0.0.1:27017
           ACCESS_TOKEN_SECRET: ci_test_access_token_secret_32_chars_min
           REFRESH_TOKEN_SECRET: ci_test_refresh_token_secret_32_chars_min
+          ACCESS_TOKEN_EXPIRATION: 15m
+          REFRESH_TOKEN_EXPIRATION: 7d
           CORS_ORIGIN: http://localhost:5173
+          API_BASE_URL: http://127.0.0.1:8000/api/v1
         run: |
           node server/src/index.js &
-          npx --yes wait-on http://localhost:8000/health -t 30000
+          SERVER_PID=$!
+          npx --yes wait-on http://127.0.0.1:8000/health -t 30000
+          echo "=== 🛡️ Running Security & RBAC Audit Suite (26 Checks) ==="
+          npm run test:security
+          echo "=== 🚀 Running E2E Application Flow Suite (16 Checks) ==="
+          npm run test:flow
+          kill $SERVER_PID || true
 
-      - name: Run Security & RBAC Audit Tests
-        env:
-          API_BASE_URL: http://localhost:8000/api/v1
-        run: npm run test:security
-
-      - name: Run E2E Application Flow Tests
-        env:
-          API_BASE_URL: http://localhost:8000/api/v1
-        run: npm run test:flow
