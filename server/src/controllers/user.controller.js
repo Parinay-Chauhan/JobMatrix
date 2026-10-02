@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -14,7 +15,11 @@ const generateAccessAndRefreshTokens = async (userId) => {
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
-    user.refreshToken = refreshToken;
+    // Store SHA-256 hash of refresh token in database (never plaintext)
+    user.refreshToken = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
     await user.save({ validateBeforeSave: false });
 
     return { accessToken, refreshToken };
@@ -23,7 +28,6 @@ const generateAccessAndRefreshTokens = async (userId) => {
       500,
       "Something went wrong while generating refresh and access token",
     );
-
   }
 };
 
@@ -191,7 +195,15 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, "Invalid refresh token");
     }
 
-    if (incomingRefreshToken !== user?.refreshToken) {
+    const incomingHashedToken = crypto
+      .createHash("sha256")
+      .update(incomingRefreshToken)
+      .digest("hex");
+
+    if (
+      user?.refreshToken !== incomingHashedToken &&
+      user?.refreshToken !== incomingRefreshToken
+    ) {
       throw new ApiError(401, "Refresh token is expired or used");
     }
 

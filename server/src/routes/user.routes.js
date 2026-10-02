@@ -12,12 +12,17 @@ import {
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/Auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
+import { validate } from "../middleware/validate.middleware.js";
+import {
+  registerUserSchema,
+  loginUserSchema,
+} from "../validators/auth.validator.js";
 
 const router = Router();
 
-// Public routes
-router.route("/register").post(registerUser);
-router.route("/login").post(loginUser);
+// Public routes with Zod schema validation
+router.route("/register").post(validate(registerUserSchema), registerUser);
+router.route("/login").post(validate(loginUserSchema), loginUser);
 
 // Secured routes
 router.route("/logout").post(verifyJWT, logoutUser);

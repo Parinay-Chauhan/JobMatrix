@@ -10,7 +10,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A modern full-stack recruitment platform built on the **MERN** stack (MongoDB, Express 5, React 19, Node.js) with **TypeScript** on the frontend. Features a dark glassmorphic design system, a **client-side heuristic ATS resume keyword optimizer**, real-time WebSocket notifications, an applicant tracking pipeline, and a resilient multi-token auth architecture with database-backed token rotation.
+A full-stack recruitment platform built with the **MERN** stack (MongoDB, Express 5, React 19, Node.js) with **TypeScript** on the frontend. Features a dark glassmorphic design system, a **client-side heuristic ATS resume keyword optimizer**, real-time WebSocket notifications, an applicant tracking pipeline, and a hardened authentication system with SHA-256 hashed refresh tokens, rate limiting, and Zod request validation.
 
 ---
 
@@ -19,12 +19,12 @@ A modern full-stack recruitment platform built on the **MERN** stack (MongoDB, E
 - **Live Application:** [https://project-job-portal-ytq3.onrender.com](https://project-job-portal-ytq3.onrender.com)
 - **Health Check Status:** [https://project-job-portal-ytq3.onrender.com/health](https://project-job-portal-ytq3.onrender.com/health)
 
-### 🔑 Test Accounts (Instant Login)
+### 🔑 Test Accounts (Instant Evaluation)
 
 | Role | Email | Password | Access Capabilities |
 |---|---|---|---|
-| **Recruiter** | `talent@stripe.com` | `Password@123` | Post jobs, review applicants, change candidate stages, manage company profile |
-| **Candidate** | `candidate@demo.com` *(or create new)* | `Password@123` | Search jobs, 1-click apply, track applications, live ATS resume optimizer |
+| **Demo Recruiter** | `recruiter.demo@jobmatrix.dev` | `Password@123` | Post jobs, review applicants, update candidate stages, manage company profile |
+| **Demo Candidate** | `candidate.demo@jobmatrix.dev` | `Password@123` | Search jobs, 1-click apply, track applications, live ATS resume optimizer |
 
 ---
 
@@ -34,7 +34,7 @@ A modern full-stack recruitment platform built on the **MERN** stack (MongoDB, E
 - **Dual Mode Input:** Analyze against active platform job postings or paste any custom Job Description (JD) from LinkedIn/Indeed.
 - **Rule-Based Skill Extraction:** Categorized dictionary across 150+ technical skills (Frontend, Backend, DevOps/Cloud, Databases, AI/ML, and Core CS).
 - **Weighted Match Scoring (0–100%):** Categorizes candidates into readiness bands (`Excellent Match`, `Strong Match`, `Good Match`, `Optimization Required`).
-- **1-Click Skill Boosting:** Add missing target keywords directly to the candidate profile with instant score recalculation.
+- **Target Keyword Identification:** Highlights matching skills in green and missing keywords in amber. *(Design note: Intended as an exploratory gap analysis tool to help candidates surface relevant skills they possess that ATS filters search for).*
 - **Tailored Bullet Point Generator:** Creates action-oriented, quantifiable bullet points aligned with the target role.
 - **5-Point Compliance Checklist:** Evaluates keyword coverage, verified PDF upload, measurable work experience, contact details, and education accreditation.
 
@@ -49,7 +49,7 @@ A modern full-stack recruitment platform built on the **MERN** stack (MongoDB, E
 - **Dashboard Metrics:** Live summary of active job listings, applicant volume, and pipeline distribution.
 - **Job Posting Lifecycle:** Multi-section form covering role requirements, salary ranges (INR), and headcount.
 - **Applicant Decisioning:** Status-based tabs (`All`, `Under Review`, `Shortlisted`, `Rejected`) with safety confirmation modals.
-- **Company Branding:** Manage verified organization descriptions, headquarters, and branding assets.
+- **Company Branding:** Manage organization descriptions, headquarters, and branding assets.
 
 ---
 
@@ -58,33 +58,39 @@ A modern full-stack recruitment platform built on the **MERN** stack (MongoDB, E
 ```
 Client (Axios / Browser)                        Server (Express + MongoDB)
        │                                                    │
-       ├─── 1. POST /api/v1/users/login ───────────────────>│ (Verify password via bcrypt)
-       │<── 2. Set-Cookie: accessToken (15m, HttpOnly) ─────┤ (Generate JWT pair,
-       │<──    Set-Cookie: refreshToken (7d, HttpOnly) ─────┤  Store refreshToken in User document)
+       ├─── 1. POST /api/v1/users/login ───────────────────>│ (Rate limit + Zod validation)
+       │<── 2. Set-Cookie: accessToken (15m, HttpOnly) ─────┤ (Generate signed JWT pair,
+       │<──    Set-Cookie: refreshToken (7d, HttpOnly) ─────┤  Store SHA-256(refreshToken) in DB)
        │                                                    │
        ├─── 3. Request with expired accessToken ───────────>│
        │<── 4. 401 Unauthorized ───────────────────────────┤
        │                                                    │
-       ├─── 5. POST /api/v1/users/refresh-token ───────────>│ (Verify incoming token matches DB)
-       │<── 6. New accessToken + Rotated refreshToken ──────┤ (Rotate & update User document)
+       ├─── 5. POST /api/v1/users/refresh-token ───────────>│ (Verify SHA-256(incoming) == DB hash)
+       │<── 6. New accessToken + Rotated refreshToken ──────┤ (Rotate hash & update User document)
        │                                                    │
-       ├─── 7. POST /api/v1/users/logout ──────────────────>│ (Remove refreshToken from DB,
-       │<── 8. Clear Cookies ───────────────────────────────┤  clear cookies)
+       ├─── 7. POST /api/v1/users/logout ──────────────────>│ (Execute $unset: { refreshToken: "" },
+       │<── 8. Clear Cookies ───────────────────────────────┤  clear HttpOnly cookies)
 ```
 
-1. **Dual-Token JWT Architecture:**
-   - **Access Token (Short-lived - 15 mins):** Carries user identity and role for stateless authorization.
-   - **Refresh Token (Long-lived - 7 days):** Encrypted JWT stored both in an `HttpOnly` cookie and persisted in the MongoDB `User` document.
-2. **Server-Side Token Rotation & Revocation:**
-   - On token refresh (`/api/v1/users/refresh-token`), the server verifies that the incoming refresh token matches the database record. A new token pair is issued, and the stored refresh token is rotated.
-   - On logout (`/api/v1/users/logout`), the server executes `$unset: { refreshToken: "" }` in MongoDB and clears browser cookies, immediately invalidating any stolen session tokens.
-3. **Silent Refresh Interceptor:**
-   - Axios response interceptor intercepts `401` errors, buffers concurrent failing requests in a queue, requests a new access token, and transparently replays original requests without interrupting user workflow.
-4. **Authenticated Socket.IO Handshake:**
-   - WebSocket connection runs handshake authentication middleware (`io.use`) verifying JWT before connection approval.
-   - Users are isolated into private rooms (`socket.join(userId)`), ensuring notifications are only delivered to authorized recipients.
-5. **Asset Storage:**
-   - Resume PDFs and company logos are uploaded via Multer and stored on Cloudinary with sanitized filenames.
+1. **Signed Dual-Token JWT Flow:**
+   - **Access Token (Short-lived - 15 mins):** Cryptographically signed JWT (HMAC-SHA256) carrying user ID and role for stateless authorization.
+   - **Refresh Token (Long-lived - 7 days):** Cryptographically signed JWT. To prevent database leak exploitation, only its **SHA-256 hash** is persisted in the MongoDB `User` document.
+2. **Server-Side Token Rotation & Invalidation:**
+   - On `/api/v1/users/refresh-token`, the server computes the SHA-256 hash of the incoming token, verifies it against the database record, issues a new token pair, and rotates the stored hash.
+   - On `/api/v1/users/logout`, the server removes the stored hash via `$unset: { refreshToken: "" }` and clears client cookies. The refresh token is revoked immediately; the stateless access token expires within its short 15-minute TTL.
+   - *Session Policy:* Single active refresh token per user (logging in on a new device replaces the active session token hash).
+3. **Cookie Configuration:**
+   - Transported via `HttpOnly` cookies with `Secure: true` in production and `SameSite: Lax` (or `SameSite: None` with HTTPS for cross-origin setups) to mitigate XSS and CSRF exposure.
+4. **Silent Refresh Interceptor:**
+   - Axios response interceptor intercepts `401` errors, buffers concurrent requests in a queue, requests a refreshed token pair, and transparently replays original requests.
+5. **Authenticated Socket.IO Handshake:**
+   - WebSocket connection runs handshake middleware (`io.use`) verifying JWT before connection approval.
+   - Users are bound to private rooms (`socket.join(userId)`), isolating notifications to authorized recipients.
+6. **API Hardening & Upload Controls:**
+   - **Helmet:** Sets secure HTTP response headers.
+   - **Express Rate Limiting:** Global rate limiting (500 req/15 min) with strict auth rate limiting (30 attempts/15 min per IP) on login and registration.
+   - **Zod Schema Validation:** Applied on auth (`/register`, `/login`) and job posting endpoints.
+   - **Multer File Validation:** Enforces a strict 5MB maximum file size limit and MIME-type verification (`PDF`, `DOCX`, `JPEG`, `PNG`).
 
 ---
 
@@ -114,19 +120,18 @@ Client (Axios / Browser)                        Server (Express + MongoDB)
 
 | Decision | Approach Chosen | Rationale & Trade-offs |
 |---|---|---|
-| **ATS Engine** | Client-Side Heuristic Tokenizer | **Chosen:** 0ms latency, zero third-party API costs, complete candidate data privacy.<br>**Trade-off:** Lacks semantic understanding of nuanced job synonyms compared to cloud LLM embeddings. |
+| **ATS Engine** | Client-Side Heuristic Tokenizer | **Chosen:** Near-instant evaluation (<10ms), zero external API billing, complete candidate data privacy.<br>**Trade-off:** Lacks semantic understanding of nuanced job synonyms compared to cloud LLM embeddings. |
 | **Deployment Model** | Single-Service Monorepo on Render | **Chosen:** Express serves both the pre-built React SPA static files and REST API from a single domain, eliminating cross-origin third-party cookie restrictions.<br>**Trade-off:** Frontend and backend share the same compute instance. |
 | **Real-Time Scaling** | In-Memory Socket.IO Rooms | **Chosen:** Zero external infrastructure dependencies for single-instance hosting.<br>**Trade-off:** Multi-instance horizontal scaling requires adding a Redis Pub/Sub adapter. |
-| **Type Safety** | TypeScript Frontend + Node.js Backend | **Chosen:** Full type safety across state management, UI props, and API response contracts on the frontend; lightweight native ES Modules on the backend. |
+| **Type Safety** | TypeScript Frontend + Node.js Backend | **Chosen:** Full type safety across state management, UI props, and API response contracts on the frontend; runtime schema validation with Zod on the backend. |
 
 ---
 
 ## ⚠️ Known Limitations & Future Roadmap
 
-- [ ] **Socket.IO Horizontal Scaling:** Implement `@socket.io/redis-adapter` with Redis to support multi-instance load balancing.
-- [ ] **Backend TypeScript Migration:** Migrate backend controllers and models to TypeScript with runtime schema validation (Zod / Joi).
-- [ ] **API Security Hardening:** Integrate `helmet` for HTTP security headers and `express-rate-limit` for DDoS / brute-force protection.
-- [ ] **Embeddings-Based Semantic Matching:** Integrate OpenAI / Gemini Embeddings as an optional backend vector search layer to complement heuristic keyword matching.
+- [ ] **Socket.IO Multi-Instance Scaling:** Implement `@socket.io/redis-adapter` with Redis to support multi-instance horizontal clustering.
+- [ ] **Backend TypeScript Migration:** Incrementally migrate backend models and controllers from ES Modules to TypeScript.
+- [ ] **Granular Session Management:** Migrate from single-token schema to a multi-device `sessions` collection with device fingerprinting and family-level reuse detection.
 
 ---
 
@@ -137,42 +142,8 @@ Client (Axios / Browser)                        Server (Express + MongoDB)
 | **Frontend** | React 19, TypeScript, Vite, TanStack Query v5, GSAP, Lucide Icons, Sonner Toasts, React Router v7 |
 | **Styling** | Tailwind CSS, Custom Glassmorphic Utilities, Responsive Dark Mode Palette |
 | **Backend** | Node.js (ES Modules), Express 5, MongoDB, Mongoose 9, Socket.IO 4.8, Multer, Cloudinary SDK |
-| **Security** | JSON Web Tokens (JWT), Bcrypt, Cookie-Parser, RBAC Guards, DB-backed Token Revocation |
-| **CI / DevOps** | GitHub Actions (`ci.yml`), Render Single-Service Deployment, UptimeRobot 5-min Keep-Alive |
-
----
-
-## 📁 Directory Layout
-
-```
-Job-portal/
-├── .github/workflows/          # GitHub Actions CI pipeline
-│   └── ci.yml
-├── client/                     # Frontend React 19 + TypeScript SPA
-│   ├── src/
-│   │   ├── components/         # Reusable glassmorphic UI components & modals
-│   │   ├── context/            # AuthContext, JobContext, SocketContext
-│   │   ├── hooks/              # Custom React & TanStack Query hooks
-│   │   ├── layouts/            # CandidateLayout, RecruiterLayout
-│   │   ├── pages/              # ResumeOptimizer, CandidateProfile, RecruiterDashboard
-│   │   ├── services/           # Axios client & silent refresh interceptor
-│   │   ├── utils/              # atsEngine.ts (Heuristic Tokenizer & Match Scorer)
-│   │   └── types/              # TypeScript interface definitions
-│   └── vite.config.ts
-├── server/                     # Backend Express 5 REST API + Socket.IO
-│   ├── src/
-│   │   ├── controllers/        # Auth, Job, Application, Profile controllers
-│   │   ├── middleware/         # Auth, Role guards, Multer upload, ErrorHandler
-│   │   ├── models/             # User, Job, Application, RecruiterProfile, CandidateProfile
-│   │   ├── routes/             # Versioned REST endpoints (/api/v1/*)
-│   │   ├── app.js              # Express app configuration & static SPA serving
-│   │   ├── index.js            # Server entry point & HTTP listener
-│   │   └── socket.js           # Authenticated Socket.IO initialization
-│   ├── seed-jobs.js            # Verified job & recruiter seeding script
-│   └── package.json
-├── package.json                # Monorepo build and installation scripts
-└── README.md
-```
+| **Security & Validation** | Signed JWTs, Bcrypt, SHA-256 Token Hashing, Helmet, Express-Rate-Limit, Zod Schemas |
+| **CI / DevOps** | GitHub Actions (`ci.yml` with MongoDB 7.0 service container), Render Hosting, UptimeRobot 5-min Ping |
 
 ---
 
@@ -210,7 +181,7 @@ VITE_API_BASE_URL=http://localhost:8000/api/v1
 VITE_SOCKET_URL=http://localhost:8000
 ```
 
-### 4. Seed Verified Data (Optional)
+### 4. Seed Curated Sample Data (Optional)
 ```bash
 cd server
 node seed-jobs.js

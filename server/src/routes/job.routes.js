@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { verifyJWT, authorizeRoles } from "../middleware/Auth.middleware.js";
+import { validate } from "../middleware/validate.middleware.js";
+import { createJobSchema } from "../validators/job.validator.js";
 import {
   postJob,
   getAllJobs,
@@ -17,7 +19,14 @@ router.route("/").get(getAllJobs);
 router.route("/get/:id").get(getJobById); // public view single job
 
 // Recruiter Restricted Routes
-router.route("/").post(verifyJWT, authorizeRoles("recruiter"), postJob);
+router
+  .route("/")
+  .post(
+    verifyJWT,
+    authorizeRoles("recruiter"),
+    validate(createJobSchema),
+    postJob,
+  );
 
 router
   .route("/my-jobs")
