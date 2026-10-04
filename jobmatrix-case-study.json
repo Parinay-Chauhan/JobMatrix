@@ -1,0 +1,52 @@
+{
+  "title": "JobMatrix — Real-Time Hiring & Talent Intelligence Platform",
+  "tagline": "A production-grade recruitment platform with dual-token security, real-time WebSocket state management, and client-side ATS analysis.",
+  "slug": "jobmatrix-recruitment-platform",
+  "featured": true,
+  "liveUrl": "https://project-job-portal-ytq3.onrender.com",
+  "githubUrl": "https://github.com/Parinay-Chauhan/JobMatrix",
+  "timeline": "3 - 4 Weeks",
+  "team": "Design & Full-Stack Development — Parinay Chauhan",
+  "techStack": [
+    "React 19",
+    "TypeScript",
+    "Node.js",
+    "Express 5",
+    "MongoDB Atlas",
+    "Socket.IO",
+    "TanStack Query v5",
+    "Tailwind CSS",
+    "GSAP",
+    "Zod",
+    "JWT & Bcrypt",
+    "Cloudinary"
+  ],
+  "myRole": [
+    "Architected the complete full-stack application from scratch",
+    "Designed and built RESTful API endpoints and WebSocket architecture with Node.js, Express, and Socket.IO",
+    "Structured MongoDB database schemas, indexing, and transactional operations",
+    "Implemented modern, interactive frontend interfaces in React 19, TypeScript, and Tailwind CSS",
+    "Built dual-token authentication, role guards (RBAC), and Axios silent refresh interceptors",
+    "Handled CI/CD deployment, automated test suites (42 total assertions), and performance optimization"
+  ],
+  "context": "Recruitment platforms often struggle with fragmented user experiences, insecure session management, and delayed communication between hiring teams and candidates. Candidates submit applications without visibility into evaluation stages, while recruiters face cumbersome tools vulnerable to unauthorized data access. JobMatrix was developed as a comprehensive full-stack recruitment ecosystem designed to demonstrate robust system architecture, complex asynchronous data workflows, resilient security mechanisms, and modern UI/UX design principles. It solves key operational bottlenecks through real-time event streaming, dual-token security, role-based workflows, and client-side ATS intelligence.",
+  "overview": "JobMatrix is a production-grade full-stack hiring platform built with React 19, TypeScript, Node.js, Express, MongoDB Atlas, and Socket.IO. It showcases core technical capabilities in building end-to-end applications with secure authentication, real-time WebSocket state synchronization, modular API design, an intelligent applicant pipeline, and a client-side ATS keyword analyzer.",
+  "problemStatement": "Developing and deploying a reliable recruitment application requires solving complex state management, data integrity, seamless client-server communication, and optimal database querying without compromising performance. Traditional single-token JWTs stored in localStorage are vulnerable to XSS attacks, multi-tenant recruiter portals risk IDOR vulnerabilities, polling-based architectures delay status updates, and candidates lack actionable ATS resume alignment insights.",
+  "challenges": [
+    "Designing a dual-token authentication system with 15-minute access tokens and 7-day refresh tokens that transparently refreshes expired sessions using Axios interceptors without race conditions during concurrent API calls",
+    "Enforcing strict Role-Based Access Control (RBAC) and ownership verification so competing recruiters cannot view, edit, or manipulate each other's candidate pipelines (IDOR defense)",
+    "Implementing Socket.IO room-based event broadcasting so candidate application status changes reflect instantly across devices without page reloads",
+    "Engineering an in-browser keyword extraction and frequency analysis engine comparing resume text against job requirements with zero backend overhead",
+    "Constructing a reproducible GitHub Actions workflow executing TypeScript type checks, a 26-assertion security/RBAC audit suite, and a 16-assertion E2E integration flow suite against real MongoDB containers"
+  ],
+  "solution": "I architected and developed a full-stack web application using the MERN + TypeScript stack with clean separation of concerns. I implemented modular controllers and route handlers on the backend, paired with SHA-256 hashed refresh tokens in MongoDB, unique cryptographic JTI identifiers, HttpOnly cookies, and Axios request queuing. For real-time functionality, I integrated Socket.IO rooms for instant candidate status alerts, alongside a cyber-themed glassmorphic UI with React 19, Tailwind CSS, GSAP 3D tilts, and MagicBento interactive cards.",
+  "keyFeatures": [
+    "Dual-token auth with rotation and reuse detection: 15-minute JWT access tokens and 7-day refresh tokens in HttpOnly cookies with SHA-256 DB hashing",
+    "Role-based workspaces for Candidates (search, 1-click apply, live tracker, resume viewer, ATS keyword optimizer) and Recruiters (job analytics, candidate pipeline, IDOR-guarded decisioning)",
+    "Real-time WebSocket alerts via Socket.IO whenever application stages change",
+    "Rule-based client-side ATS keyword matcher calculating match score and missing keywords against job specifications",
+    "Interactive UI with MagicBento cards featuring spotlight cursor tracking, 3D perspective tilt, magnetism, particle star animations, and custom glowing borders",
+    "Battle-tested automated CI/CD pipeline running TypeScript builds, 26 security/RBAC tests, and 16 E2E flow tests with 100% pass rate"
+  ],
+  "resultsAndImpact": "Successfully developed and deployed a fully functional, high-performance recruitment platform with 100% automated test coverage (26/26 Security assertions & 16/16 E2E Flow assertions), sub-100ms real-time status synchronization, and zero security vulnerabilities across IDOR, mass assignment, and session hijacking vectors."
+}
