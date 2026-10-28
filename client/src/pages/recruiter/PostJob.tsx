@@ -80,7 +80,7 @@ export const PostJob: React.FC = () => {
       {/* Back Link */}
       <Link
         to="/recruiter/jobs"
-        className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-emerald-400 transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-blue-400 transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
         <span>Back to Manage Jobs</span>
@@ -88,7 +88,7 @@ export const PostJob: React.FC = () => {
 
       {/* Header Banner */}
       <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
           <Sparkles className="w-3.5 h-3.5" />
           <span>New Opportunity</span>
         </div>
@@ -107,7 +107,7 @@ export const PostJob: React.FC = () => {
       >
         {/* Basic Role Details */}
         <div className="space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2 border-b border-slate-800 pb-2">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2 border-b border-slate-800 pb-2">
             <Briefcase className="w-4 h-4" />
             <span>Role Specifications</span>
           </h2>
@@ -180,7 +180,7 @@ export const PostJob: React.FC = () => {
 
         {/* Location & Compensation */}
         <div className="space-y-4 pt-2">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2 border-b border-slate-800 pb-2">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2 border-b border-slate-800 pb-2">
             <MapPin className="w-4 h-4" />
             <span>Location & Compensation</span>
           </h2>
@@ -218,7 +218,7 @@ export const PostJob: React.FC = () => {
 
         {/* Description & Requirements */}
         <div className="space-y-4 pt-2">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2 border-b border-slate-800 pb-2">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2 border-b border-slate-800 pb-2">
             <FileText className="w-4 h-4" />
             <span>Description & Requirements</span>
           </h2>
@@ -259,7 +259,7 @@ export const PostJob: React.FC = () => {
             variant="primary"
             isLoading={postJobMutation.isPending}
             disabled={postJobMutation.isPending}
-            className="justify-center bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-lg shadow-emerald-500/20"
+            className="justify-center bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold shadow-lg shadow-blue-500/20"
           >
             <CheckCircle2 className="w-4 h-4 mr-1.5" />
             <span>Publish Job Listing</span>

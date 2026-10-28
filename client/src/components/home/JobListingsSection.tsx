@@ -23,7 +23,7 @@ export const JobListingsSection: React.FC = () => {
 
           <Link
             to="/register"
-            className="text-sm text-emerald-600 hover:text-emerald-700 font-bold transition-colors"
+            className="text-sm text-orange-500 hover:text-orange-600 font-bold transition-colors"
           >
             Post a Job &rarr;
           </Link>

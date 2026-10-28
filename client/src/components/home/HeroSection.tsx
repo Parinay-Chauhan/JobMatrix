@@ -80,8 +80,8 @@ export const HeroSection: React.FC = () => {
   return (
     <div className="relative pt-28 sm:pt-36 pb-12 sm:pb-16 flex flex-col justify-between overflow-hidden bg-slate-950">
       {/* Background Decorative Ambient Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-500/10 blur-[130px] pointer-events-none rounded-full" />
-      <div className="absolute bottom-16 right-10 w-96 h-96 bg-teal-500/10 blur-[110px] pointer-events-none rounded-full" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-blue-600/10 blur-[130px] pointer-events-none rounded-full" />
+      <div className="absolute bottom-16 right-10 w-96 h-96 bg-orange-500/10 blur-[110px] pointer-events-none rounded-full" />
       <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-40" />
 
       {/* Center Hero Content */}
@@ -89,9 +89,9 @@ export const HeroSection: React.FC = () => {
         {/* Top Pill Badge */}
         <div
           ref={heroBadgeRef}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-400/25 text-emerald-300 text-xs font-semibold backdrop-blur-md shadow-sm mb-5"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/25 text-blue-300 text-xs font-semibold backdrop-blur-md shadow-sm mb-5"
         >
-          <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="flex h-2 w-2 rounded-full bg-blue-400 animate-pulse" />
           <span>Over 10,000+ Verified Job Opportunities</span>
         </div>
 
@@ -101,7 +101,7 @@ export const HeroSection: React.FC = () => {
           className="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.08] max-w-4xl"
         >
           Find Your{" "}
-          <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">
             Dream Job
           </span>{" "}
           or Hire Top Talent
@@ -117,7 +117,7 @@ export const HeroSection: React.FC = () => {
 
         {/* Responsive Search Bar: Card on mobile, Pill on desktop */}
         <div ref={heroSearchRef} className="w-full max-w-4xl mt-8 sm:mt-10">
-          <div className="bg-white rounded-2xl sm:rounded-full p-2.5 sm:p-2 sm:pl-3 shadow-2xl shadow-black/40 border border-white/20 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 transition-all duration-300 hover:shadow-emerald-500/15">
+          <div className="bg-white rounded-2xl sm:rounded-full p-2.5 sm:p-2 sm:pl-3 shadow-2xl shadow-black/40 border border-white/20 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 transition-all duration-300 hover:shadow-blue-500/15">
             {/* Input 1: Job Title / Skills */}
             <div className="flex-1 flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-4 border-b sm:border-b-0 sm:border-r border-gray-100 sm:border-gray-200/80 min-w-0">
               <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -173,11 +173,11 @@ export const HeroSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Search Button with Emerald/Teal Gradient */}
+            {/* Search Button with Blue/Orange Gradient */}
             <button
               onClick={handleSearchSubmit}
-              className="w-full sm:w-auto sm:ml-1 shrink-0 px-8 py-3.5 rounded-xl sm:rounded-full text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-95 shadow-md shadow-emerald-500/30"
-              style={{ background: "linear-gradient(135deg, #059669 0%, #0d9488 100%)" }}
+              className="w-full sm:w-auto sm:ml-1 shrink-0 px-8 py-3.5 rounded-xl sm:rounded-full text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-95 shadow-md shadow-orange-500/30"
+              style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)" }}
             >
               Search
             </button>

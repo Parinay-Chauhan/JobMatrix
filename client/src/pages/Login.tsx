@@ -99,9 +99,9 @@ export const Login: React.FC = () => {
     <div className="min-h-screen flex bg-slate-950 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-emerald-600/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-teal-600/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-sky-600/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
       </div>
 
       {/* Left Panel — Branding */}
@@ -110,21 +110,21 @@ export const Login: React.FC = () => {
           <div ref={brandingRef}>
             <Link to="/" className="inline-flex items-center group">
               <span className="text-3xl font-black tracking-tight text-white group-hover:opacity-90 transition-opacity">
-                Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
+                Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">Matrix</span>
               </span>
             </Link>
           </div>
         </div>
 
         <div className="w-full max-w-lg space-y-7">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
             Top Career Platform
           </div>
 
           <h1 ref={headingRef} className="text-5xl xl:text-6xl font-black text-white leading-[1.12] tracking-tight">
             Your career journey{" "}
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">
               starts here
             </span>
           </h1>
@@ -166,7 +166,7 @@ export const Login: React.FC = () => {
           <div className="lg:hidden mb-8 text-center">
             <Link to="/" className="inline-flex items-center group">
               <span className="text-2xl font-black tracking-tight text-white group-hover:opacity-90 transition-opacity">
-                Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
+                Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">Matrix</span>
               </span>
             </Link>
           </div>
@@ -215,7 +215,7 @@ export const Login: React.FC = () => {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
+                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/60 transition-all hover:border-slate-600"
                   />
                 </div>
               </div>
@@ -237,7 +237,7 @@ export const Login: React.FC = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-11 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
+                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-11 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/60 transition-all hover:border-slate-600"
                   />
                   <button
                     type="button"
@@ -262,8 +262,8 @@ export const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-1 py-3 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/25"
-                style={{ background: "linear-gradient(135deg, #10b981 0%, #0d9488 50%, #059669 100%)" }}
+                className="w-full mt-1 py-3 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-orange-500/25"
+                style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)" }}
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -291,7 +291,7 @@ export const Login: React.FC = () => {
               Don't have an account?{" "}
               <Link
                 to="/register"
-                className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                className="font-semibold text-orange-400 hover:text-orange-300 transition-colors"
               >
                 Create an account
               </Link>

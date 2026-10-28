@@ -65,7 +65,7 @@ export const ManageJobs: React.FC = () => {
       {/* Header Banner */}
       <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Job Inventory</span>
           </div>
@@ -81,7 +81,7 @@ export const ManageJobs: React.FC = () => {
           <Button
             variant="primary"
             size="md"
-            className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-105 active:scale-95 transition-all"
+            className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all"
           >
             <PlusCircle className="w-4 h-4 mr-1.5" />
             <span>Post New Job</span>
@@ -104,7 +104,7 @@ export const ManageJobs: React.FC = () => {
             <Link to="/recruiter/jobs/new">
               <Button
                 variant="primary"
-                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold"
+                className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold"
               >
                 Post a Job Now
               </Button>
@@ -125,7 +125,7 @@ export const ManageJobs: React.FC = () => {
               <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
             <div className="text-xs text-slate-400 font-medium self-end sm:self-center">
-              Showing <span className="text-emerald-400 font-bold">{filteredJobs.length}</span> of <span className="text-white font-bold">{jobs.length}</span> postings
+              Showing <span className="text-blue-400 font-bold">{filteredJobs.length}</span> of <span className="text-white font-bold">{jobs.length}</span> postings
             </div>
           </div>
 
@@ -135,7 +135,7 @@ export const ManageJobs: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="mt-3 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                className="mt-3 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
               >
                 Clear Search Filter
               </button>
@@ -154,7 +154,7 @@ export const ManageJobs: React.FC = () => {
                         <h3 className="font-bold text-white text-base">
                           {job.title}
                         </h3>
-                        <span className="text-xs font-semibold text-emerald-400">
+                        <span className="text-xs font-semibold text-blue-400">
                           {job.category || "General"}
                         </span>
                       </div>
@@ -169,7 +169,7 @@ export const ManageJobs: React.FC = () => {
                         <span>{job.location || "Remote"}</span>
                       </span>
                       {job.workMode && (
-                        <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-2 py-0.5 rounded-md font-medium">
+                        <span className="inline-flex items-center gap-1 bg-blue-500/10 text-blue-300 border border-blue-500/20 px-2 py-0.5 rounded-md font-medium">
                           {job.workMode}
                         </span>
                       )}
@@ -188,7 +188,7 @@ export const ManageJobs: React.FC = () => {
                         <Button
                           variant="primary"
                           size="sm"
-                          className="font-bold shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-105 active:scale-95 transition-all"
+                          className="font-bold shadow-md shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all"
                         >
                           <span>Applicants</span>
                           <ArrowRight className="w-3 h-3 ml-1" />
@@ -220,10 +220,10 @@ export const ManageJobs: React.FC = () => {
                           className="hover:bg-slate-800/40 transition-colors group"
                         >
                           <td className="px-6 py-4">
-                            <div className="font-bold text-white group-hover:text-emerald-300 transition-colors">
+                            <div className="font-bold text-white group-hover:text-blue-300 transition-colors">
                               {job.title}
                             </div>
-                            <div className="text-xs text-emerald-400 font-medium mt-0.5">
+                            <div className="text-xs text-blue-400 font-medium mt-0.5">
                               {job.category || "General"}
                             </div>
                           </td>
@@ -232,7 +232,7 @@ export const ManageJobs: React.FC = () => {
                               {job.jobType || "Full-time"}
                             </span>
                             {job.workMode && (
-                              <span className="inline-block bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-md text-xs font-semibold">
+                              <span className="inline-block bg-blue-500/10 border border-blue-500/20 text-blue-300 px-2 py-0.5 rounded-md text-xs font-semibold">
                                 {job.workMode}
                               </span>
                             )}
@@ -260,7 +260,7 @@ export const ManageJobs: React.FC = () => {
                               <Button
                                 variant="primary"
                                 size="sm"
-                                className="font-bold shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-105 active:scale-95 transition-all"
+                                className="font-bold shadow-md shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all"
                               >
                                 <span>Applicants</span>
                                 <ArrowRight className="w-3.5 h-3.5 ml-1" />

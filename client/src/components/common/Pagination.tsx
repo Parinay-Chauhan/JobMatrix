@@ -29,8 +29,8 @@ export const Pagination: React.FC<PaginationProps> = ({
     >
       {totalItems !== undefined && (
         <p className="text-xs text-slate-400 font-medium">
-          Showing <span className="font-bold text-emerald-400">{startItem}</span> to{" "}
-          <span className="font-bold text-emerald-400">{endItem}</span> of{" "}
+          Showing <span className="font-bold text-blue-400">{startItem}</span> to{" "}
+          <span className="font-bold text-blue-400">{endItem}</span> of{" "}
           <span className="font-bold text-white">{totalItems}</span> results
         </p>
       )}
@@ -47,7 +47,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         </Button>
 
         <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-bold text-slate-200">
-          Page <span className="text-emerald-400">{currentPage}</span> of {totalPages}
+          Page <span className="text-blue-400">{currentPage}</span> of {totalPages}
         </div>
 
         <Button

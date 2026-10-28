@@ -210,9 +210,9 @@ export const ResumeOptimizer: React.FC = () => {
   const bandConfig = {
     high: {
       text: "Strong ATS Match",
-      badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-      circleClass: "text-emerald-400 stroke-emerald-400",
-      accentBg: "from-emerald-500/10 via-teal-500/5 to-transparent",
+      badgeClass: "bg-blue-500/15 text-blue-400 border-blue-500/30",
+      circleClass: "text-blue-400 stroke-blue-400",
+      accentBg: "from-blue-500/10 via-sky-500/5 to-transparent",
       tip: "High likelihood of passing automated ATS recruiter filters!",
     },
     medium: {
@@ -235,12 +235,12 @@ export const ResumeOptimizer: React.FC = () => {
     <div className="space-y-8 animate-in fade-in duration-200">
       {/* Hero Header Strip */}
       <div className="relative overflow-hidden rounded-3xl bg-slate-900/90 border border-slate-800/90 p-6 sm:p-8 shadow-2xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
               <span>Smart Candidate Tool</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
@@ -253,7 +253,7 @@ export const ResumeOptimizer: React.FC = () => {
 
           {/* Quick Resume Upload/Status Card */}
           <div className="flex items-center gap-4 bg-slate-950/80 border border-slate-800 rounded-2xl p-4 shrink-0 shadow-lg">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
               <FileText className="w-6 h-6" />
             </div>
             <div>
@@ -266,13 +266,13 @@ export const ResumeOptimizer: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsResumeModalOpen(true)}
-                    className="text-emerald-400 hover:text-emerald-300 transition-colors text-xs font-bold underline cursor-pointer"
+                    className="text-blue-400 hover:text-blue-300 transition-colors text-xs font-bold underline cursor-pointer"
                   >
                     View
                   </button>
                 </div>
               ) : (
-                <label className="text-xs font-bold text-emerald-400 hover:underline cursor-pointer inline-flex items-center gap-1.5 mt-0.5">
+                <label className="text-xs font-bold text-blue-400 hover:underline cursor-pointer inline-flex items-center gap-1.5 mt-0.5">
                   <UploadCloud className="w-4 h-4" />
                   <span>Upload Resume PDF</span>
                   <input
@@ -290,17 +290,17 @@ export const ResumeOptimizer: React.FC = () => {
         {/* 4 Summary Stat Tiles */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mt-7 pt-6 border-t border-slate-800">
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
               <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">ATS Readiness</span>
-              <span className="text-lg sm:text-xl font-black text-emerald-400">{overallAtsReadiness}%</span>
+              <span className="text-lg sm:text-xl font-black text-blue-400">{overallAtsReadiness}%</span>
             </div>
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
               <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
@@ -310,17 +310,17 @@ export const ResumeOptimizer: React.FC = () => {
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
               <Briefcase className="w-5 h-5" />
             </div>
             <div>
               <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Active Roles</span>
-              <span className="text-lg sm:text-xl font-black text-cyan-300">{jobs.length}</span>
+              <span className="text-lg sm:text-xl font-black text-sky-300">{jobs.length}</span>
             </div>
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
               <Layers className="w-5 h-5" />
             </div>
             <div>
@@ -333,10 +333,10 @@ export const ResumeOptimizer: React.FC = () => {
 
       {/* User-Friendly 3-Step Guided Guide Card */}
       {showHowItWorks && (
-        <div className="relative rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/90 to-teal-950/40 border border-emerald-500/30 p-5 sm:p-6 shadow-xl animate-in slide-in-from-top-2 duration-200">
+        <div className="relative rounded-2xl bg-gradient-to-r from-blue-950/40 via-slate-900/90 to-sky-950/40 border border-blue-500/30 p-5 sm:p-6 shadow-xl animate-in slide-in-from-top-2 duration-200">
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80">
-            <div className="flex items-center gap-2.5 text-emerald-300 font-extrabold text-sm sm:text-base uppercase tracking-wider">
-              <HelpCircle className="w-5 h-5 text-emerald-400 shrink-0" />
+            <div className="flex items-center gap-2.5 text-blue-300 font-extrabold text-sm sm:text-base uppercase tracking-wider">
+              <HelpCircle className="w-5 h-5 text-blue-400 shrink-0" />
               <span>How It Works (3 Easy Steps)</span>
             </div>
             <button
@@ -350,7 +350,7 @@ export const ResumeOptimizer: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             <div className="flex items-start gap-3.5 bg-slate-950/80 p-4.5 rounded-xl border border-slate-800/90 shadow-sm">
-              <span className="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-300 font-black text-base flex items-center justify-center shrink-0 border border-emerald-500/30">
+              <span className="w-9 h-9 rounded-full bg-blue-500/20 text-blue-300 font-black text-base flex items-center justify-center shrink-0 border border-blue-500/30">
                 1
               </span>
               <div>
@@ -362,7 +362,7 @@ export const ResumeOptimizer: React.FC = () => {
             </div>
 
             <div className="flex items-start gap-3.5 bg-slate-950/80 p-4.5 rounded-xl border border-slate-800/90 shadow-sm">
-              <span className="w-9 h-9 rounded-full bg-teal-500/20 text-teal-300 font-black text-base flex items-center justify-center shrink-0 border border-teal-500/30">
+              <span className="w-9 h-9 rounded-full bg-sky-500/20 text-sky-300 font-black text-base flex items-center justify-center shrink-0 border border-sky-500/30">
                 2
               </span>
               <div>
@@ -374,7 +374,7 @@ export const ResumeOptimizer: React.FC = () => {
             </div>
 
             <div className="flex items-start gap-3.5 bg-slate-950/80 p-4.5 rounded-xl border border-slate-800/90 shadow-sm">
-              <span className="w-9 h-9 rounded-full bg-cyan-500/20 text-cyan-300 font-black text-base flex items-center justify-center shrink-0 border border-cyan-500/30">
+              <span className="w-9 h-9 rounded-full bg-sky-500/20 text-sky-300 font-black text-base flex items-center justify-center shrink-0 border border-sky-500/30">
                 3
               </span>
               <div>
@@ -397,7 +397,7 @@ export const ResumeOptimizer: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 shadow-xl space-y-5">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div>
-                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-400 block">Step 1</span>
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-blue-400 block">Step 1</span>
                 <h2 className="text-base sm:text-lg font-bold text-white">
                   Select Target Position
                 </h2>
@@ -410,7 +410,7 @@ export const ResumeOptimizer: React.FC = () => {
                   onClick={() => setAnalysisMode("platform_job")}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     analysisMode === "platform_job"
-                      ? "bg-emerald-500 text-slate-950 shadow-md"
+                      ? "bg-blue-500 text-slate-950 shadow-md"
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -421,7 +421,7 @@ export const ResumeOptimizer: React.FC = () => {
                   onClick={() => setAnalysisMode("custom_jd")}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     analysisMode === "custom_jd"
-                      ? "bg-emerald-500 text-slate-950 shadow-md"
+                      ? "bg-blue-500 text-slate-950 shadow-md"
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -462,12 +462,12 @@ export const ResumeOptimizer: React.FC = () => {
                           onClick={() => setSelectedJobId(j._id)}
                           className={`p-4 rounded-xl border transition-all cursor-pointer ${
                             isSelected
-                              ? "bg-emerald-500/10 border-emerald-500/50 shadow-md ring-1 ring-emerald-500/20"
+                              ? "bg-blue-500/10 border-blue-500/50 shadow-md ring-1 ring-blue-500/20"
                               : "bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-950"
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
-                            <h4 className={`text-sm sm:text-base font-bold line-clamp-1 ${isSelected ? "text-emerald-300" : "text-white"}`}>
+                            <h4 className={`text-sm sm:text-base font-bold line-clamp-1 ${isSelected ? "text-blue-300" : "text-white"}`}>
                               {j.title}
                             </h4>
                             <span className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 shrink-0 font-semibold">
@@ -502,10 +502,10 @@ export const ResumeOptimizer: React.FC = () => {
                           key={preset.name}
                           type="button"
                           onClick={() => handleApplyPreset(preset)}
-                          className="p-2.5 rounded-xl bg-slate-950 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/30 text-left transition-all cursor-pointer group"
+                          className="p-2.5 rounded-xl bg-slate-950 hover:bg-blue-500/10 border border-slate-800 hover:border-blue-500/30 text-left transition-all cursor-pointer group"
                         >
-                          <div className="flex items-center gap-2 text-xs sm:text-[13px] font-semibold text-slate-200 group-hover:text-emerald-300">
-                            <Icon className="w-4 h-4 text-emerald-400 shrink-0" />
+                          <div className="flex items-center gap-2 text-xs sm:text-[13px] font-semibold text-slate-200 group-hover:text-blue-300">
+                            <Icon className="w-4 h-4 text-blue-400 shrink-0" />
                             <span className="truncate">{preset.name}</span>
                           </div>
                         </button>
@@ -545,14 +545,14 @@ export const ResumeOptimizer: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <span className="text-xs font-black uppercase tracking-wider text-teal-400 block">Your Profile</span>
+                <span className="text-xs font-black uppercase tracking-wider text-sky-400 block">Your Profile</span>
                 <h3 className="text-sm sm:text-base font-bold text-white">
                   Active Skills ({candidateSkills.length})
                 </h3>
               </div>
               <Link
                 to="/candidate/profile"
-                className="text-xs sm:text-sm font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+                className="text-xs sm:text-sm font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
               >
                 <span>Edit Profile</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -585,14 +585,14 @@ export const ResumeOptimizer: React.FC = () => {
             {/* Header Strip with Glowing Gradient */}
             <div className={`p-6 border-b border-slate-800 bg-gradient-to-r ${bandConfig.accentBg} flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
               <div>
-                <span className="text-xs font-black uppercase tracking-wider text-emerald-400 block mb-1">
+                <span className="text-xs font-black uppercase tracking-wider text-blue-400 block mb-1">
                   Step 2 & 3: Live Scan Result
                 </span>
                 <h2 className="text-xl sm:text-3xl font-black text-white tracking-tight">
                   {currentJob.title}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-300 flex items-center gap-2 mt-1.5 font-semibold">
-                  <Building2 className="w-4 h-4 text-emerald-400" />
+                  <Building2 className="w-4 h-4 text-blue-400" />
                   <span>
                     {(typeof currentJob.recruiter === "object" ? currentJob.recruiter?.companyName : undefined) ||
                       currentJob.companyName ||
@@ -649,7 +649,7 @@ export const ResumeOptimizer: React.FC = () => {
                 onClick={() => setActiveTab("skills")}
                 className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "skills"
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20"
+                    ? "bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-xs shadow-blue-500/20"
                     : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                 }`}
               >
@@ -664,7 +664,7 @@ export const ResumeOptimizer: React.FC = () => {
                 onClick={() => setActiveTab("bullets")}
                 className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "bullets"
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20"
+                    ? "bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-xs shadow-blue-500/20"
                     : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                 }`}
               >
@@ -679,7 +679,7 @@ export const ResumeOptimizer: React.FC = () => {
                 onClick={() => setActiveTab("checklist")}
                 className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "checklist"
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20"
+                    ? "bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-xs shadow-blue-500/20"
                     : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                 }`}
               >
@@ -696,7 +696,7 @@ export const ResumeOptimizer: React.FC = () => {
                 <div className="space-y-6">
                   {/* Diagnostic Advice */}
                   <div className="p-4.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs sm:text-sm text-slate-200 leading-relaxed">
-                    <p className="font-bold text-emerald-400 mb-1">ATS Diagnostic Recommendation:</p>
+                    <p className="font-bold text-blue-400 mb-1">ATS Diagnostic Recommendation:</p>
                     {analysis.keywordDensityAdvice}
                   </div>
 
@@ -716,18 +716,18 @@ export const ResumeOptimizer: React.FC = () => {
                           key={sk}
                           type="button"
                           onClick={() => handleAddSkillToProfile(sk)}
-                          className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-emerald-500/20 border border-amber-500/40 hover:border-emerald-500/50 text-amber-200 hover:text-emerald-300 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer group shadow-sm active:scale-95"
+                          className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-blue-500/20 border border-amber-500/40 hover:border-blue-500/50 text-amber-200 hover:text-blue-300 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer group shadow-sm active:scale-95"
                           title={`Click to add "${sk}" to your profile skills`}
                         >
-                          <Plus className="w-4 h-4 text-amber-400 group-hover:text-emerald-300 transition-colors" />
+                          <Plus className="w-4 h-4 text-amber-400 group-hover:text-blue-300 transition-colors" />
                           <span>{sk}</span>
-                          <span className="text-xs text-slate-400 font-normal group-hover:text-emerald-400">
+                          <span className="text-xs text-slate-400 font-normal group-hover:text-blue-400">
                             (+Add)
                           </span>
                         </button>
                       ))}
                       {analysis.missingSkills.length === 0 && (
-                        <p className="text-xs sm:text-sm text-emerald-400 font-bold flex items-center gap-2 py-1">
+                        <p className="text-xs sm:text-sm text-blue-400 font-bold flex items-center gap-2 py-1">
                           <CheckCircle2 className="w-4 h-4" />
                           <span>All detected required keywords are present in your profile!</span>
                         </p>
@@ -738,8 +738,8 @@ export const ResumeOptimizer: React.FC = () => {
                   {/* Matched Skills */}
                   <div className="space-y-3 bg-slate-950/60 border border-slate-800 rounded-2xl p-5">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-blue-400" />
                         <span>Matching Skills Found ({analysis.matchedSkills.length})</span>
                       </h4>
                       <span className="text-xs text-slate-400">Will pass ATS filters</span>
@@ -749,9 +749,9 @@ export const ResumeOptimizer: React.FC = () => {
                       {analysis.matchedSkills.map((sk) => (
                         <span
                           key={sk}
-                          className="px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm font-bold flex items-center gap-2"
+                          className="px-3.5 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs sm:text-sm font-bold flex items-center gap-2"
                         >
-                          <Check className="w-4 h-4 text-emerald-400" />
+                          <Check className="w-4 h-4 text-blue-400" />
                           <span>{sk}</span>
                         </span>
                       ))}
@@ -767,8 +767,8 @@ export const ResumeOptimizer: React.FC = () => {
 
               {activeTab === "bullets" && (
                 <div className="space-y-4">
-                  <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs sm:text-sm text-emerald-300 flex items-center gap-2.5">
-                    <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-xs sm:text-sm text-blue-300 flex items-center gap-2.5">
+                    <Sparkles className="w-4 h-4 text-blue-400 shrink-0" />
                     <span>Copy these bullet points directly into your resume under your relevant work experience entries:</span>
                   </div>
 
@@ -784,11 +784,11 @@ export const ResumeOptimizer: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleCopyBullet(bullet, idx)}
-                          className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-emerald-300 hover:border-emerald-500/40 transition-all shrink-0 cursor-pointer"
+                          className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-blue-300 hover:border-blue-500/40 transition-all shrink-0 cursor-pointer"
                           title="Copy bullet point to clipboard"
                         >
                           {copiedIndex === idx ? (
-                            <Check className="w-4 h-4 text-emerald-400" />
+                            <Check className="w-4 h-4 text-blue-400" />
                           ) : (
                             <Copy className="w-4 h-4" />
                           )}
@@ -806,13 +806,13 @@ export const ResumeOptimizer: React.FC = () => {
                       key={idx}
                       className={`p-4.5 rounded-xl border flex items-start gap-4 ${
                         tip.passed
-                          ? "bg-emerald-500/5 border-emerald-500/25"
+                          ? "bg-blue-500/5 border-blue-500/25"
                           : "bg-slate-950/80 border-slate-800"
                       }`}
                     >
                       <div className="mt-0.5 shrink-0">
                         {tip.passed ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                          <CheckCircle2 className="w-5 h-5 text-blue-400" />
                         ) : (
                           <AlertTriangle className="w-5 h-5 text-amber-400" />
                         )}
@@ -820,7 +820,7 @@ export const ResumeOptimizer: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-2.5">
                           <h5 className="text-sm sm:text-base font-bold text-white">{tip.title}</h5>
-                          <span className={`text-xs font-bold px-2 py-0.5 rounded-md uppercase ${tip.passed ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"}`}>
+                          <span className={`text-xs font-bold px-2 py-0.5 rounded-md uppercase ${tip.passed ? "bg-blue-500/20 text-blue-300" : "bg-amber-500/20 text-amber-300"}`}>
                             {tip.passed ? "OPTIMIZED" : "ACTION NEEDED"}
                           </span>
                         </div>
@@ -861,7 +861,7 @@ export const ResumeOptimizer: React.FC = () => {
                 href={profile.resume}
                 target="_blank"
                 rel="noreferrer"
-                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs inline-flex items-center gap-1.5 transition-colors"
+                className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs inline-flex items-center gap-1.5 transition-colors"
               >
                 <span>Download PDF</span>
                 <ExternalLink className="w-3.5 h-3.5" />

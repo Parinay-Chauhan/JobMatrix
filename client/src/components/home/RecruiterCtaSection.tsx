@@ -5,7 +5,7 @@ export const RecruiterCtaSection: React.FC = () => {
   return (
     <section id="hire" className="bg-gray-50 py-14 sm:py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 border border-emerald-100/80 shadow-sm flex flex-col md:flex-row items-center min-h-[220px]">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-blue-50 via-white to-orange-50 border border-blue-100/80 shadow-sm flex flex-col md:flex-row items-center min-h-[220px]">
           {/* Left — Decorative Abstract Illustration */}
           <div className="hidden md:flex items-end justify-center w-[260px] shrink-0 self-stretch pl-10 pt-6 relative">
             <svg viewBox="0 0 220 200" className="w-full h-auto max-h-[200px] mt-auto" xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +48,7 @@ export const RecruiterCtaSection: React.FC = () => {
           {/* Right — Text & CTA */}
           <div className="flex-1 flex flex-col items-start justify-center py-10 px-8 sm:px-10">
             {/* Badge */}
-            <span className="inline-block text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] bg-emerald-100 text-emerald-800 px-3.5 py-1 rounded-full mb-4">
+            <span className="inline-block text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] bg-blue-100 text-blue-900 px-3.5 py-1 rounded-full mb-4">
               JobMatrix for Employers
             </span>
 
@@ -60,7 +60,7 @@ export const RecruiterCtaSection: React.FC = () => {
             {/* Subtext */}
             <p className="text-gray-600 text-sm sm:text-base mt-3 mb-6 max-w-sm leading-relaxed">
               Find the best candidate from{" "}
-              <span className="font-semibold text-emerald-700">10,000+ active job seekers</span>{" "}
+              <span className="font-semibold text-blue-600">10,000+ active job seekers</span>{" "}
               — post your first job in under 2 minutes.
             </p>
 
@@ -93,8 +93,8 @@ export const RecruiterCtaSection: React.FC = () => {
               </Link>
               <Link
                 to="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-white transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95 shadow-md shadow-emerald-500/25"
-                style={{ background: "linear-gradient(135deg, #059669 0%, #0d9488 100%)" }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-white transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95 shadow-md shadow-orange-500/25"
+                style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)" }}
               >
                 Create Recruiter Account
               </Link>
@@ -102,8 +102,8 @@ export const RecruiterCtaSection: React.FC = () => {
           </div>
 
           {/* Decorative background blobs */}
-          <div className="absolute top-0 right-0 w-56 h-56 bg-gradient-to-bl from-emerald-100/60 to-transparent rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 w-40 h-40 bg-gradient-to-tr from-teal-100/50 to-transparent rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-56 h-56 bg-gradient-to-bl from-blue-100/60 to-transparent rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/3 w-40 h-40 bg-gradient-to-tr from-orange-100/50 to-transparent rounded-full blur-2xl pointer-events-none" />
         </div>
       </div>
     </section>

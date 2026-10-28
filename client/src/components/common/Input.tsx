@@ -52,7 +52,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             } ${rightIcon ? "pr-10" : ""} ${
               error
                 ? "border-rose-500/80 focus:border-rose-400 focus:ring-rose-500/20"
-                : "border-slate-800 hover:border-slate-700 focus:border-emerald-500/80 focus:ring-emerald-500/20"
+                : "border-slate-800 hover:border-slate-700 focus:border-blue-500/80 focus:ring-blue-500/20"
             } ${className}`}
             {...props}
           />

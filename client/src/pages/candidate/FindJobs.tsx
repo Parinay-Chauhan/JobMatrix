@@ -136,7 +136,7 @@ export const FindJobs: React.FC = () => {
       <div className="relative overflow-hidden rounded-2xl bg-slate-900/90 border border-slate-800/90 p-6 sm:p-8 shadow-xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
               <span>Career Directory</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -151,7 +151,7 @@ export const FindJobs: React.FC = () => {
         {/* 4 Metric Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mt-7 pt-6 border-t border-slate-800">
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
               <Briefcase className="w-4 h-4" />
             </div>
             <div>
@@ -161,27 +161,27 @@ export const FindJobs: React.FC = () => {
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
               <span className="text-[11px] text-slate-400 font-medium block">Applied Roles</span>
-              <span className="text-base sm:text-lg font-bold text-emerald-400">{appliedJobIds.length}</span>
+              <span className="text-base sm:text-lg font-bold text-blue-400">{appliedJobIds.length}</span>
             </div>
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
               <Globe className="w-4 h-4" />
             </div>
             <div>
               <span className="text-[11px] text-slate-400 font-medium block">Remote Roles</span>
-              <span className="text-base sm:text-lg font-bold text-cyan-300">{remoteCount}</span>
+              <span className="text-base sm:text-lg font-bold text-sky-300">{remoteCount}</span>
             </div>
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
               <Layers className="w-4 h-4" />
             </div>
             <div>
@@ -264,7 +264,7 @@ export const FindJobs: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 !selectedWorkMode && !selectedJobType && !selectedCategory
-                  ? "bg-emerald-500 text-slate-950 font-bold"
+                  ? "bg-blue-500 text-slate-950 font-bold"
                   : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
               }`}
             >
@@ -277,7 +277,7 @@ export const FindJobs: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 selectedWorkMode === "Remote"
-                  ? "bg-emerald-500 text-slate-950 font-bold"
+                  ? "bg-blue-500 text-slate-950 font-bold"
                   : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
               }`}
             >
@@ -290,7 +290,7 @@ export const FindJobs: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 selectedJobType === "Full-time"
-                  ? "bg-emerald-500 text-slate-950 font-bold"
+                  ? "bg-blue-500 text-slate-950 font-bold"
                   : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
               }`}
             >
@@ -303,7 +303,7 @@ export const FindJobs: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 selectedJobType === "Internship"
-                  ? "bg-emerald-500 text-slate-950 font-bold"
+                  ? "bg-blue-500 text-slate-950 font-bold"
                   : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
               }`}
             >
@@ -327,7 +327,7 @@ export const FindJobs: React.FC = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight flex items-center gap-2.5">
           <span>Active Opportunities</span>
-          <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+          <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400">
             {filteredJobs.length}
           </span>
         </h2>
@@ -362,7 +362,7 @@ export const FindJobs: React.FC = () => {
             activeFiltersCount > 0 ? (
               <button
                 onClick={handleResetFilters}
-                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs transition-all cursor-pointer"
               >
                 Clear All Filters
               </button>

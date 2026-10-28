@@ -81,8 +81,8 @@ export const CandidateLayout: React.FC = () => {
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     `block px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
       isActive
-        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-extrabold"
-        : "text-slate-300 hover:bg-slate-800/80 hover:text-emerald-300"
+        ? "bg-blue-500/20 text-blue-300 border border-blue-500/30 font-extrabold"
+        : "text-slate-300 hover:bg-slate-800/80 hover:text-blue-300"
     }`;
 
   const userInitials = user?.fullName
@@ -95,10 +95,10 @@ export const CandidateLayout: React.FC = () => {
     : "C";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col relative selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col relative selection:bg-blue-500/30 selection:text-blue-200">
       {/* Ambient background glow & grid */}
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0" />
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none z-0" />
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-blue-600/10 via-orange-500/5 to-transparent blur-3xl pointer-events-none z-0" />
 
       {/* Navbar Header - Exact Home FloatingHeader Style */}
       <div
@@ -109,9 +109,9 @@ export const CandidateLayout: React.FC = () => {
           ref={headerRef}
           className={`pointer-events-auto flex flex-col justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             mobileMenuOpen
-              ? "w-[92%] max-w-5xl px-6 py-4 rounded-3xl bg-slate-950/95 backdrop-blur-xl border border-emerald-500/20 shadow-2xl shadow-black/80 ring-1 ring-emerald-500/10 text-white"
+              ? "w-[92%] max-w-5xl px-6 py-4 rounded-3xl bg-slate-950/95 backdrop-blur-xl border border-blue-500/20 shadow-2xl shadow-black/80 ring-1 ring-blue-500/10 text-white"
               : isScrolled
-              ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-950/60 backdrop-blur-xl backdrop-saturate-150 border border-emerald-500/20 shadow-2xl shadow-black/60 ring-1 ring-emerald-500/10 text-white"
+              ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-950/60 backdrop-blur-xl backdrop-saturate-150 border border-blue-500/20 shadow-2xl shadow-black/60 ring-1 ring-blue-500/10 text-white"
               : "w-[92%] max-w-5xl px-6 py-3 rounded-full bg-transparent border border-transparent text-white"
           }`}
         >
@@ -120,9 +120,9 @@ export const CandidateLayout: React.FC = () => {
             <div ref={logoRef} className="flex items-center shrink-0">
               <Link to="/candidate/dashboard" className="flex items-center group cursor-pointer">
                 <span className="font-black tracking-tight text-xl sm:text-2xl text-white hover:opacity-90 transition-opacity">
-                  Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
+                  Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">Matrix</span>
                 </span>
-                <span className="ml-2 hidden sm:inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="ml-2 hidden sm:inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
                   Candidate
                 </span>
               </Link>
@@ -138,8 +138,8 @@ export const CandidateLayout: React.FC = () => {
                 className={({ isActive }) =>
                   `text-sm font-medium transition-colors relative py-1 ${
                     isActive
-                      ? "text-emerald-400 font-bold"
-                      : "text-slate-300 hover:text-emerald-300"
+                      ? "text-blue-400 font-bold"
+                      : "text-slate-300 hover:text-blue-300"
                   }`
                 }
               >
@@ -150,8 +150,8 @@ export const CandidateLayout: React.FC = () => {
                 className={({ isActive }) =>
                   `text-sm font-medium transition-colors relative py-1 ${
                     isActive
-                      ? "text-emerald-400 font-bold"
-                      : "text-slate-300 hover:text-emerald-300"
+                      ? "text-blue-400 font-bold"
+                      : "text-slate-300 hover:text-blue-300"
                   }`
                 }
               >
@@ -162,12 +162,12 @@ export const CandidateLayout: React.FC = () => {
                 className={({ isActive }) =>
                   `text-sm font-semibold transition-all relative py-1 px-3 rounded-full flex items-center gap-1.5 ${
                     isActive
-                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20"
-                      : "text-slate-300 hover:text-emerald-300 bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
+                      ? "bg-orange-500/20 text-orange-300 border border-orange-500/40 shadow-xs shadow-orange-500/20"
+                      : "text-slate-300 hover:text-blue-300 bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
                   }`
                 }
               >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <Sparkles className="w-3.5 h-3.5 text-orange-400" />
                 <span>ATS Optimizer</span>
               </NavLink>
             </nav>
@@ -179,7 +179,7 @@ export const CandidateLayout: React.FC = () => {
               {/* User Profile Avatar Link */}
               <Link
                 to="/candidate/profile"
-                className="p-0.5 rounded-full hover:ring-2 hover:ring-emerald-400/80 transition-all group cursor-pointer inline-block"
+                className="p-0.5 rounded-full hover:ring-2 hover:ring-blue-400/80 transition-all group cursor-pointer inline-block"
                 title={`Profile: ${user?.fullName || "Candidate"}`}
               >
                 <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-slate-900 border border-slate-700/80 text-slate-100 flex items-center justify-center font-extrabold text-xs shadow-md overflow-hidden group-hover:scale-105 transition-transform">
@@ -190,7 +190,7 @@ export const CandidateLayout: React.FC = () => {
                       className="w-full h-full object-cover rounded-full"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-extrabold text-xs">
+                    <div className="w-full h-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center font-extrabold text-xs">
                       {userInitials}
                     </div>
                   )}
@@ -201,7 +201,7 @@ export const CandidateLayout: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-1.5 rounded-xl text-slate-300 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors cursor-pointer"
+                className="md:hidden p-1.5 rounded-xl text-slate-300 hover:text-blue-400 hover:bg-slate-800/80 transition-colors cursor-pointer"
                 aria-label="Toggle menu"
               >
                 <svg
@@ -242,7 +242,7 @@ export const CandidateLayout: React.FC = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-extrabold text-xs">
+                    <div className="w-full h-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center font-extrabold text-xs">
                       {userInitials}
                     </div>
                   )}
@@ -277,7 +277,7 @@ export const CandidateLayout: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-emerald-400" />
+                  <Sparkles className="w-4 h-4 text-orange-400" />
                   <span>ATS Resume Optimizer</span>
                 </div>
               </NavLink>

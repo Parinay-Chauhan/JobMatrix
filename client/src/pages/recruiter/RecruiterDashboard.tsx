@@ -39,7 +39,7 @@ export const RecruiterDashboard: React.FC = () => {
       {/* Header Banner */}
       <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Employer Center</span>
           </div>
@@ -55,7 +55,7 @@ export const RecruiterDashboard: React.FC = () => {
           <Button
             variant="primary"
             size="md"
-            className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-105 active:scale-95 transition-all"
+            className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all"
           >
             <PlusCircle className="w-4 h-4 mr-1.5" />
             <span>Post New Job</span>
@@ -66,7 +66,7 @@ export const RecruiterDashboard: React.FC = () => {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 shadow-xl transition-all flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 shadow-inner">
+          <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 shadow-inner">
             <Briefcase className="w-6 h-6" />
           </div>
           <div>
@@ -80,7 +80,7 @@ export const RecruiterDashboard: React.FC = () => {
         </div>
 
         <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 shadow-xl transition-all flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center shrink-0 shadow-inner">
+          <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 shadow-inner">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
@@ -95,7 +95,7 @@ export const RecruiterDashboard: React.FC = () => {
 
         <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 shadow-xl transition-all flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 shadow-inner">
+            <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 shadow-inner">
               <Users className="w-6 h-6" />
             </div>
             <div>
@@ -104,7 +104,7 @@ export const RecruiterDashboard: React.FC = () => {
               </p>
               <Link
                 to="/recruiter/jobs"
-                className="text-xs font-bold text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1 mt-1 group"
+                className="text-xs font-bold text-blue-400 hover:text-blue-300 inline-flex items-center gap-1 mt-1 group"
               >
                 <span>Job Manager</span>
                 <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -118,12 +118,12 @@ export const RecruiterDashboard: React.FC = () => {
       <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-xl overflow-hidden backdrop-blur-md">
         <div className="px-6 py-4.5 border-b border-slate-800 flex justify-between items-center bg-slate-950/60">
           <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-emerald-400" />
+            <Layers className="w-4 h-4 text-blue-400" />
             <h2 className="font-bold text-white text-base">Recent Job Postings</h2>
           </div>
           <Link
             to="/recruiter/jobs"
-            className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors"
+            className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
           >
             <span>View All ({jobs.length})</span>
             <ArrowRight className="w-3 h-3" />
@@ -140,7 +140,7 @@ export const RecruiterDashboard: React.FC = () => {
                   <Button
                     variant="primary"
                     size="sm"
-                    className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold"
+                    className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold"
                   >
                     + Post a Job
                   </Button>
@@ -156,7 +156,7 @@ export const RecruiterDashboard: React.FC = () => {
                 className="p-5 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-slate-800/40 transition-colors group"
               >
                 <div className="space-y-1.5">
-                  <h3 className="font-bold text-white text-base group-hover:text-emerald-300 transition-colors">
+                  <h3 className="font-bold text-white text-base group-hover:text-blue-300 transition-colors">
                     {job.title}
                   </h3>
                   <div className="flex flex-wrap items-center gap-2.5 text-xs text-slate-400">
@@ -180,7 +180,7 @@ export const RecruiterDashboard: React.FC = () => {
                     <Button
                       variant="primary"
                       size="sm"
-                      className="font-bold shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-105 active:scale-95 transition-all"
+                      className="font-bold shadow-md shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all"
                     >
                       <Users className="w-3.5 h-3.5 mr-1" />
                       <span>View Applicants</span>

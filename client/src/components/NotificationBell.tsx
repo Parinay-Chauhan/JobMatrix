@@ -72,14 +72,14 @@ export const NotificationBell: React.FC = () => {
       {/* Bell Icon Button */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="relative p-2 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors focus:outline-none cursor-pointer"
+        className="relative p-2 rounded-xl text-slate-400 hover:text-blue-400 hover:bg-slate-800/80 transition-colors focus:outline-none cursor-pointer"
         aria-label="View notifications"
       >
         <Bell className="w-5 h-5" />
 
         {/* Unread Badge Counter */}
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-slate-950 bg-emerald-400 rounded-full shadow-md ring-2 ring-slate-950">
+          <span className="absolute top-1 right-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-slate-950 bg-blue-400 rounded-full shadow-md ring-2 ring-slate-950">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
@@ -104,7 +104,7 @@ export const NotificationBell: React.FC = () => {
                 Notifications
               </span>
               {unreadCount > 0 && (
-                <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
                   {unreadCount} new
                 </span>
               )}
@@ -113,7 +113,7 @@ export const NotificationBell: React.FC = () => {
             {unreadCount > 0 ? (
               <button
                 onClick={markAllAsRead}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors cursor-pointer flex items-center gap-1"
+                className="text-xs text-blue-400 hover:text-blue-300 font-semibold transition-colors cursor-pointer flex items-center gap-1"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
                 <span>Mark all read</span>
@@ -149,7 +149,7 @@ export const NotificationBell: React.FC = () => {
                     onClick={() => handleNotificationClick(item)}
                     className={`p-3.5 sm:p-4 text-xs sm:text-sm cursor-pointer transition-all flex items-start gap-3 active:bg-slate-800 group ${
                       isUnread
-                        ? "bg-emerald-500/10 hover:bg-emerald-500/15 border-l-4 border-emerald-400"
+                        ? "bg-blue-500/10 hover:bg-blue-500/15 border-l-4 border-blue-400"
                         : "bg-slate-900/60 hover:bg-slate-800/60 text-slate-300"
                     }`}
                   >
@@ -157,7 +157,7 @@ export const NotificationBell: React.FC = () => {
                     <span
                       className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${
                         isUnread
-                          ? "bg-emerald-400"
+                          ? "bg-blue-400"
                           : "bg-transparent"
                       }`}
                     />
@@ -183,7 +183,7 @@ export const NotificationBell: React.FC = () => {
                             })}
                           </span>
                         </span>
-                        <span className="text-[10px] font-semibold text-emerald-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                        <span className="text-[10px] font-semibold text-blue-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
                           <span>
                             {item.type === "NEW_APPLICATION"
                               ? "View Applicants"

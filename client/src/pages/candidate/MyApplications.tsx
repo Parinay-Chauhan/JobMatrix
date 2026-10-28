@@ -52,7 +52,7 @@ export const MyApplications: React.FC = () => {
       <div className="relative overflow-hidden rounded-2xl bg-slate-900/90 border border-slate-800/90 p-6 sm:p-8 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
               <span>Application Status Tracker</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -67,7 +67,7 @@ export const MyApplications: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
-              className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold"
+              className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold"
             >
               + Browse Open Positions
             </Button>
@@ -97,12 +97,12 @@ export const MyApplications: React.FC = () => {
           </div>
 
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
               <span className="text-[11px] text-slate-400 font-medium block">Shortlisted / Offered</span>
-              <span className="text-lg font-bold text-emerald-400">{stats.shortlisted}</span>
+              <span className="text-lg font-bold text-blue-400">{stats.shortlisted}</span>
             </div>
           </div>
 
@@ -148,7 +148,7 @@ export const MyApplications: React.FC = () => {
             <Link to="/candidate/find-jobs">
               <Button
                 variant="primary"
-                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold"
+                className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold"
               >
                 Explore Active Positions
               </Button>
@@ -173,10 +173,10 @@ export const MyApplications: React.FC = () => {
                 className="bg-slate-900/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 rounded-2xl p-5 sm:p-6 shadow-xl transition-all duration-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group"
               >
                 <div className="space-y-1.5">
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-emerald-300 transition-colors">
+                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-blue-300 transition-colors">
                     {title}
                   </h3>
-                  <p className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+                  <p className="text-xs font-semibold text-blue-400 flex items-center gap-1.5">
                     <Building2 className="w-3.5 h-3.5" />
                     <span>{companyName}</span>
                   </p>

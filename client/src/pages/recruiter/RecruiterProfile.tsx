@@ -137,7 +137,7 @@ export const RecruiterProfile: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       {/* Page Header Banner */}
       <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Employer Identity</span>
         </div>
@@ -153,7 +153,7 @@ export const RecruiterProfile: React.FC = () => {
         {/* Card 1: Personal Recruiter Identity */}
         <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6">
           <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-            <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">
+            <div className="h-10 w-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-base">
               <User className="w-5 h-5" />
             </div>
             <div>
@@ -225,7 +225,7 @@ export const RecruiterProfile: React.FC = () => {
         {/* Card 2: Company Information */}
         <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6">
           <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-            <div className="h-10 w-10 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-base">
+            <div className="h-10 w-10 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-base">
               <Building2 className="w-5 h-5" />
             </div>
             <div>
@@ -300,7 +300,7 @@ export const RecruiterProfile: React.FC = () => {
                   type="file"
                   accept="image/png, image/jpeg, image/webp"
                   onChange={handleLogoChange}
-                  className="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-500/15 file:text-emerald-300 hover:file:bg-emerald-500/25 cursor-pointer"
+                  className="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-500/15 file:text-blue-300 hover:file:bg-blue-500/25 cursor-pointer"
                 />
                 <p className="text-[11px] text-slate-500">
                   Supported formats: PNG, JPG, WEBP (Max 2MB). Transparent backgrounds recommended.
@@ -317,7 +317,7 @@ export const RecruiterProfile: React.FC = () => {
             size="lg"
             variant="primary"
             isLoading={isSaving}
-            className="w-full sm:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-bold shadow-lg shadow-emerald-500/20"
+            className="w-full sm:w-auto px-8 py-3 bg-blue-500 hover:bg-blue-400 text-slate-950 text-sm font-bold shadow-lg shadow-blue-500/20"
           >
             <CheckCircle2 className="w-4 h-4 mr-1.5" />
             <span>{isSaving ? "Saving Profile..." : "Save Recruiter Profile"}</span>
@@ -332,7 +332,7 @@ export const RecruiterProfile: React.FC = () => {
             Employer Account Session
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-            Signed in as <span className="font-semibold text-emerald-400">{fullName}</span> ({email})
+            Signed in as <span className="font-semibold text-blue-400">{fullName}</span> ({email})
           </p>
         </div>
         <Button

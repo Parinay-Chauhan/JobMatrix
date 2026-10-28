@@ -60,7 +60,7 @@ export const FloatingHeader: React.FC = () => {
         ref={headerRef}
         className={`pointer-events-auto flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isScrolled
-            ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-950/60 backdrop-blur-xl backdrop-saturate-150 border border-emerald-500/20 shadow-2xl shadow-black/60 ring-1 ring-emerald-500/10 text-white"
+            ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-950/60 backdrop-blur-xl backdrop-saturate-150 border border-blue-500/20 shadow-2xl shadow-black/60 ring-1 ring-blue-500/10 text-white"
             : "w-[92%] max-w-5xl px-6 py-3 bg-transparent border border-transparent text-white"
         }`}
       >
@@ -68,7 +68,7 @@ export const FloatingHeader: React.FC = () => {
         <div ref={logoRef} className="flex items-center shrink-0">
           <Link to="/" className="flex items-center group">
             <span className="font-black tracking-tight text-xl sm:text-2xl text-white hover:opacity-90 transition-opacity">
-              Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
+              Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">Matrix</span>
             </span>
           </Link>
         </div>
@@ -77,13 +77,13 @@ export const FloatingHeader: React.FC = () => {
         <nav className="hidden md:flex items-center space-x-7">
           <a
             href="#jobs"
-            className="text-sm font-medium text-slate-300 hover:text-emerald-300 transition-colors relative py-1"
+            className="text-sm font-medium text-slate-300 hover:text-blue-300 transition-colors relative py-1"
           >
             Explore Jobs
           </a>
           <a
             href="#companies"
-            className="text-sm font-medium text-slate-300 hover:text-emerald-300 transition-colors relative py-1"
+            className="text-sm font-medium text-slate-300 hover:text-blue-300 transition-colors relative py-1"
           >
             Top Companies
           </a>
@@ -91,8 +91,8 @@ export const FloatingHeader: React.FC = () => {
             href="#hire"
             className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative py-1 flex items-center gap-1.5 group"
           >
-            <span className="group-hover:text-emerald-300 transition-colors">Hire Talent</span>
-            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 group-hover:bg-emerald-500/25 transition-colors">
+            <span className="group-hover:text-blue-300 transition-colors">Hire Talent</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/25 group-hover:bg-orange-500/25 transition-colors">
               Hiring
             </span>
           </a>
@@ -104,9 +104,9 @@ export const FloatingHeader: React.FC = () => {
             <Link
               ref={getStartedButtonRef}
               to={dashboardRoute}
-              className="inline-flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-105 active:scale-95 transition-all duration-200"
+              className="inline-flex items-center gap-2 font-bold text-xs sm:text-sm text-white bg-blue-600 hover:bg-blue-500 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200"
             >
-              <LayoutDashboard className="w-4 h-4 text-slate-950" />
+              <LayoutDashboard className="w-4 h-4 text-white" />
               <span>Go to Dashboard</span>
             </Link>
           ) : (
@@ -121,14 +121,14 @@ export const FloatingHeader: React.FC = () => {
               <Link
                 ref={getStartedButtonRef}
                 to="/register"
-                className="inline-flex items-center gap-1.5 font-bold text-xs sm:text-sm text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-full whitespace-nowrap active:scale-95 shadow-md shadow-emerald-500/25 hover:shadow-lg hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-200"
+                className="inline-flex items-center gap-1.5 font-bold text-xs sm:text-sm text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-full whitespace-nowrap active:scale-95 shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/40 hover:scale-105 transition-all duration-200"
                 style={{
-                  background: "linear-gradient(135deg, #10b981 0%, #0d9488 100%)",
+                  background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
                   color: "#ffffff",
                   display: "inline-flex",
                 }}
               >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
+                <Sparkles className="w-3.5 h-3.5 text-orange-100" />
                 <span>Get Started</span>
               </Link>
             </>

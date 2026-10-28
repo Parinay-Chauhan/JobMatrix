@@ -77,9 +77,9 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
   const bandConfig = {
     high: {
       text: "Strong ATS Match",
-      badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-      circleClass: "text-emerald-400 stroke-emerald-400",
-      accentBg: "from-emerald-500/20 via-teal-500/10 to-transparent",
+      badgeClass: "bg-blue-500/15 text-blue-400 border-blue-500/30",
+      circleClass: "text-blue-400 stroke-blue-400",
+      accentBg: "from-blue-500/20 via-sky-500/10 to-transparent",
     },
     medium: {
       text: "Moderate Match (Keywords Needed)",
@@ -102,14 +102,14 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
         <div className={`p-6 border-b border-slate-800 bg-gradient-to-r ${bandConfig.accentBg} flex justify-between items-start gap-4 shrink-0`}>
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/80 border border-slate-800 text-xs font-bold text-white uppercase tracking-wider mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
               <span>AI ATS Resume Optimizer</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
               {job.title}
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 flex items-center gap-1.5 mt-1 font-medium">
-              <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+              <Building2 className="w-3.5 h-3.5 text-blue-400" />
               <span>{companyName}</span>
               <span className="text-slate-600">&bull;</span>
               <span className="text-slate-400">{job.location || "Remote / Hybrid"}</span>
@@ -170,8 +170,8 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
                 {analysis.keywordDensityAdvice}
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                  <CheckCircle2 className="w-3 h-3 text-blue-400" />
                   <span>{analysis.matchedSkills.length} Matched Skills</span>
                 </span>
                 <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">
@@ -189,7 +189,7 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
               onClick={() => setActiveTab("skills")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === "skills"
-                  ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                  ? "bg-blue-500/15 text-blue-300 border border-blue-500/30"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
               }`}
             >
@@ -204,11 +204,11 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
               onClick={() => setActiveTab("bullets")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === "bullets"
-                  ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                  ? "bg-blue-500/15 text-blue-300 border border-blue-500/30"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
               <span>Tailored Resume Bullets</span>
             </button>
 
@@ -217,11 +217,11 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
               onClick={() => setActiveTab("checklist")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === "checklist"
-                  ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                  ? "bg-blue-500/15 text-blue-300 border border-blue-500/30"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
               }`}
             >
-              <FileText className="w-3.5 h-3.5 text-emerald-400" />
+              <FileText className="w-3.5 h-3.5 text-blue-400" />
               <span>ATS Health Checklist</span>
             </button>
           </div>
@@ -242,7 +242,7 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
                 </div>
 
                 {analysis.missingSkills.length === 0 ? (
-                  <p className="text-xs text-emerald-400 font-medium py-1">
+                  <p className="text-xs text-blue-400 font-medium py-1">
                     🎉 Excellent! You have included all primary technical keywords required for this role.
                   </p>
                 ) : (
@@ -253,12 +253,12 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
                         type="button"
                         onClick={() => handleAddSkillToProfile(skill)}
                         disabled={updateProfileMutation.isPending}
-                        className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-amber-500/30 text-amber-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:border-emerald-500/40 transition-all cursor-pointer shadow-xs active:scale-95"
+                        className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-amber-500/30 text-amber-300 hover:bg-blue-500/20 hover:text-blue-300 hover:border-blue-500/40 transition-all cursor-pointer shadow-xs active:scale-95"
                         title={`Click to add ${skill} to your profile skills`}
                       >
-                        <Plus className="w-3.5 h-3.5 text-amber-400 group-hover:text-emerald-300 transition-colors" />
+                        <Plus className="w-3.5 h-3.5 text-amber-400 group-hover:text-blue-300 transition-colors" />
                         <span>{skill}</span>
-                        <span className="text-[10px] text-slate-400 group-hover:text-emerald-400 font-normal">
+                        <span className="text-[10px] text-slate-400 group-hover:text-blue-400 font-normal">
                           (+Add)
                         </span>
                       </button>
@@ -270,8 +270,8 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
               {/* Matched Skills Section */}
               <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-4.5 space-y-3">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400">
                     Matching Skills Found ({analysis.matchedSkills.length})
                   </h3>
                 </div>
@@ -285,9 +285,9 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
                     {analysis.matchedSkills.map((skill) => (
                       <span
                         key={skill}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 shadow-xs"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-500/10 border border-blue-500/25 text-blue-300 shadow-xs"
                       >
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <Check className="w-3.5 h-3.5 text-blue-400" />
                         <span>{skill}</span>
                       </span>
                     ))}
@@ -300,7 +300,7 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
           {/* TAB 2: TAILORED RESUME BULLET POINTS */}
           {activeTab === "bullets" && (
             <div className="space-y-4 animate-in fade-in duration-150">
-              <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs text-emerald-300">
+              <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl text-xs text-blue-300">
                 💡 <span className="font-bold">ATS Tip:</span> Hiring managers and ATS parsers look for quantifiable achievements with strong action verbs. Copy these ready-to-use bullet points into your resume:
               </div>
 
@@ -316,11 +316,11 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
                     <button
                       type="button"
                       onClick={() => handleCopyBullet(bullet, idx)}
-                      className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 hover:border-emerald-500/40 transition-all shrink-0 cursor-pointer"
+                      className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-blue-300 hover:border-blue-500/40 transition-all shrink-0 cursor-pointer"
                       title="Copy bullet point to clipboard"
                     >
                       {copiedIndex === idx ? (
-                        <Check className="w-4 h-4 text-emerald-400" />
+                        <Check className="w-4 h-4 text-blue-400" />
                       ) : (
                         <Copy className="w-4 h-4" />
                       )}
@@ -339,13 +339,13 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
                   key={idx}
                   className="p-4 bg-slate-950/80 border border-slate-800 rounded-2xl flex items-start gap-3.5"
                 >
-                  <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${tip.passed ? "bg-emerald-500/15 text-emerald-400" : "bg-amber-500/15 text-amber-400"}`}>
+                  <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${tip.passed ? "bg-blue-500/15 text-blue-400" : "bg-amber-500/15 text-amber-400"}`}>
                     {tip.passed ? <CheckCircle2 className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
                   </div>
                   <div>
                     <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                       <span>{tip.title}</span>
-                      <span className={`text-[10px] font-extrabold px-1.5 py-0.2 rounded-md ${tip.passed ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-500/20 text-amber-300"}`}>
+                      <span className={`text-[10px] font-extrabold px-1.5 py-0.2 rounded-md ${tip.passed ? "bg-blue-500/20 text-blue-400" : "bg-amber-500/20 text-amber-300"}`}>
                         {tip.passed ? "PASSED" : "ACTION REQUIRED"}
                       </span>
                     </h4>
@@ -364,7 +364,7 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
           <Link
             to="/candidate/profile"
             onClick={onClose}
-            className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition-colors"
+            className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1.5 transition-colors"
           >
             <span>Edit Full Profile & Skills in Profile Page</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -390,7 +390,7 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
                   onApply(job._id);
                   onClose();
                 }}
-                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
+                className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold shadow-md shadow-blue-500/20"
               >
                 {isApplied ? "Already Applied" : "Apply to Job Now"}
               </Button>
