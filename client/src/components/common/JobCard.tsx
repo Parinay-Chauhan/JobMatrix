@@ -69,7 +69,7 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
 
         {/* Title & Company */}
         <h3 className="text-base sm:text-lg font-bold text-white line-clamp-1 group-hover:text-blue-300 transition-colors">
-          {job.title}
+          {(job.title || "").replace(/\s+\d{10,14}$/, "")}
         </h3>
         <p className="mt-1 text-xs font-semibold text-blue-400 flex items-center gap-1.5">
           <Building2 className="w-3.5 h-3.5 text-blue-400/80" />

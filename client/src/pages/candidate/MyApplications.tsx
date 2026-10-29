@@ -159,7 +159,7 @@ export const MyApplications: React.FC = () => {
         <div className="space-y-4">
           {paginatedApps.map((app) => {
             const job = typeof app.job === "object" ? app.job : null;
-            const title = job?.title || "Position Title Unavailable";
+            const title = (job?.title || "Position Title Unavailable").replace(/\s+\d{10,14}$/, "");
             const location = job?.location || "Remote / Hybrid";
             const jobType = job?.jobType || "Full-time";
             const companyName =

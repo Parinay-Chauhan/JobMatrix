@@ -106,7 +106,7 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
               <span>AI ATS Resume Optimizer</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              {job.title}
+              {(job.title || "").replace(/\s+\d{10,14}$/, "")}
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 flex items-center gap-1.5 mt-1 font-medium">
               <Building2 className="w-3.5 h-3.5 text-blue-400" />
