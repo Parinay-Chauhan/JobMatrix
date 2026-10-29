@@ -157,7 +157,7 @@ export const RecruiterDashboard: React.FC = () => {
               >
                 <div className="space-y-1.5">
                   <h3 className="font-bold text-white text-base group-hover:text-blue-300 transition-colors">
-                    {job.title}
+                    {(job.title || "").replace(/\s+\d{10,14}$/, "")}
                   </h3>
                   <div className="flex flex-wrap items-center gap-2.5 text-xs text-slate-400">
                     <span className="inline-flex items-center gap-1 rounded-md bg-slate-950 border border-slate-800 px-2 py-0.5 text-slate-300 font-medium">

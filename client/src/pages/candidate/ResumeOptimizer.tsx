@@ -261,7 +261,7 @@ export const ResumeOptimizer: React.FC = () => {
               {profile?.resume ? (
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className="text-xs font-bold text-white truncate max-w-[140px]">
-                    {profile.resume.split("/").pop()}
+                    {(profile.resume.split("/").pop() || "").replace(/^\d+[-_]?/, "")}
                   </span>
                   <button
                     type="button"
@@ -468,7 +468,7 @@ export const ResumeOptimizer: React.FC = () => {
                         >
                           <div className="flex items-start justify-between gap-2">
                             <h4 className={`text-sm sm:text-base font-bold line-clamp-1 ${isSelected ? "text-blue-300" : "text-white"}`}>
-                              {j.title}
+                              {(j.title || "").replace(/\s+\d{10,14}$/, "")}
                             </h4>
                             <span className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 shrink-0 font-semibold">
                               {j.jobType || "Full-time"}
@@ -589,7 +589,7 @@ export const ResumeOptimizer: React.FC = () => {
                   Step 2 & 3: Live Scan Result
                 </span>
                 <h2 className="text-xl sm:text-3xl font-black text-white tracking-tight">
-                  {currentJob.title}
+                  {(currentJob.title || "").replace(/\s+\d{10,14}$/, "")}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-300 flex items-center gap-2 mt-1.5 font-semibold">
                   <Building2 className="w-4 h-4 text-blue-400" />

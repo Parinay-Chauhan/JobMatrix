@@ -224,7 +224,7 @@ export const Careers: React.FC = () => {
                     </div>
 
                     <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-blue-300 transition-colors">
-                      {job.title}
+                      {(job.title || "").replace(/\s+\d{10,14}$/, "")}
                     </h3>
 
                     <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">

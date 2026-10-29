@@ -152,7 +152,7 @@ export const ManageJobs: React.FC = () => {
                     <div className="flex justify-between items-start gap-2">
                       <div>
                         <h3 className="font-bold text-white text-base">
-                          {job.title}
+                          {(job.title || "").replace(/\s+\d{10,14}$/, "")}
                         </h3>
                         <span className="text-xs font-semibold text-blue-400">
                           {job.category || "General"}
@@ -221,7 +221,7 @@ export const ManageJobs: React.FC = () => {
                         >
                           <td className="px-6 py-4">
                             <div className="font-bold text-white group-hover:text-blue-300 transition-colors">
-                              {job.title}
+                              {(job.title || "").replace(/\s+\d{10,14}$/, "")}
                             </div>
                             <div className="text-xs text-blue-400 font-medium mt-0.5">
                               {job.category || "General"}
