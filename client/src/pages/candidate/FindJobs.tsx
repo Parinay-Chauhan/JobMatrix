@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+﻿import React, { useState, useMemo } from "react";
 import { toast } from "sonner";
 import {
   Briefcase,
@@ -352,22 +352,14 @@ export const FindJobs: React.FC = () => {
         </div>
       ) : filteredJobs.length === 0 ? (
         <EmptyState
-          title="No jobs matching your criteria"
-          description={
-            activeFiltersCount > 0
-              ? "Adjust your search keywords or clear applied filters to view more available roles."
-              : "There are currently no active job postings matching your parameters."
-          }
-          action={
-            activeFiltersCount > 0 ? (
-              <button
-                onClick={handleResetFilters}
-                className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs transition-all cursor-pointer"
-              >
-                Clear All Filters
-              </button>
-            ) : undefined
-          }
+          searchQuery={searchTerm || (activeFiltersCount > 0 ? selectedCategory || selectedJobType || selectedWorkMode || "search" : undefined)}
+          onApplySuggestion={(suggested) => setSearchTerm(suggested)}
+          onSearchAgain={() => {
+            handleResetFilters();
+            const input = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement;
+            input?.focus();
+          }}
+          onBrowsePopular={handleResetFilters}
         />
       ) : (
         <div className="space-y-8">

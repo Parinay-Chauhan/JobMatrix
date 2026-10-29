@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+﻿import React, { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "sonner";
 import {
@@ -206,16 +206,12 @@ export const JobApplicants: React.FC = () => {
           }
         />
       ) : filteredApplicants.length === 0 ? (
-        <div className="bg-slate-900/80 rounded-2xl border border-slate-800 p-12 text-center">
-          <p className="text-slate-400 text-sm">No applications found with status filter "{filterStatus}".</p>
-          <button
-            type="button"
-            onClick={() => setFilterStatus("all")}
-            className="mt-3 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
-          >
-            Show All Applications
-          </button>
-        </div>
+        <EmptyState
+          searchQuery={filterStatus !== "all" ? filterStatus : undefined}
+          title={`No applications matching "${filterStatus}"`}
+          onSearchAgain={() => setFilterStatus("all")}
+          onBrowsePopular={() => setFilterStatus("all")}
+        />
       ) : (
         <div className="space-y-4">
           {/* Mobile View: Dedicated Applicant Cards (md:hidden) */}

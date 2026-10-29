@@ -130,16 +130,16 @@ export const ManageJobs: React.FC = () => {
           </div>
 
           {filteredJobs.length === 0 ? (
-            <div className="bg-slate-900/80 rounded-2xl border border-slate-800 p-12 text-center">
-              <p className="text-slate-400 text-sm">No job postings matched "{searchQuery}".</p>
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                className="mt-3 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
-              >
-                Clear Search Filter
-              </button>
-            </div>
+            <EmptyState
+              searchQuery={searchQuery}
+              onApplySuggestion={(suggested) => setSearchQuery(suggested)}
+              onSearchAgain={() => {
+                setSearchQuery("");
+                const input = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement;
+                input?.focus();
+              }}
+              onBrowsePopular={() => setSearchQuery("")}
+            />
           ) : (
             <div className="space-y-4">
               {/* Mobile View: Job Cards (md:hidden) */}
