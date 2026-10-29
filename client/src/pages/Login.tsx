@@ -12,6 +12,17 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Real-time validation states ("Catch mistakes as people type, not after")
+  const isEmailTouched = email.length > 0;
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const emailError = isEmailTouched && !isEmailValid ? "Enter a valid email address." : "";
+  const emailSuccess = isEmailTouched && isEmailValid ? "Looks good!" : "";
+
+  const isPasswordTouched = password.length > 0;
+  const isPasswordValid = password.length >= 6;
+  const passwordError = isPasswordTouched && !isPasswordValid ? "Password must be at least 6 characters." : "";
+  const passwordSuccess = isPasswordTouched && isPasswordValid ? "Looks good!" : "";
+
   const leftPanelRef = useRef<HTMLDivElement>(null);
   const brandingRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -34,6 +45,16 @@ export const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!isEmailValid) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (!isPasswordValid) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -198,7 +219,7 @@ export const Login: React.FC = () => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email Field */}
+              {/* Email Field with Real-time Validation */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                   Email Address <span className="text-red-400">*</span>
@@ -212,15 +233,43 @@ export const Login: React.FC = () => {
                   <input
                     type="email"
                     required
-                    placeholder="you@example.com"
+                    placeholder="riya@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/60 transition-all hover:border-slate-600"
+                    className={`w-full rounded-xl border pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-150 focus:outline-none focus:ring-2 ${
+                      emailError
+                        ? "border-red-500 focus:border-red-400 focus:ring-red-500/20 bg-red-950/10"
+                        : emailSuccess
+                        ? "border-emerald-500 focus:border-emerald-400 focus:ring-emerald-500/20 bg-emerald-950/10"
+                        : "border-slate-700/80 bg-slate-800/50 hover:border-slate-600 focus:border-blue-500/60 focus:ring-blue-500/40"
+                    }`}
                   />
+                  {emailError ? (
+                    <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-red-500 animate-in fade-in zoom-in-75 duration-150">
+                      <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  ) : emailSuccess ? (
+                    <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-emerald-500 animate-in fade-in zoom-in-75 duration-150">
+                      <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  ) : null}
                 </div>
+                {emailError ? (
+                  <p className="text-xs text-red-400 font-medium flex items-center gap-1.5 mt-1 animate-in fade-in duration-150">
+                    <span>{emailError}</span>
+                  </p>
+                ) : emailSuccess ? (
+                  <p className="text-xs text-emerald-400 font-medium flex items-center gap-1.5 mt-1 animate-in fade-in duration-150">
+                    <span>{emailSuccess}</span>
+                  </p>
+                ) : null}
               </div>
 
-              {/* Password Field */}
+              {/* Password Field with Real-time Validation */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                   Password <span className="text-red-400">*</span>
@@ -237,25 +286,56 @@ export const Login: React.FC = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-11 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/60 transition-all hover:border-slate-600"
+                    className={`w-full rounded-xl border pl-10 pr-16 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-150 focus:outline-none focus:ring-2 ${
+                      passwordError
+                        ? "border-red-500 focus:border-red-400 focus:ring-red-500/20 bg-red-950/10"
+                        : passwordSuccess
+                        ? "border-emerald-500 focus:border-emerald-400 focus:ring-emerald-500/20 bg-emerald-950/10"
+                        : "border-slate-700/80 bg-slate-800/50 hover:border-slate-600 focus:border-blue-500/60 focus:ring-blue-500/40"
+                    }`}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
-                  >
-                    {showPassword ? (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    )}
-                  </button>
+                  <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center gap-2">
+                    {passwordError ? (
+                      <span className="text-red-500 animate-in fade-in zoom-in-75 duration-150">
+                        <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                      </span>
+                    ) : passwordSuccess ? (
+                      <span className="text-emerald-500 animate-in fade-in zoom-in-75 duration-150">
+                        <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </span>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-slate-500 hover:text-slate-300 transition-colors"
+                      title={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                 </div>
+                {passwordError ? (
+                  <p className="text-xs text-red-400 font-medium flex items-center gap-1.5 mt-1 animate-in fade-in duration-150">
+                    <span>{passwordError}</span>
+                  </p>
+                ) : passwordSuccess ? (
+                  <p className="text-xs text-emerald-400 font-medium flex items-center gap-1.5 mt-1 animate-in fade-in duration-150">
+                    <span>{passwordSuccess}</span>
+                  </p>
+                ) : null}
               </div>
 
               {/* Sign In Button */}
