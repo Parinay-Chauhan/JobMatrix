@@ -36,6 +36,18 @@ export const authService = {
     return response.data;
   },
 
+  async changePassword(payload: {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Promise<ApiResponse<Record<string, never>>> {
+    const response = await api.post<ApiResponse<Record<string, never>>>(
+      "/users/change-password",
+      payload,
+    );
+    return response.data;
+  },
+
   async refreshAccessToken(refreshToken?: string): Promise<ApiResponse<{ accessToken: string; refreshToken?: string }>> {
     const response = await api.post<ApiResponse<{ accessToken: string; refreshToken?: string }>>(
       "/users/refresh-token",
