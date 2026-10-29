@@ -12,7 +12,8 @@ import {
   XCircle,
 } from "lucide-react";
 import { useMyApplicationsQuery } from "../../hooks/queries";
-import { StatusBadge, Skeleton, EmptyState, Button, Pagination } from "../../components/common";
+import { Skeleton, EmptyState, Button, Pagination } from "../../components/common";
+import { ApplicationStepper } from "../../components/candidate";
 
 const PAGE_SIZE = 6;
 
@@ -197,7 +198,7 @@ export const MyApplications: React.FC = () => {
                 </div>
 
                 <div className="shrink-0 self-end sm:self-center">
-                  <StatusBadge status={app.status} size="md" />
+                  <ApplicationStepper status={app.status} />
                 </div>
               </div>
             );
