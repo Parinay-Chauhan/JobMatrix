@@ -26,9 +26,9 @@ export const HomeFooter: React.FC = () => {
   ];
 
   const legalLinks = [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Service", href: "#" },
-    { label: "Cookie Policy", href: "#" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Cookie Policy", href: "/cookies" },
   ];
 
   return (
@@ -136,12 +136,21 @@ export const HomeFooter: React.FC = () => {
             <ul className="space-y-2.5 text-xs sm:text-sm">
               {productLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-slate-400 hover:text-white transition-colors duration-150 inline-block"
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("/") ? (
+                    <Link
+                      to={link.href}
+                      className="text-slate-400 hover:text-white transition-colors duration-150 inline-block"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-slate-400 hover:text-white transition-colors duration-150 inline-block"
+                    >
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -187,12 +196,12 @@ export const HomeFooter: React.FC = () => {
             <ul className="space-y-2.5 text-xs sm:text-sm">
               {legalLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-slate-400 hover:text-white transition-colors duration-150 inline-block"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

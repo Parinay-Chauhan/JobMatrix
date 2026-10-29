@@ -19,6 +19,9 @@ const RecruiterDashboard = lazy(() => import("../pages/recruiter/RecruiterDashbo
 const PostJob = lazy(() => import("../pages/recruiter/PostJob"));
 const ManageJobs = lazy(() => import("../pages/recruiter/ManageJobs"));
 const JobApplicants = lazy(() => import("../pages/recruiter/JobApplicants"));
+const PrivacyPolicy = lazy(() => import("../pages/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("../pages/TermsOfService"));
+const CookiePolicy = lazy(() => import("../pages/CookiePolicy"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 
 const Unauthorized: React.FC = () => {
@@ -83,6 +86,9 @@ export const AppRoutes: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/cookies" element={<CookiePolicy />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Protected Candidate Routes */}
