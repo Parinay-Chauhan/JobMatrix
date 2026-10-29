@@ -19,10 +19,10 @@ export const HomeFooter: React.FC = () => {
   ];
 
   const companyLinks = [
-    { label: "About Us", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Contact", href: "#" },
-    { label: "Press", href: "#" },
+    { label: "About Us", href: "/about" },
+    { label: "Careers", href: "/careers" },
+    { label: "Contact", href: "/contact" },
+    { label: "Press", href: "/press" },
   ];
 
   const legalLinks = [
@@ -179,12 +179,12 @@ export const HomeFooter: React.FC = () => {
             <ul className="space-y-2.5 text-xs sm:text-sm">
               {companyLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-slate-400 hover:text-white transition-colors duration-150 inline-block"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
