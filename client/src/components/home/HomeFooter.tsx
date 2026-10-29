@@ -5,10 +5,10 @@ export const HomeFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const productLinks = [
-    { label: "Features", href: "#jobs" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Features", href: "/features" },
+    { label: "Pricing", href: "/pricing" },
     { label: "ATS Optimizer", href: "/candidate/resume-optimizer" },
-    { label: "Browse Companies", href: "#companies" },
+    { label: "Browse Companies", href: "/#companies" },
   ];
 
   const resourceLinks = [

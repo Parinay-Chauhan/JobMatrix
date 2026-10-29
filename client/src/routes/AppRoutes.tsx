@@ -30,6 +30,8 @@ const Documentation = lazy(() => import("../pages/Documentation"));
 const Blog = lazy(() => import("../pages/Blog"));
 const CareerGuide = lazy(() => import("../pages/CareerGuide"));
 const Support = lazy(() => import("../pages/Support"));
+const Pricing = lazy(() => import("../pages/Pricing"));
+const Features = lazy(() => import("../pages/Features"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 
 const Unauthorized: React.FC = () => {
@@ -105,6 +107,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="/blog" element={<Blog />} />
         <Route path="/career-guide" element={<CareerGuide />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/features" element={<Features />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Protected Candidate Routes */}
