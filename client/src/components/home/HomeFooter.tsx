@@ -12,10 +12,10 @@ export const HomeFooter: React.FC = () => {
   ];
 
   const resourceLinks = [
-    { label: "Documentation", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "Career Guide", href: "#" },
-    { label: "Support", href: "#" },
+    { label: "Documentation", href: "/docs" },
+    { label: "Blog", href: "/blog" },
+    { label: "Career Guide", href: "/career-guide" },
+    { label: "Support", href: "/support" },
   ];
 
   const companyLinks = [
@@ -162,12 +162,12 @@ export const HomeFooter: React.FC = () => {
             <ul className="space-y-2.5 text-xs sm:text-sm">
               {resourceLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-slate-400 hover:text-white transition-colors duration-150 inline-block"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
