@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+﻿import React, { useState, useRef, useEffect } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { toast } from "sonner";
@@ -6,6 +6,7 @@ import { Sparkles } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useCandidateProfileQuery } from "../hooks/queries";
 import { NotificationBell } from "../components/NotificationBell";
+import { DashboardFooter } from "../components/common";
 
 export const CandidateLayout: React.FC = () => {
   const { user, logout } = useAuth();
@@ -310,14 +311,11 @@ export const CandidateLayout: React.FC = () => {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-12 relative z-10">
         <Outlet />
       </main>
-
-      {/* Footer subtle branding */}
-      <footer className="border-t border-slate-800/60 bg-slate-950/80 py-6 text-center text-xs text-slate-500 relative z-10">
-        <p>© 2026 JobMatrix. Next-Gen Tech Talent & Career Platform.</p>
-      </footer>
+      <DashboardFooter />
     </div>
   );
 };
 
 export default CandidateLayout;
+
 

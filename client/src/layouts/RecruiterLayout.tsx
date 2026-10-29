@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+﻿import React, { useState, useRef, useEffect } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { toast } from "sonner";
@@ -14,6 +14,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { useRecruiterProfileQuery } from "../hooks/queries";
 import { NotificationBell } from "../components/NotificationBell";
+import { DashboardFooter } from "../components/common";
 
 export const RecruiterLayout: React.FC = () => {
   const { user, logout } = useAuth();
@@ -301,8 +302,10 @@ export const RecruiterLayout: React.FC = () => {
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16 relative z-10">
         <Outlet />
       </main>
+      <DashboardFooter />
     </div>
   );
 };
 
 export default RecruiterLayout;
+
