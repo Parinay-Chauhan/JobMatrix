@@ -140,21 +140,26 @@ export const Login: React.FC = () => {
     }, 800);
   };
 
-  // Direct Change Password Handler (uses backend changePassword controller)
+  // Direct Change Password Handler with Strict Verification
   const handleDirectPasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     setForgotError("");
 
-    if (!forgotEmail.trim()) {
+    const cleanEmail = forgotEmail.trim();
+    if (!cleanEmail) {
       setForgotError("Please enter your registered email address.");
       return;
     }
-    if (!oldPassword) {
+    if (!oldPassword.trim()) {
       setForgotError("Please enter your current password.");
       return;
     }
     if (newPassword.length < 6) {
       setForgotError("New password must be at least 6 characters.");
+      return;
+    }
+    if (newPassword === oldPassword) {
+      setForgotError("New password must be different from your current password.");
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -165,38 +170,70 @@ export const Login: React.FC = () => {
     setForgotLoading(true);
 
     try {
-      // 1. Authenticate with current credentials to obtain session token
+      // 1. Rigorously verify current password against MongoDB bcrypt hash via backend login
       const loginRes = await authService.login({
-        email: forgotEmail,
+        email: cleanEmail,
         password: oldPassword,
       });
 
-      if (loginRes.data?.accessToken) {
-        // 2. Call backend changePassword controller
-        await authService.changePassword({
-          oldPassword,
-          newPassword,
-          confirmPassword,
-        });
-
-        toast.success("Password changed successfully!", {
-          description: "You can now sign in with your updated password.",
-        });
-
-        // Pre-fill password on login form
-        setEmail(forgotEmail);
-        setPassword(newPassword);
-        setShowForgotModal(false);
-        setOldPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
+      const tempAccessToken = loginRes.data?.accessToken;
+      if (!tempAccessToken) {
+        throw new Error("Verification failed. Current password could not be validated.");
       }
+
+      // Temporarily store token so the backend changePassword endpoint can authenticate request
+      localStorage.setItem("accessToken", tempAccessToken);
+
+      // 2. Execute backend changePassword controller (which cryptographically re-verifies oldPassword)
+      await authService.changePassword({
+        oldPassword,
+        newPassword,
+        confirmPassword,
+      });
+
+      // 3. Security Isolation: Immediately remove all temporary tokens so user is NEVER automatically logged in
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
+      toast.success("Password updated successfully!", {
+        description: "Please sign in with your new password to verify.",
+      });
+
+      // Close modal and set email on login form, leaving password clean for manual sign in
+      setEmail(cleanEmail);
+      setPassword("");
+      setShowForgotModal(false);
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setForgotError("");
     } catch (err: unknown) {
-      const msg =
+      // Always purge any temporary tokens on error
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
+      const responseMsg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "Password update failed. Please check your credentials.";
-      setForgotError(msg);
-      toast.error("Password Update Failed", { description: msg });
+          ?.message || "";
+
+      let displayError = "Current password is incorrect. Verification failed.";
+      if (
+        responseMsg.toLowerCase().includes("user does not exist") ||
+        responseMsg.toLowerCase().includes("not found")
+      ) {
+        displayError = "No account found matching this email address.";
+      } else if (
+        responseMsg.toLowerCase().includes("invalid user credentials") ||
+        responseMsg.toLowerCase().includes("invalid old password") ||
+        responseMsg.toLowerCase().includes("password")
+      ) {
+        displayError = "Current password is incorrect. You must provide your valid existing password to update.";
+      } else if (responseMsg) {
+        displayError = responseMsg;
+      }
+
+      setForgotError(displayError);
+      toast.error("Security Verification Failed", { description: displayError });
     } finally {
       setForgotLoading(false);
     }
@@ -516,6 +553,16 @@ export const Login: React.FC = () => {
         size="md"
       >
         <div className="p-6 space-y-5">
+          {/* Security Notice Banner */}
+          <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-3 flex items-start gap-2.5 text-xs text-blue-300 leading-relaxed">
+            <svg className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span>
+              <strong>Cryptographic Security:</strong> Password updates require strict authentication against your existing database credentials. Unauthorized modifications are rejected.
+            </span>
+          </div>
+
           {/* Tabs for Reset Type */}
           <div className="grid grid-cols-2 gap-2 p-1 bg-slate-800/60 rounded-xl border border-slate-700/60">
             <button
@@ -549,7 +596,7 @@ export const Login: React.FC = () => {
           </div>
 
           {forgotError && (
-            <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-3 text-xs text-red-400 font-medium flex items-center gap-2">
+            <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-3 text-xs text-red-400 font-medium flex items-center gap-2 animate-in fade-in duration-150">
               <svg className="w-4 h-4 shrink-0 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
@@ -619,16 +666,16 @@ export const Login: React.FC = () => {
               </form>
             )
           ) : (
-            /* Direct Password Change using backend changePassword controller */
+            /* Direct Password Change strictly verifying current password */
             <form onSubmit={handleDirectPasswordChange} className="space-y-4">
               <p className="text-xs text-slate-300 leading-relaxed">
-                Update your account password by verifying your current password. Existing 5-character passwords can also be upgraded here.
+                Enter your current credentials to verify ownership before setting a new password. Existing 5-character passwords can also be upgraded here.
               </p>
 
               {/* Email */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  Account Email
+                  Account Email <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="email"
@@ -640,10 +687,10 @@ export const Login: React.FC = () => {
                 />
               </div>
 
-              {/* Current Password */}
+              {/* Current Password with Verification */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  Current Password
+                  Current Password <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -676,7 +723,7 @@ export const Login: React.FC = () => {
               {/* New Password */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  New Password
+                  New Password <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -723,7 +770,7 @@ export const Login: React.FC = () => {
               {/* Confirm New Password */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  Confirm New Password
+                  Confirm New Password <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="password"
@@ -748,7 +795,7 @@ export const Login: React.FC = () => {
                   disabled={forgotLoading}
                   className="py-2.5 px-5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-400 hover:to-amber-500 shadow-md shadow-orange-500/25 transition-all cursor-pointer disabled:opacity-50"
                 >
-                  {forgotLoading ? "Updating..." : "Update Password"}
+                  {forgotLoading ? "Verifying & Updating..." : "Verify & Update Password"}
                 </button>
               </div>
             </form>
