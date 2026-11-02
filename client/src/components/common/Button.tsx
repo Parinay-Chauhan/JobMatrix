@@ -41,7 +41,8 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantStyles: Record<ButtonVariant, string> = {
     primary:
-      "bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold shadow-md shadow-emerald-500/20 focus:ring-emerald-400",
+      "bg-orange-500 text-white hover:bg-orange-600 font-bold shadow-md shadow-orange-500/25 focus:ring-orange-400",
+
     secondary:
       "bg-slate-800 text-slate-200 hover:bg-slate-700 hover:text-white border border-slate-700 focus:ring-slate-500",
     outline:
@@ -51,7 +52,9 @@ export const Button: React.FC<ButtonProps> = ({
     ghost:
       "bg-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-100 focus:ring-slate-700",
     success:
-      "bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold shadow-md shadow-emerald-500/20 focus:ring-emerald-400",
+      "bg-blue-600 text-white hover:bg-blue-500 font-bold shadow-md shadow-blue-600/25 focus:ring-blue-500",
+
+
   };
 
   return (

@@ -25,35 +25,35 @@ const testimonials: Testimonial[] = [
   },
   {
     initials: "AN",
-    bg: "bg-teal-500",
+    bg: "bg-sky-500",
     name: "Anshika Aggarwal",
     role: "1.5 YOE as MTS",
     text: "JobMatrix helped me land my first full-time role after college. The remote filters are really useful. I found a hybrid role that perfectly matched my expectations.",
   },
   {
     initials: "AT",
-    bg: "bg-emerald-600",
+    bg: "bg-blue-600",
     name: "Anuj Thakur",
     role: "Data Analyst at Scaler",
     text: "I was skeptical but after applying through JobMatrix I got 3 interview calls in a single week. The search actually works — no irrelevant junk showing up.",
   },
   {
     initials: "RS",
-    bg: "bg-teal-600",
+    bg: "bg-sky-600",
     name: "Rohan Kumar Sah",
     role: "Software Engineer",
     text: "Clean, fast, and straightforward. I love how you can filter by work mode instantly. Found a remote backend role that fit my skills exactly within days.",
   },
   {
     initials: "BB",
-    bg: "bg-emerald-600",
+    bg: "bg-blue-600",
     name: "Bhavya Bhalla",
     role: "Student",
     text: "As a fresher I was worried no one would respond. But JobMatrix actually showed me entry-level listings and I landed an internship at a startup within 10 days!",
   },
   {
     initials: "NJ",
-    bg: "bg-cyan-600",
+    bg: "bg-sky-600",
     name: "Nidhi Juneja",
     role: "SDE Intern",
     text: "The part-time section is gold. I found a remote content writing gig that fits perfectly with my college schedule. Didn't have to scroll endlessly like other sites.",
@@ -74,7 +74,7 @@ const testimonials: Testimonial[] = [
   },
   {
     initials: "PS",
-    bg: "bg-cyan-600",
+    bg: "bg-sky-600",
     name: "Priya Sharma",
     role: "UX Designer",
     text: "Found a women-friendly startup through the 'Jobs for Women' section. The company was exactly as described. No bait-and-switch on salary either. 10/10 experience.",
@@ -88,14 +88,14 @@ const testimonials: Testimonial[] = [
   },
   {
     initials: "SR",
-    bg: "bg-emerald-600",
+    bg: "bg-blue-600",
     name: "Sneha Rawat",
     role: "HR at Infosys",
     text: "We use JobMatrix to post openings and the quality of candidates is noticeably better. The talent pool is serious about job hunting — not just browsing.",
   },
   {
     initials: "VB",
-    bg: "bg-teal-600",
+    bg: "bg-sky-600",
     name: "Vikram Bansal",
     role: "Full Stack Developer",
     text: "Switched from a service company to a product startup using JobMatrix. The remote filter and tech stack search is incredibly precise. Super happy with my move.",
@@ -116,14 +116,14 @@ const testimonials: Testimonial[] = [
   },
   {
     initials: "KR",
-    bg: "bg-teal-500",
+    bg: "bg-sky-500",
     name: "Kavita Rao",
     role: "QA Engineer at Wipro",
     text: "Part-time remote QA role — something I thought was impossible to find. JobMatrix had exactly that. Now I work 4 hours a day from home and it's changed my life.",
   },
   {
     initials: "SM",
-    bg: "bg-emerald-600",
+    bg: "bg-blue-600",
     name: "Suresh Mishra",
     role: "Product Manager",
     text: "Used JobMatrix to hire for two product roles at our startup. The quality of applications was far better than what we got on LinkedIn for the same JD.",
@@ -142,7 +142,7 @@ const row2 = testimonials.slice(6, 12);
 const row3 = testimonials.slice(12, 18);
 
 const TestimonialCard: React.FC<{ t: Testimonial }> = ({ t }) => (
-  <div className="shrink-0 w-[300px] sm:w-[320px] bg-slate-900 border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl p-5 cursor-default select-none transition-colors duration-200">
+  <div className="shrink-0 w-[300px] sm:w-[320px] bg-slate-900 border border-slate-800/80 hover:border-blue-500/40 rounded-2xl p-5 cursor-default select-none transition-colors duration-200">
     <div className="flex items-center gap-3 mb-3">
       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 ${t.bg}`}>
         {t.initials}

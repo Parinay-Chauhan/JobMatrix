@@ -4,8 +4,18 @@ import { useJobContext } from "../../context/JobContext";
 import { JobCard, JobCardSkeleton, EmptyState } from "../common";
 
 export const JobListingsSection: React.FC = () => {
-  const { filteredJobs, loading, clearFilters } = useJobContext();
+  const {
+    filteredJobs,
+    loading,
+    searchTitle,
+    setSearchTitle,
+    searchLocation,
+    searchExperience,
+    clearFilters,
+  } = useJobContext();
   const navigate = useNavigate();
+
+  const activeSearchQuery = searchTitle || searchLocation || searchExperience;
 
   return (
     <div id="jobs" className="bg-gray-50 flex-1 w-full border-t border-gray-200/80">
@@ -23,7 +33,7 @@ export const JobListingsSection: React.FC = () => {
 
           <Link
             to="/register"
-            className="text-sm text-emerald-600 hover:text-emerald-700 font-bold transition-colors"
+            className="text-sm text-orange-500 hover:text-orange-600 font-bold transition-colors"
           >
             Post a Job &rarr;
           </Link>
@@ -37,12 +47,20 @@ export const JobListingsSection: React.FC = () => {
             <JobCardSkeleton />
           </div>
         ) : filteredJobs.length === 0 ? (
-          /* Empty Search State */
+          /* Empty Search State with Pattern 10 Design */
           <EmptyState
-            title="No jobs found"
-            description="Try adjusting your search terms or location filters."
-            actionText="Clear Search"
-            onAction={clearFilters}
+            searchQuery={activeSearchQuery || "all"}
+            onApplySuggestion={(suggested) => {
+              setSearchTitle(suggested);
+            }}
+            onSearchAgain={() => {
+              clearFilters();
+              const input = document.querySelector(
+                'input[placeholder*="Job title"], input[placeholder*="Search"]'
+              ) as HTMLInputElement;
+              input?.focus();
+            }}
+            onBrowsePopular={clearFilters}
           />
         ) : (
           /* Job Grid */

@@ -284,7 +284,7 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
                 <ZoomIn className="w-3.5 h-3.5 text-slate-400" />
                 <span>Zoom Scale</span>
               </span>
-              <span className="text-emerald-400 font-mono">{Math.round(zoom * 100)}%</span>
+              <span className="text-blue-400 font-mono">{Math.round(zoom * 100)}%</span>
             </div>
 
             <div className="flex items-center gap-3 bg-slate-900 p-2 rounded-xl border border-slate-800">
@@ -307,7 +307,7 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
                 step="0.05"
                 value={zoom}
                 onChange={(e) => setZoom(parseFloat(e.target.value))}
-                className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 hover:accent-emerald-400"
+                className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400"
               />
 
               {/* Zoom In Button (+) */}
@@ -340,7 +340,7 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
             type="button"
             onClick={handleConfirmCrop}
             disabled={isSaving}
-            className="py-2 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-[0.99] text-slate-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="py-2 px-5 rounded-xl bg-blue-500 hover:bg-blue-400 active:scale-[0.99] text-slate-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSaving ? (
               <>

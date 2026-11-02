@@ -472,7 +472,7 @@ export const CandidateProfile: React.FC = () => {
                     placeholder="https://www.linkedin.com/in/username"
                     value={linkedin}
                     onChange={(e) => setLinkedin(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30 transition-all font-mono text-xs"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono text-xs"
                   />
                 </div>
 
@@ -488,7 +488,7 @@ export const CandidateProfile: React.FC = () => {
                     placeholder="https://github.com/username"
                     value={github}
                     onChange={(e) => setGithub(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30 transition-all font-mono text-xs"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono text-xs"
                   />
                 </div>
               </div>
@@ -500,14 +500,14 @@ export const CandidateProfile: React.FC = () => {
                 </label>
                 {profile?.resume && (
                   <div className="flex items-center justify-between p-3.5 bg-slate-900/90 rounded-2xl border border-slate-800 text-xs">
-                    <span className="text-emerald-300 font-mono truncate max-w-sm flex items-center gap-2">
-                      <FileText className="w-4 h-4 shrink-0 text-emerald-400" />
+                    <span className="text-blue-300 font-mono truncate max-w-sm flex items-center gap-2">
+                      <FileText className="w-4 h-4 shrink-0 text-blue-400" />
                       <span className="truncate">{profile.resume.split("/").pop()}</span>
                     </span>
                     <button
                       type="button"
                       onClick={() => setIsResumeModalOpen(true)}
-                      className="text-emerald-400 font-semibold hover:underline cursor-pointer flex items-center gap-1.5"
+                      className="text-blue-400 font-semibold hover:underline cursor-pointer flex items-center gap-1.5"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>View Current</span>
@@ -520,7 +520,7 @@ export const CandidateProfile: React.FC = () => {
                   onChange={(e) =>
                     setResumeFile(e.target.files ? e.target.files[0] : null)
                   }
-                  className="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-500/10 file:text-emerald-400 hover:file:bg-emerald-500/20 cursor-pointer"
+                  className="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-500/10 file:text-blue-400 hover:file:bg-blue-500/20 cursor-pointer"
                 />
               </div>
 
@@ -530,7 +530,7 @@ export const CandidateProfile: React.FC = () => {
                   type="submit"
                   variant="primary"
                   isLoading={isSaving}
-                  className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-2.5 rounded-xl"
+                  className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-6 py-2.5 rounded-xl"
                 >
                   Save Changes
                 </Button>
@@ -568,8 +568,8 @@ export const CandidateProfile: React.FC = () => {
                 {/* Uploading Spinner */}
                 {uploadAvatarMutation.isPending && (
                   <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs flex flex-col items-center justify-center text-white z-20">
-                    <div className="w-8 h-8 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin mb-2" />
-                    <span className="text-xs font-semibold text-emerald-300">Uploading...</span>
+                    <div className="w-8 h-8 border-3 border-blue-400 border-t-transparent rounded-full animate-spin mb-2" />
+                    <span className="text-xs font-semibold text-blue-300">Uploading...</span>
                   </div>
                 )}
 
@@ -587,7 +587,7 @@ export const CandidateProfile: React.FC = () => {
                   type="button"
                   onClick={() => avatarInputRef.current?.click()}
                   disabled={uploadAvatarMutation.isPending}
-                  className="absolute bottom-3 left-1/2 -translate-x-1/2 py-1.5 px-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white text-xs font-semibold border border-slate-700 hover:border-emerald-500/40 shadow-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  className="absolute bottom-3 left-1/2 -translate-x-1/2 py-1.5 px-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white text-xs font-semibold border border-slate-700 hover:border-blue-500/40 shadow-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                 >
                   <Pencil className="w-3.5 h-3.5 text-slate-300" />
                   <span>{uploadAvatarMutation.isPending ? "Saving..." : "Change Photo"}</span>
@@ -617,7 +617,7 @@ export const CandidateProfile: React.FC = () => {
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 shadow-xl relative overflow-hidden">
             {/* Top ambient glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-16 bg-emerald-500/5 blur-xl pointer-events-none" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-16 bg-blue-500/5 blur-xl pointer-events-none" />
 
             {/* Profile Avatar (Perfect Circle) */}
             <div className="relative mx-auto w-44 h-44 sm:w-48 sm:h-48 mb-5 group">
@@ -638,8 +638,8 @@ export const CandidateProfile: React.FC = () => {
                 {/* Uploading Spinner */}
                 {uploadAvatarMutation.isPending && (
                   <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs flex flex-col items-center justify-center text-white z-20">
-                    <div className="w-8 h-8 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin mb-2" />
-                    <span className="text-xs font-semibold text-emerald-300">Saving photo...</span>
+                    <div className="w-8 h-8 border-3 border-blue-400 border-t-transparent rounded-full animate-spin mb-2" />
+                    <span className="text-xs font-semibold text-blue-300">Saving photo...</span>
                   </div>
                 )}
 
@@ -659,7 +659,7 @@ export const CandidateProfile: React.FC = () => {
                   disabled={uploadAvatarMutation.isPending}
                   className="absolute inset-0 bg-slate-950/75 backdrop-blur-2xs flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-semibold gap-1.5 disabled:opacity-0"
                 >
-                  <Pencil className="w-5 h-5 text-emerald-400" />
+                  <Pencil className="w-5 h-5 text-blue-400" />
                   <span>Update Photo</span>
                 </button>
               </div>
@@ -674,7 +674,7 @@ export const CandidateProfile: React.FC = () => {
                 <span className="text-xs font-medium text-slate-400">
                   Candidate Profile
                 </span>
-                <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
                   Open to Opportunities
                 </span>
               </div>
@@ -698,7 +698,7 @@ export const CandidateProfile: React.FC = () => {
                 onClick={handleStartEditing}
                 className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-white text-xs font-bold border border-slate-700 hover:border-slate-600 shadow-xs transition-all duration-200 active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer group"
               >
-                <Pencil className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+                <Pencil className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-400 transition-colors" />
                 <span>Edit Profile</span>
               </button>
             </div>
@@ -735,10 +735,10 @@ export const CandidateProfile: React.FC = () => {
                     href={profile.linkedin.startsWith("http") ? profile.linkedin : `https://${profile.linkedin}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="truncate hover:text-emerald-400 transition-colors font-medium flex items-center gap-1"
+                    className="truncate hover:text-blue-400 transition-colors font-medium flex items-center gap-1"
                   >
                     <span className="truncate">{profile.linkedin.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, "")}</span>
-                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-emerald-400 shrink-0" />
+                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-blue-400 shrink-0" />
                   </a>
                 </div>
               )}
@@ -753,10 +753,10 @@ export const CandidateProfile: React.FC = () => {
                     href={profile.github.startsWith("http") ? profile.github : `https://${profile.github}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="truncate hover:text-emerald-400 transition-colors font-medium flex items-center gap-1"
+                    className="truncate hover:text-blue-400 transition-colors font-medium flex items-center gap-1"
                   >
                     <span className="truncate">{profile.github.replace(/^https?:\/\/(www\.)?github\.com\//, "")}</span>
-                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-emerald-400 shrink-0" />
+                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-blue-400 shrink-0" />
                   </a>
                 </div>
               )}
@@ -764,15 +764,15 @@ export const CandidateProfile: React.FC = () => {
               {/* Portfolio */}
               {profile?.portfolio && (
                 <div className="flex items-center gap-3 text-slate-300 group">
-                  <Globe className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <Globe className="w-4 h-4 text-blue-400 shrink-0" />
                   <a
                     href={profile.portfolio.startsWith("http") ? profile.portfolio : `https://${profile.portfolio}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="truncate hover:text-emerald-400 transition-colors font-medium flex items-center gap-1"
+                    className="truncate hover:text-blue-400 transition-colors font-medium flex items-center gap-1"
                   >
                     <span className="truncate">{profile.portfolio.replace(/^https?:\/\//, "")}</span>
-                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-emerald-400 shrink-0" />
+                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-blue-400 shrink-0" />
                   </a>
                 </div>
               )}
@@ -787,7 +787,7 @@ export const CandidateProfile: React.FC = () => {
                 <span>Resume Document</span>
               </span>
               {profile?.resume ? (
-                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
                   Uploaded
                 </span>
               ) : (
@@ -806,7 +806,7 @@ export const CandidateProfile: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsResumeModalOpen(true)}
-                    className="flex-1 text-center py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                    className="flex-1 text-center py-2 px-3 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
                   >
                     <Eye className="w-3.5 h-3.5" />
                     <span>View Resume</span>
@@ -830,7 +830,7 @@ export const CandidateProfile: React.FC = () => {
                   type="button"
                   onClick={() => resumeInputRef.current?.click()}
                   disabled={uploadResumeMutation.isPending}
-                  className="py-2 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-2 disabled:opacity-50"
+                  className="py-2 px-4 rounded-xl bg-blue-500 hover:bg-blue-400 text-slate-950 text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-2 disabled:opacity-50"
                 >
                   {uploadResumeMutation.isPending ? (
                     <>
@@ -896,10 +896,10 @@ export const CandidateProfile: React.FC = () => {
             };
 
             return (
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/95 to-slate-950 border border-emerald-500/20 p-6 shadow-xl">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/95 to-slate-950 border border-blue-500/20 p-6 shadow-xl">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-800">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
                       <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
@@ -907,7 +907,7 @@ export const CandidateProfile: React.FC = () => {
                         <h2 className="text-base sm:text-lg font-bold text-white">
                           AI ATS Resume & Keyword Optimizer
                         </h2>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-blue-500/15 text-blue-300 border border-blue-500/30">
                           Live Analysis
                         </span>
                       </div>
@@ -925,7 +925,7 @@ export const CandidateProfile: React.FC = () => {
                         {atsScore >= 80 ? "Top Candidate" : atsScore >= 50 ? "Good Foundation" : "Needs Keywords"}
                       </span>
                     </div>
-                    <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-black text-sm text-emerald-400">
+                    <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center font-black text-sm text-blue-400">
                       {atsScore}%
                     </div>
                   </div>
@@ -935,7 +935,7 @@ export const CandidateProfile: React.FC = () => {
                 <div className="mt-4">
                   <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
                     <div
-                      className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-blue-500 via-sky-400 to-sky-400 rounded-full transition-all duration-500"
                       style={{ width: `${atsScore}%` }}
                     />
                   </div>
@@ -943,20 +943,20 @@ export const CandidateProfile: React.FC = () => {
 
                 {/* 4 Checkpoint Badges */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-4">
-                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.resume ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
-                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.resume ? "text-emerald-400" : "text-slate-600"}`} />
+                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.resume ? "bg-blue-500/10 border-blue-500/20 text-blue-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
+                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.resume ? "text-blue-400" : "text-slate-600"}`} />
                     <span className="truncate">Resume PDF</span>
                   </div>
-                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${skillsList.length >= 5 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
-                    <CheckCircle2 className={`w-3.5 h-3.5 ${skillsList.length >= 5 ? "text-emerald-400" : "text-slate-600"}`} />
+                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${skillsList.length >= 5 ? "bg-blue-500/10 border-blue-500/20 text-blue-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
+                    <CheckCircle2 className={`w-3.5 h-3.5 ${skillsList.length >= 5 ? "text-blue-400" : "text-slate-600"}`} />
                     <span className="truncate">5+ Key Skills ({skillsList.length})</span>
                   </div>
-                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.bio ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
-                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.bio ? "text-emerald-400" : "text-slate-600"}`} />
+                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.bio ? "bg-blue-500/10 border-blue-500/20 text-blue-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
+                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.bio ? "text-blue-400" : "text-slate-600"}`} />
                     <span className="truncate">Summary Bio</span>
                   </div>
-                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.experience && profile.experience.length > 0 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
-                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.experience && profile.experience.length > 0 ? "text-emerald-400" : "text-slate-600"}`} />
+                  <div className={`p-2.5 rounded-xl border text-xs flex items-center gap-2 ${profile?.experience && profile.experience.length > 0 ? "bg-blue-500/10 border-blue-500/20 text-blue-300" : "bg-slate-950/60 border-slate-800 text-slate-500"}`}>
+                    <CheckCircle2 className={`w-3.5 h-3.5 ${profile?.experience && profile.experience.length > 0 ? "text-blue-400" : "text-slate-600"}`} />
                     <span className="truncate">Work Experience</span>
                   </div>
                 </div>
@@ -975,9 +975,9 @@ export const CandidateProfile: React.FC = () => {
                           key={sug}
                           type="button"
                           onClick={() => handleQuickAddSkill(sug)}
-                          className="px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/30 text-slate-300 hover:text-emerald-300 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer group"
+                          className="px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-blue-500/10 border border-slate-800 hover:border-blue-500/30 text-slate-300 hover:text-blue-300 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer group"
                         >
-                          <Plus className="w-3 h-3 text-emerald-400 group-hover:scale-110 transition-transform" />
+                          <Plus className="w-3 h-3 text-blue-400 group-hover:scale-110 transition-transform" />
                           <span>{sug}</span>
                         </button>
                       ))}
@@ -992,7 +992,7 @@ export const CandidateProfile: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 shadow-xl p-6 sm:p-7 space-y-6">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2.5">
-                <User className="w-4 h-4 text-emerald-400" />
+                <User className="w-4 h-4 text-blue-400" />
                 <h2 className="text-base font-bold text-white">Professional Summary</h2>
               </div>
               <button
@@ -1050,9 +1050,9 @@ export const CandidateProfile: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 sm:p-7 shadow-xl space-y-5">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2.5">
-                <Briefcase className="w-4 h-4 text-teal-400" />
+                <Briefcase className="w-4 h-4 text-sky-400" />
                 <h2 className="text-base font-bold text-white">Work Experience</h2>
-                <span className="text-xs font-semibold text-teal-400 bg-teal-500/10 border border-teal-500/20 px-2 py-0.5 rounded-md">
+                <span className="text-xs font-semibold text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-md">
                   {profile?.experience?.length || 0}
                 </span>
               </div>
@@ -1079,7 +1079,7 @@ export const CandidateProfile: React.FC = () => {
                       <h3 className="font-bold text-white text-sm">
                         {exp.title}{" "}
                         <span className="text-slate-400 font-normal">at</span>{" "}
-                        <span className="text-emerald-400">{exp.company}</span>
+                        <span className="text-blue-400">{exp.company}</span>
                       </h3>
                       <p className="text-xs text-slate-400 flex items-center gap-1.5">
                         <Calendar className="w-3 h-3 text-slate-500" />
@@ -1112,7 +1112,7 @@ export const CandidateProfile: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsAddExpModalOpen(true)}
-                  className="mt-2 text-xs font-semibold text-emerald-400 hover:underline cursor-pointer"
+                  className="mt-2 text-xs font-semibold text-blue-400 hover:underline cursor-pointer"
                 >
                   + Add Experience Record
                 </button>
@@ -1124,9 +1124,9 @@ export const CandidateProfile: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-6 sm:p-7 shadow-xl space-y-5">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2.5">
-                <GraduationCap className="w-4 h-4 text-cyan-400" />
+                <GraduationCap className="w-4 h-4 text-sky-400" />
                 <h2 className="text-base font-bold text-white">Education & Credentials</h2>
-                <span className="text-xs font-semibold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-md">
+                <span className="text-xs font-semibold text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-md">
                   {profile?.education?.length || 0}
                 </span>
               </div>
@@ -1153,7 +1153,7 @@ export const CandidateProfile: React.FC = () => {
                       <h3 className="font-bold text-white text-sm">
                         {edu.degree}{" "}
                         <span className="text-slate-400 font-normal">from</span>{" "}
-                        <span className="text-cyan-400">{edu.institution}</span>
+                        <span className="text-sky-400">{edu.institution}</span>
                       </h3>
                       <p className="text-xs text-slate-400">
                         {edu.fieldOfStudy ? `${edu.fieldOfStudy} • ` : ""}
@@ -1178,7 +1178,7 @@ export const CandidateProfile: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsAddEduModalOpen(true)}
-                  className="mt-2 text-xs font-semibold text-cyan-400 hover:underline cursor-pointer"
+                  className="mt-2 text-xs font-semibold text-sky-400 hover:underline cursor-pointer"
                 >
                   + Add Degree or University
                 </button>
@@ -1266,7 +1266,7 @@ export const CandidateProfile: React.FC = () => {
               variant="primary"
               size="sm"
               isLoading={addExperienceMutation.isPending}
-              className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold"
+              className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold"
             >
               Add Experience
             </Button>
@@ -1334,7 +1334,7 @@ export const CandidateProfile: React.FC = () => {
               variant="primary"
               size="sm"
               isLoading={addEducationMutation.isPending}
-              className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold"
+              className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold"
             >
               Add Education
             </Button>
@@ -1390,7 +1390,7 @@ export const CandidateProfile: React.FC = () => {
                     onClick={() => setResumeViewerMode("google")}
                     className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
                       resumeViewerMode === "google"
-                        ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                        ? "bg-blue-500/20 text-blue-300 font-bold"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
@@ -1401,7 +1401,7 @@ export const CandidateProfile: React.FC = () => {
                     onClick={() => setResumeViewerMode("direct")}
                     className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
                       resumeViewerMode === "direct"
-                        ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                        ? "bg-blue-500/20 text-blue-300 font-bold"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
@@ -1412,7 +1412,7 @@ export const CandidateProfile: React.FC = () => {
                     onClick={() => setResumeViewerMode("office")}
                     className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
                       resumeViewerMode === "office"
-                        ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                        ? "bg-blue-500/20 text-blue-300 font-bold"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
@@ -1427,7 +1427,7 @@ export const CandidateProfile: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => window.open(profile.resume, "_blank", "noopener,noreferrer")}
-                    className="py-2 px-3.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                    className="py-2 px-3.5 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 border border-blue-500/30 text-xs font-semibold transition-all inline-flex items-center gap-1.5 cursor-pointer"
                   >
                     <span>Open in New Tab</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -1460,13 +1460,13 @@ export const CandidateProfile: React.FC = () => {
             <div className="space-y-2">
               {/* Document Banner Notice & Quick Action */}
               <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-xs text-slate-300">
-                <span className="truncate max-w-md font-mono text-emerald-400">
+                <span className="truncate max-w-md font-mono text-blue-400">
                   {profile.resume.split("/").pop()}
                 </span>
                 <button
                   type="button"
                   onClick={() => window.open(profile.resume, "_blank", "noopener,noreferrer")}
-                  className="text-emerald-400 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                  className="text-blue-400 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   <span>Trouble viewing? Open in full tab</span>
                   <ExternalLink className="w-3 h-3" />
@@ -1521,7 +1521,7 @@ export const CandidateProfile: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => resumeInputRef.current?.click()}
-                className="text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950"
+                className="text-xs font-bold bg-blue-500 hover:bg-blue-400 text-slate-950"
               >
                 Upload Resume
               </Button>

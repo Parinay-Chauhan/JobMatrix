@@ -19,6 +19,19 @@ const RecruiterDashboard = lazy(() => import("../pages/recruiter/RecruiterDashbo
 const PostJob = lazy(() => import("../pages/recruiter/PostJob"));
 const ManageJobs = lazy(() => import("../pages/recruiter/ManageJobs"));
 const JobApplicants = lazy(() => import("../pages/recruiter/JobApplicants"));
+const PrivacyPolicy = lazy(() => import("../pages/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("../pages/TermsOfService"));
+const CookiePolicy = lazy(() => import("../pages/CookiePolicy"));
+const AboutUs = lazy(() => import("../pages/AboutUs"));
+const Careers = lazy(() => import("../pages/Careers"));
+const Contact = lazy(() => import("../pages/Contact"));
+const Press = lazy(() => import("../pages/Press"));
+const Documentation = lazy(() => import("../pages/Documentation"));
+const Blog = lazy(() => import("../pages/Blog"));
+const CareerGuide = lazy(() => import("../pages/CareerGuide"));
+const Support = lazy(() => import("../pages/Support"));
+const Pricing = lazy(() => import("../pages/Pricing"));
+const Features = lazy(() => import("../pages/Features"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 
 const Unauthorized: React.FC = () => {
@@ -83,6 +96,19 @@ export const AppRoutes: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/cookies" element={<CookiePolicy />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/careers" element={<Careers />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/press" element={<Press />} />
+        <Route path="/docs" element={<Documentation />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/career-guide" element={<CareerGuide />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/features" element={<Features />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Protected Candidate Routes */}

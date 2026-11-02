@@ -16,6 +16,60 @@ export const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Real-time validation states ("Catch mistakes as people type, not after")
+  const isFullNameTouched = fullName.length > 0;
+  const isFullNameValid = fullName.trim().length >= 2;
+  const fullNameError = isFullNameTouched && !isFullNameValid ? "Full name must be at least 2 characters." : "";
+  const fullNameSuccess = isFullNameTouched && isFullNameValid ? "Looks good!" : "";
+
+  const isUsernameTouched = username.length > 0;
+  const isUsernameValid = /^[a-z0-9_]{3,20}$/.test(username);
+  const usernameError =
+    isUsernameTouched && !isUsernameValid
+      ? username.length < 3
+        ? "Username must be at least 3 characters."
+        : "Only lowercase letters, numbers, and underscores allowed."
+      : "";
+  const usernameSuccess = isUsernameTouched && isUsernameValid ? "Looks good!" : "";
+
+  const isEmailTouched = email.length > 0;
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const emailError = isEmailTouched && !isEmailValid ? "Enter a valid email address." : "";
+  const emailSuccess = isEmailTouched && isEmailValid ? "Looks good!" : "";
+
+  // Password Strength & Requirement Criteria
+  const hasMinLength = password.length >= 8;
+  const hasNumber = /\d/.test(password);
+  const hasSymbol = /[^A-Za-z0-9]/.test(password);
+  const hasUppercase = /[A-Z]/.test(password);
+
+  const passwordRequirements = [
+    { id: "length", label: "At least 8 characters", met: hasMinLength },
+    { id: "number", label: "Includes a number", met: hasNumber },
+    { id: "symbol", label: "Includes a symbol", met: hasSymbol },
+    { id: "uppercase", label: "Includes an uppercase letter", met: hasUppercase },
+  ];
+
+  const metCount = passwordRequirements.filter((r) => r.met).length;
+
+  const getStrengthInfo = () => {
+    if (password.length === 0) {
+      return { label: "", color: "bg-slate-700/60", textColor: "text-slate-500" };
+    }
+    if (metCount <= 1) {
+      return { label: "Weak", color: "bg-rose-500", textColor: "text-rose-400" };
+    }
+    if (metCount === 2) {
+      return { label: "Fair", color: "bg-amber-500", textColor: "text-amber-400" };
+    }
+    if (metCount === 3) {
+      return { label: "Strong", color: "bg-emerald-500", textColor: "text-emerald-400" };
+    }
+    return { label: "Strong", color: "bg-emerald-500", textColor: "text-emerald-400" };
+  };
+
+  const strength = getStrengthInfo();
+
   const leftPanelRef = useRef<HTMLDivElement>(null);
   const brandingRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -39,6 +93,24 @@ export const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!isFullNameValid) {
+      setError("Please provide a valid full name (minimum 2 characters).");
+      return;
+    }
+    if (!isUsernameValid) {
+      setError("Please choose a valid username (3-20 lowercase alphanumeric characters).");
+      return;
+    }
+    if (!isEmailValid) {
+      setError("Please provide a valid email address.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -97,9 +169,9 @@ export const Register: React.FC = () => {
     <div className="min-h-screen flex bg-slate-950 relative overflow-hidden">
       {/* Background decorative ambient lights */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-emerald-600/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-teal-600/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-sky-600/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
       </div>
 
       {/* Left Panel — Branding & Highlights */}
@@ -108,21 +180,21 @@ export const Register: React.FC = () => {
           <div ref={brandingRef}>
             <Link to="/" className="inline-flex items-center group">
               <span className="text-3xl font-black tracking-tight text-white group-hover:opacity-90 transition-opacity">
-                Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
+                Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">Matrix</span>
               </span>
             </Link>
           </div>
         </div>
 
         <div className="w-full max-w-lg space-y-7">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
             Verified Opportunities
           </div>
 
           <h1 ref={headingRef} className="text-5xl xl:text-6xl font-black text-white leading-[1.12] tracking-tight">
             Join the future of{" "}
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">
               career growth
             </span>
           </h1>
@@ -134,7 +206,7 @@ export const Register: React.FC = () => {
           {/* Benefits list */}
           <div ref={perksRef} className="space-y-4 pt-2">
             <div className="flex items-center gap-3.5 text-slate-300 text-sm">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 text-blue-400">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                 </svg>
@@ -143,7 +215,7 @@ export const Register: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3.5 text-slate-300 text-sm">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 text-blue-400">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -152,7 +224,7 @@ export const Register: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3.5 text-slate-300 text-sm">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 text-blue-400">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
@@ -176,7 +248,7 @@ export const Register: React.FC = () => {
           <div className="lg:hidden mb-8 text-center">
             <Link to="/" className="inline-flex items-center group">
               <span className="text-2xl font-black tracking-tight text-white group-hover:opacity-90 transition-opacity">
-                Job<span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Matrix</span>
+                Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">Matrix</span>
               </span>
             </Link>
           </div>
@@ -217,9 +289,9 @@ export const Register: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setRole("candidate")}
-                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
                       role === "candidate"
-                        ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/25"
+                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25"
                         : "text-slate-400 hover:text-white hover:bg-slate-700/40"
                     }`}
                   >
@@ -231,9 +303,9 @@ export const Register: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setRole("recruiter")}
-                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
                       role === "recruiter"
-                        ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/25"
+                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25"
                         : "text-slate-400 hover:text-white hover:bg-slate-700/40"
                     }`}
                   >
@@ -247,6 +319,7 @@ export const Register: React.FC = () => {
 
               {/* Full Name & Username in 2 columns */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {/* Full Name */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                     Full Name <span className="text-red-400">*</span>
@@ -263,11 +336,40 @@ export const Register: React.FC = () => {
                       placeholder="John Doe"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-9 pr-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
+                      className={`w-full rounded-xl border pl-9 pr-9 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-150 focus:outline-none focus:ring-2 ${
+                        fullNameError
+                          ? "border-red-500 focus:border-red-400 focus:ring-red-500/20 bg-red-950/10"
+                          : fullNameSuccess
+                          ? "border-emerald-500 focus:border-emerald-400 focus:ring-emerald-500/20 bg-emerald-950/10"
+                          : "border-slate-700/80 bg-slate-800/50 hover:border-slate-600 focus:border-blue-500/60 focus:ring-blue-500/40"
+                      }`}
                     />
+                    {fullNameError ? (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500 animate-in fade-in zoom-in-75 duration-150">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : fullNameSuccess ? (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-emerald-500 animate-in fade-in zoom-in-75 duration-150">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : null}
                   </div>
+                  {fullNameError ? (
+                    <p className="text-[11px] text-red-400 font-medium mt-1 animate-in fade-in duration-150">
+                      {fullNameError}
+                    </p>
+                  ) : fullNameSuccess ? (
+                    <p className="text-[11px] text-emerald-400 font-medium mt-1 animate-in fade-in duration-150">
+                      {fullNameSuccess}
+                    </p>
+                  ) : null}
                 </div>
 
+                {/* Username */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                     Username <span className="text-red-400">*</span>
@@ -282,13 +384,41 @@ export const Register: React.FC = () => {
                       placeholder="johndoe"
                       value={username}
                       onChange={(e) => setUsername(e.target.value.toLowerCase().trim())}
-                      className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-8 pr-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
+                      className={`w-full rounded-xl border pl-8 pr-9 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-150 focus:outline-none focus:ring-2 ${
+                        usernameError
+                          ? "border-red-500 focus:border-red-400 focus:ring-red-500/20 bg-red-950/10"
+                          : usernameSuccess
+                          ? "border-emerald-500 focus:border-emerald-400 focus:ring-emerald-500/20 bg-emerald-950/10"
+                          : "border-slate-700/80 bg-slate-800/50 hover:border-slate-600 focus:border-blue-500/60 focus:ring-blue-500/40"
+                      }`}
                     />
+                    {usernameError ? (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500 animate-in fade-in zoom-in-75 duration-150">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : usernameSuccess ? (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-emerald-500 animate-in fade-in zoom-in-75 duration-150">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : null}
                   </div>
+                  {usernameError ? (
+                    <p className="text-[11px] text-red-400 font-medium mt-1 animate-in fade-in duration-150">
+                      {usernameError}
+                    </p>
+                  ) : usernameSuccess ? (
+                    <p className="text-[11px] text-emerald-400 font-medium mt-1 animate-in fade-in duration-150">
+                      {usernameSuccess}
+                    </p>
+                  ) : null}
                 </div>
               </div>
 
-              {/* Email Field */}
+              {/* Email Field with Real-time Validation */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                   Email Address <span className="text-red-400">*</span>
@@ -302,49 +432,124 @@ export const Register: React.FC = () => {
                   <input
                     type="email"
                     required
-                    placeholder="john@example.com"
+                    placeholder="riya@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
+                    className={`w-full rounded-xl border pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-150 focus:outline-none focus:ring-2 ${
+                      emailError
+                        ? "border-red-500 focus:border-red-400 focus:ring-red-500/20 bg-red-950/10"
+                        : emailSuccess
+                        ? "border-emerald-500 focus:border-emerald-400 focus:ring-emerald-500/20 bg-emerald-950/10"
+                        : "border-slate-700/80 bg-slate-800/50 hover:border-slate-600 focus:border-blue-500/60 focus:ring-blue-500/40"
+                    }`}
                   />
+                  {emailError ? (
+                    <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-red-500 animate-in fade-in zoom-in-75 duration-150">
+                      <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  ) : emailSuccess ? (
+                    <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-emerald-500 animate-in fade-in zoom-in-75 duration-150">
+                      <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  ) : null}
                 </div>
+                {emailError ? (
+                  <p className="text-xs text-red-400 font-medium flex items-center gap-1.5 mt-1 animate-in fade-in duration-150">
+                    <span>{emailError}</span>
+                  </p>
+                ) : emailSuccess ? (
+                  <p className="text-xs text-emerald-400 font-medium flex items-center gap-1.5 mt-1 animate-in fade-in duration-150">
+                    <span>{emailSuccess}</span>
+                  </p>
+                ) : null}
               </div>
 
-              {/* Password Field */}
-              <div className="space-y-1.5">
+              {/* Password Field with Reference Design Strength Meter */}
+              <div className="space-y-2">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  Password <span className="text-red-400">*</span>
+                  Create a password <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
                   <input
                     type={showPassword ? "text" : "password"}
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-800/50 pl-10 pr-11 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all hover:border-slate-600"
+                    className="w-full rounded-xl border border-orange-500/80 bg-slate-800/60 pl-4 pr-11 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500 hover:border-orange-400"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    title={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                       </svg>
                     ) : (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
                     )}
                   </button>
+                </div>
+
+                {/* Password Strength Meter (4 Segments + Text) */}
+                <div className="flex items-center gap-3 pt-0.5">
+                  <div className="grid grid-cols-4 gap-1.5 flex-1">
+                    {[0, 1, 2, 3].map((index) => (
+                      <div
+                        key={index}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          index < metCount ? strength.color : "bg-slate-800"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  {password.length > 0 && strength.label && (
+                    <span className={`text-xs font-bold transition-all duration-200 ${strength.textColor}`}>
+                      {strength.label}
+                    </span>
+                  )}
+                </div>
+
+                {/* Checklist criteria matching reference image */}
+                <div className="space-y-1.5 pt-1.5">
+                  {passwordRequirements.map((req) => (
+                    <div
+                      key={req.id}
+                      className="flex items-center gap-2.5 text-xs transition-colors duration-150"
+                    >
+                      {req.met ? (
+                        <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center shrink-0 animate-in zoom-in-75 duration-150">
+                          <svg
+                            className="w-2.5 h-2.5 text-white stroke-[3.5]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      ) : (
+                        <div className="w-4 h-4 rounded-full border-2 border-slate-600 shrink-0 transition-colors" />
+                      )}
+                      <span
+                        className={`transition-colors duration-150 ${
+                          req.met ? "text-slate-200 font-medium" : "text-slate-500 font-normal"
+                        }`}
+                      >
+                        {req.label}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -352,8 +557,8 @@ export const Register: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-2 py-3 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/25"
-                style={{ background: "linear-gradient(135deg, #10b981 0%, #0d9488 50%, #059669 100%)" }}
+                className="w-full mt-2 py-3 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-orange-500/25 cursor-pointer"
+                style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)" }}
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -381,7 +586,7 @@ export const Register: React.FC = () => {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                className="font-semibold text-orange-400 hover:text-orange-300 transition-colors"
               >
                 Sign in
               </Link>

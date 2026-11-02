@@ -1,9 +1,9 @@
 /* MagicBento Styles - Tailored for JobMatrix Dark Cyber Aesthetics */
 
 :root {
-  --jobmatrix-emerald: 16, 185, 129;
-  --jobmatrix-teal: 20, 184, 166;
-  --jobmatrix-cyan: 6, 182, 212;
+  --jobmatrix-blue: 37, 99, 235;
+  --jobmatrix-sky: 14, 165, 233;
+  --jobmatrix-orange: 249, 115, 22;
   --bento-bg: #0b1120;
   --bento-border: rgba(30, 41, 59, 0.8);
 }
@@ -31,7 +31,7 @@
   --glow-y: 50%;
   --glow-intensity: 0;
   --glow-radius: 280px;
-  --glow-color: 16, 185, 129;
+  --glow-color: 37, 99, 235;
 }
 
 .magic-bento-card:hover {

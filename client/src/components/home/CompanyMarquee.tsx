@@ -194,10 +194,10 @@ export const CompanyMarquee: React.FC = () => {
       <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-l from-slate-950 via-slate-950/90 to-transparent z-10 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 mb-3 sm:mb-4 text-center">
-        <p className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-emerald-400/90 flex items-center justify-center gap-3 sm:gap-4">
-          <span className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent to-emerald-500/50" />
+        <p className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-blue-400/90 flex items-center justify-center gap-3 sm:gap-4">
+          <span className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent to-blue-500/50" />
           <span>Top Tech & Service Leaders Hiring on JobMatrix</span>
-          <span className="h-px w-8 sm:w-16 bg-gradient-to-l from-transparent to-emerald-500/50" />
+          <span className="h-px w-8 sm:w-16 bg-gradient-to-l from-transparent to-blue-500/50" />
         </p>
       </div>
 
@@ -212,7 +212,7 @@ export const CompanyMarquee: React.FC = () => {
               <div className="w-6 h-6 flex items-center justify-center shrink-0">
                 {company.icon}
               </div>
-              <span className="text-base sm:text-lg font-extrabold text-slate-200 group-hover:text-emerald-300 tracking-tight transition-colors">
+              <span className="text-base sm:text-lg font-extrabold text-slate-200 group-hover:text-blue-300 tracking-tight transition-colors">
                 {company.name}
               </span>
             </div>

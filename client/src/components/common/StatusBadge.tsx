@@ -21,13 +21,13 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   switch (normalized) {
     case "accepted":
     case "shortlisted":
-      styles = "bg-emerald-500/10 text-emerald-300 border-emerald-500/30";
-      dotColor = "bg-emerald-400 shadow-xs shadow-emerald-400";
+      styles = "bg-blue-500/10 text-blue-300 border-blue-500/30";
+      dotColor = "bg-blue-400 shadow-xs shadow-blue-400";
       label = normalized === "shortlisted" ? "Shortlisted" : "Accepted";
       break;
     case "reviewed":
-      styles = "bg-cyan-500/10 text-cyan-300 border-cyan-500/30";
-      dotColor = "bg-cyan-400 shadow-xs shadow-cyan-400";
+      styles = "bg-sky-500/10 text-sky-300 border-sky-500/30";
+      dotColor = "bg-sky-400 shadow-xs shadow-sky-400";
       label = "Reviewed";
       break;
     case "rejected":
@@ -36,8 +36,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
       label = "Rejected";
       break;
     case "active":
-      styles = "bg-emerald-500/10 text-emerald-300 border-emerald-500/30";
-      dotColor = "bg-emerald-400 shadow-xs shadow-emerald-400";
+      styles = "bg-blue-500/10 text-blue-300 border-blue-500/30";
+      dotColor = "bg-blue-400 shadow-xs shadow-blue-400";
       label = "Active";
       break;
     case "closed":
