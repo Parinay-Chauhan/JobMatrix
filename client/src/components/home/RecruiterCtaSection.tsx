@@ -1,111 +1,69 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 
 export const RecruiterCtaSection: React.FC = () => {
   return (
-    <section id="hire" className="bg-gray-50 py-14 sm:py-16 px-4 sm:px-6 lg:px-8">
+    <section id="hire" className="bg-slate-950 py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/[0.08]">
       <div className="max-w-7xl mx-auto">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-blue-50 via-white to-orange-50 border border-blue-100/80 shadow-sm flex flex-col md:flex-row items-center min-h-[220px]">
-          {/* Left — Decorative Abstract Illustration */}
-          <div className="hidden md:flex items-end justify-center w-[260px] shrink-0 self-stretch pl-10 pt-6 relative">
-            <svg viewBox="0 0 220 200" className="w-full h-auto max-h-[200px] mt-auto" xmlns="http://www.w3.org/2000/svg">
-              {/* Person 1 — standing back */}
-              <ellipse cx="75" cy="196" rx="30" ry="6" fill="#d1fae5" opacity="0.7" />
-              <rect x="55" y="100" width="40" height="90" rx="6" fill="#059669" opacity="0.9" />
-              <circle cx="75" cy="88" r="22" fill="#d1fae5" />
-              <rect x="60" y="88" width="30" height="18" rx="4" fill="#059669" opacity="0.9" />
-              <circle cx="69" cy="85" r="2.5" fill="#059669" />
-              <circle cx="81" cy="85" r="2.5" fill="#059669" />
-              <path d="M70 93 Q75 97 80 93" stroke="#059669" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-              <rect x="35" y="110" width="20" height="8" rx="4" fill="#6ee7b7" transform="rotate(-15 45 114)" />
-              <rect x="95" y="112" width="20" height="8" rx="4" fill="#6ee7b7" transform="rotate(15 115 116)" />
+        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/90 via-slate-900/50 to-slate-950/90 border border-white/[0.08] p-8 sm:p-12 backdrop-blur-md shadow-2xl">
+          {/* Ambient glow */}
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-28 bg-blue-500/10 blur-3xl rounded-full pointer-events-none" />
 
-              {/* Person 2 — in front */}
-              <ellipse cx="145" cy="196" rx="28" ry="5" fill="#d1fae5" opacity="0.7" />
-              <rect x="126" y="115" width="38" height="80" rx="6" fill="#0d9488" opacity="0.95" />
-              <circle cx="145" cy="103" r="20" fill="#ccfbf1" />
-              <rect x="132" y="103" width="26" height="16" rx="4" fill="#0d9488" opacity="0.9" />
-              <circle cx="139" cy="100" r="2" fill="#0d9488" />
-              <circle cx="151" cy="100" r="2" fill="#0d9488" />
-              <path d="M140 107 Q145 111 150 107" stroke="#0d9488" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-              <rect x="106" y="124" width="20" height="7" rx="4" fill="#5eead4" transform="rotate(-10 116 127)" />
-              <rect x="163" y="126" width="20" height="7" rx="4" fill="#5eead4" transform="rotate(10 173 129)" />
-
-              {/* Floating briefcase icon */}
-              <rect x="165" y="50" width="32" height="26" rx="5" fill="#059669" opacity="0.15" />
-              <rect x="172" y="45" width="18" height="9" rx="3" fill="none" stroke="#059669" strokeWidth="2" />
-              <rect x="165" y="50" width="32" height="26" rx="5" fill="none" stroke="#059669" strokeWidth="2" opacity="0.6" />
-              <line x1="181" y1="50" x2="181" y2="76" stroke="#059669" strokeWidth="1.5" opacity="0.4" />
-
-              {/* Sparkles */}
-              <circle cx="30" cy="50" r="3" fill="#fbbf24" opacity="0.8" />
-              <circle cx="50" cy="30" r="2" fill="#059669" opacity="0.5" />
-              <circle cx="200" cy="80" r="2.5" fill="#10b981" opacity="0.7" />
-              <circle cx="190" cy="35" r="4" fill="#f59e0b" opacity="0.5" />
-            </svg>
-          </div>
-
-          {/* Right — Text & CTA */}
-          <div className="flex-1 flex flex-col items-start justify-center py-10 px-8 sm:px-10">
-            {/* Badge */}
-            <span className="inline-block text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] bg-blue-100 text-blue-900 px-3.5 py-1 rounded-full mb-4">
-              JobMatrix for Employers
-            </span>
-
-            {/* Headline */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-              Want to hire?
-            </h2>
-
-            {/* Subtext */}
-            <p className="text-gray-600 text-sm sm:text-base mt-3 mb-6 max-w-sm leading-relaxed">
-              Find the best candidate from{" "}
-              <span className="font-semibold text-blue-600">10,000+ active job seekers</span>{" "}
-              — post your first job in under 2 minutes.
-            </p>
-
-            {/* Quick Stats Row */}
-            <div className="flex flex-wrap gap-5 mb-7 text-sm">
-              <div>
-                <span className="font-extrabold text-gray-900 text-lg">10k+</span>
-                <span className="text-gray-500 ml-1.5">Active Candidates</span>
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="max-w-2xl space-y-4">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-normal">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Hiring infrastructure</span>
               </div>
-              <div className="w-px bg-gray-200" />
-              <div>
-                <span className="font-extrabold text-gray-900 text-lg">24h</span>
-                <span className="text-gray-500 ml-1.5">Avg. First Response</span>
-              </div>
-              <div className="w-px bg-gray-200" />
-              <div>
-                <span className="font-extrabold text-gray-900 text-lg">Free</span>
-                <span className="text-gray-500 ml-1.5">to Post a Job</span>
+
+              <h2 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight leading-tight">
+                Scale your engineering team with top-tier talent
+              </h2>
+
+              <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-normal">
+                Access verified developers, AI-ranked ATS candidate profiles, and direct applicant tracking without recruiter spam or commission markups.
+              </p>
+
+              {/* Quick Metrics */}
+              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.06] max-w-lg">
+                <div>
+                  <div className="text-xl sm:text-2xl font-semibold text-white font-mono tabular-nums">10,000+</div>
+                  <div className="text-xs text-slate-400 mt-0.5">Active profiles</div>
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-semibold text-blue-400 font-mono tabular-nums">&lt;24h</div>
+                  <div className="text-xs text-slate-400 mt-0.5">First response</div>
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-semibold text-emerald-400 font-mono tabular-nums">0%</div>
+                  <div className="text-xs text-slate-400 mt-0.5">Placement fee</div>
+                </div>
               </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-3">
+            {/* CTA Actions */}
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
               <Link
                 to="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-gray-900 text-gray-900 text-sm font-bold hover:bg-gray-900 hover:text-white transition-all duration-200 group"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-all duration-200 shadow-[0_0_20px_rgba(37,99,235,0.35)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] active:scale-95"
               >
-                Post a Job
-                <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                <span>Create recruiter account</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                to="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-white transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95 shadow-md shadow-orange-500/25"
-                style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)" }}
+                to="/login"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white text-sm font-normal transition-all"
               >
-                Create Recruiter Account
+                <CheckCircle2 className="w-4 h-4 text-slate-400" />
+                <span>Sign in to dashboard</span>
               </Link>
             </div>
           </div>
-
-          {/* Decorative background blobs */}
-          <div className="absolute top-0 right-0 w-56 h-56 bg-gradient-to-bl from-blue-100/60 to-transparent rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 w-40 h-40 bg-gradient-to-tr from-orange-100/50 to-transparent rounded-full blur-2xl pointer-events-none" />
         </div>
       </div>
     </section>
   );
 };
+
+export default RecruiterCtaSection;

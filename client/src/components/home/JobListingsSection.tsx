@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, X, Filter } from "lucide-react";
 import { useJobContext } from "../../context/JobContext";
 import { JobCard, JobCardSkeleton, EmptyState } from "../common";
 
@@ -10,7 +11,9 @@ export const JobListingsSection: React.FC = () => {
     searchTitle,
     setSearchTitle,
     searchLocation,
+    setSearchLocation,
     searchExperience,
+    setSearchExperience,
     clearFilters,
   } = useJobContext();
   const navigate = useNavigate();
@@ -18,26 +21,81 @@ export const JobListingsSection: React.FC = () => {
   const activeSearchQuery = searchTitle || searchLocation || searchExperience;
 
   return (
-    <div id="jobs" className="bg-gray-50 flex-1 w-full border-t border-gray-200/80">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+    <div id="jobs" className="bg-slate-950 flex-1 w-full border-t border-white/[0.08]">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 w-full">
         {/* Section Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-              Latest Job Openings
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-normal mb-3">
+              <Filter className="w-3.5 h-3.5" />
+              <span>Opportunities</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              Latest job openings
             </h2>
-            <p className="text-xs text-gray-500 mt-1">
-              Explore available opportunities posted by top companies
+            <p className="text-sm text-slate-400 mt-1">
+              Explore available opportunities posted by verified tech companies
             </p>
           </div>
 
           <Link
             to="/register"
-            className="text-sm text-orange-500 hover:text-orange-600 font-bold transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors group"
           >
-            Post a Job &rarr;
+            <span>Post a job opening</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
+
+        {/* Active Filters Bar (if any filter is applied) */}
+        {activeSearchQuery && (
+          <div className="flex flex-wrap items-center gap-2 p-3 mb-6 rounded-xl bg-slate-900/60 border border-white/[0.08] backdrop-blur-md">
+            <span className="text-xs text-slate-400 font-normal mr-1">Active filters:</span>
+            {searchTitle && (
+              <span className="inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-300">
+                <span>keyword: {searchTitle}</span>
+                <button
+                  type="button"
+                  onClick={() => setSearchTitle("")}
+                  className="hover:text-white"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {searchLocation && (
+              <span className="inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-300">
+                <span>location: {searchLocation}</span>
+                <button
+                  type="button"
+                  onClick={() => setSearchLocation("")}
+                  className="hover:text-white"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {searchExperience && (
+              <span className="inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-300">
+                <span>experience: {searchExperience}</span>
+                <button
+                  type="button"
+                  onClick={() => setSearchExperience("")}
+                  className="hover:text-white"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="text-xs text-slate-400 hover:text-slate-200 underline ml-2"
+            >
+              Reset all
+            </button>
+          </div>
+        )}
 
         {/* Loading Skeletons */}
         {loading ? (
@@ -47,7 +105,6 @@ export const JobListingsSection: React.FC = () => {
             <JobCardSkeleton />
           </div>
         ) : filteredJobs.length === 0 ? (
-          /* Empty Search State with Pattern 10 Design */
           <EmptyState
             searchQuery={activeSearchQuery || "all"}
             onApplySuggestion={(suggested) => {
@@ -56,7 +113,7 @@ export const JobListingsSection: React.FC = () => {
             onSearchAgain={() => {
               clearFilters();
               const input = document.querySelector(
-                'input[placeholder*="Job title"], input[placeholder*="Search"]'
+                'input[placeholder*="Role"], input[placeholder*="Search"]'
               ) as HTMLInputElement;
               input?.focus();
             }}
@@ -69,7 +126,7 @@ export const JobListingsSection: React.FC = () => {
               <JobCard
                 key={job._id}
                 job={job}
-                actionText="Apply Now"
+                actionText="Apply now"
                 onAction={() => navigate("/login")}
               />
             ))}
@@ -79,3 +136,5 @@ export const JobListingsSection: React.FC = () => {
     </div>
   );
 };
+
+export default JobListingsSection;

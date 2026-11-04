@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
-import { LayoutDashboard, LogIn, Sparkles } from "lucide-react";
+import { LayoutDashboard, ArrowRight } from "lucide-react";
 import { useJobContext } from "../../context/JobContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -12,13 +12,12 @@ export const FloatingHeader: React.FC = () => {
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const navActionsRef = useRef<HTMLDivElement>(null);
-  const getStartedButtonRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Header entrance animation
       gsap.from(headerRef.current, {
-        y: -20,
+        y: -16,
         opacity: 0,
         duration: 0.35,
         ease: "power2.out",
@@ -26,7 +25,6 @@ export const FloatingHeader: React.FC = () => {
 
       // Logo entrance
       gsap.from(logoRef.current, {
-        scale: 0.95,
         opacity: 0,
         duration: 0.3,
         delay: 0.05,
@@ -36,7 +34,6 @@ export const FloatingHeader: React.FC = () => {
       // Actions entrance
       if (navActionsRef.current) {
         gsap.from(navActionsRef.current, {
-          scale: 0.95,
           opacity: 0,
           duration: 0.3,
           delay: 0.1,
@@ -58,41 +55,48 @@ export const FloatingHeader: React.FC = () => {
     >
       <header
         ref={headerRef}
-        className={`pointer-events-auto flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`pointer-events-auto flex items-center justify-between transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isScrolled
-            ? "w-[88%] max-w-4xl px-5 py-2.5 rounded-full bg-slate-950/60 backdrop-blur-xl backdrop-saturate-150 border border-blue-500/20 shadow-2xl shadow-black/60 ring-1 ring-blue-500/10 text-white"
-            : "w-[92%] max-w-5xl px-6 py-3 bg-transparent border border-transparent text-white"
+            ? "w-[92%] max-w-5xl px-5 py-2.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] text-white"
+            : "w-[94%] max-w-6xl px-6 py-3.5 bg-transparent border border-transparent text-white"
         }`}
       >
         {/* Logo Section */}
         <div ref={logoRef} className="flex items-center shrink-0">
-          <Link to="/" className="flex items-center group">
-            <span className="font-black tracking-tight text-xl sm:text-2xl text-white hover:opacity-90 transition-opacity">
-              Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">Matrix</span>
+          <Link to="/" className="flex items-center gap-2 group">
+            <span className="flex h-2 w-2 rounded-full bg-blue-500 ring-2 ring-blue-500/30" />
+            <span className="font-semibold tracking-tight text-lg sm:text-xl text-white">
+              Job<span className="text-blue-400">Matrix</span>
             </span>
           </Link>
         </div>
 
         {/* Navigation Center Links */}
-        <nav className="hidden md:flex items-center space-x-7">
+        <nav className="hidden md:flex items-center space-x-7 text-sm font-normal text-slate-300">
           <a
             href="#jobs"
-            className="text-sm font-medium text-slate-300 hover:text-blue-300 transition-colors relative py-1"
+            className="hover:text-white transition-colors duration-150 py-1"
           >
-            Explore Jobs
+            Explore jobs
           </a>
           <a
             href="#companies"
-            className="text-sm font-medium text-slate-300 hover:text-blue-300 transition-colors relative py-1"
+            className="hover:text-white transition-colors duration-150 py-1"
           >
-            Top Companies
+            Top companies
+          </a>
+          <a
+            href="#pathways"
+            className="hover:text-white transition-colors duration-150 py-1"
+          >
+            Career pathways
           </a>
           <a
             href="#hire"
-            className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative py-1 flex items-center gap-1.5 group"
+            className="hover:text-white transition-colors duration-150 py-1 flex items-center gap-2 group"
           >
-            <span className="group-hover:text-blue-300 transition-colors">Hire Talent</span>
-            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/25 group-hover:bg-orange-500/25 transition-colors">
+            <span>For employers</span>
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
               Hiring
             </span>
           </a>
@@ -102,34 +106,26 @@ export const FloatingHeader: React.FC = () => {
         <div ref={navActionsRef} className="flex items-center gap-3 shrink-0">
           {user ? (
             <Link
-              ref={getStartedButtonRef}
               to={dashboardRoute}
-              className="inline-flex items-center gap-2 font-bold text-xs sm:text-sm text-white bg-blue-600 hover:bg-blue-500 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.1] px-4 py-2 rounded-lg transition-all duration-200"
             >
-              <LayoutDashboard className="w-4 h-4 text-white" />
-              <span>Go to Dashboard</span>
+              <LayoutDashboard className="w-3.5 h-3.5 text-blue-400" />
+              <span>Dashboard</span>
             </Link>
           ) : (
             <>
               <Link
                 to="/login"
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white px-3 py-2 transition-colors"
+                className="hidden sm:inline-flex items-center text-xs sm:text-sm font-normal text-slate-300 hover:text-white px-3 py-1.5 transition-colors"
               >
-                <LogIn className="w-3.5 h-3.5" />
-                <span>Sign In</span>
+                Sign in
               </Link>
               <Link
-                ref={getStartedButtonRef}
                 to="/register"
-                className="inline-flex items-center gap-1.5 font-bold text-xs sm:text-sm text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-full whitespace-nowrap active:scale-95 shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/40 hover:scale-105 transition-all duration-200"
-                style={{
-                  background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
-                  color: "#ffffff",
-                  display: "inline-flex",
-                }}
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-slate-950 bg-white hover:bg-slate-200 px-4 py-2 rounded-lg transition-all duration-200 shadow-sm"
               >
-                <Sparkles className="w-3.5 h-3.5 text-orange-100" />
-                <span>Get Started</span>
+                <span>Get started</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </>
           )}
@@ -138,3 +134,5 @@ export const FloatingHeader: React.FC = () => {
     </div>
   );
 };
+
+export default FloatingHeader;
