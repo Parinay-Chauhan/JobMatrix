@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import {
   Building2,
   User,
-  Sparkles,
   LogOut,
   CheckCircle2,
 } from "lucide-react";
@@ -60,7 +59,7 @@ export const RecruiterProfile: React.FC = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        toast.error("File Too Large", {
+        toast.error("File too large", {
           description: "Company logo must be under 2MB.",
         });
         return;
@@ -74,14 +73,13 @@ export const RecruiterProfile: React.FC = () => {
     e.preventDefault();
 
     if (!companyName.trim()) {
-      toast.error("Validation Error", {
+      toast.error("Validation error", {
         description: "Company name is required.",
       });
       return;
     }
 
     try {
-      // 1. Update text profile fields
       await updateProfileMutation.mutateAsync({
         companyName: companyName.trim(),
         designation: designation.trim(),
@@ -94,35 +92,34 @@ export const RecruiterProfile: React.FC = () => {
         industry: industry.trim(),
       });
 
-      // 2. Upload logo if selected
       if (logoFile) {
         await uploadLogoMutation.mutateAsync(logoFile);
         setLogoFile(null);
       }
 
-      toast.success("Profile Updated", {
-        description: "Your recruiter and company profile have been saved successfully.",
+      toast.success("Profile updated", {
+        description: "Your recruiter and organization profile have been saved.",
       });
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message || "Failed to update recruiter profile.";
-      toast.error("Update Failed", { description: msg });
+      toast.error("Update failed", { description: msg });
     }
   };
 
   const handleLogout = async () => {
     await logout();
-    toast.success("Logged out successfully");
+    toast.success("Signed out successfully.");
     navigate("/login");
   };
 
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
-        <Skeleton className="h-10 w-1/3" />
-        <Skeleton className="h-64 rounded-3xl" />
-        <Skeleton className="h-64 rounded-3xl" />
+        <Skeleton className="h-8 w-1/3" />
+        <Skeleton className="h-56 rounded-xl" />
+        <Skeleton className="h-56 rounded-xl" />
       </div>
     );
   }
@@ -134,35 +131,26 @@ export const RecruiterProfile: React.FC = () => {
     updateProfileMutation.isPending || uploadLogoMutation.isPending;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-12">
+    <div className="max-w-4xl mx-auto space-y-6 pb-8 animate-in fade-in duration-150">
       {/* Page Header Banner */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Employer Identity</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-          Recruiter & Company Profile
+      <div className="bg-slate-900/40 border border-slate-800/80 rounded-xl p-6 sm:p-8">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+          Recruiter & organization profile
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl">
-          Manage your personal recruiter credentials, organization branding, and public hiring profile.
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed">
+          Manage your hiring credentials, employer branding, and public organization profile.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Card 1: Personal Recruiter Identity */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6">
-          <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-            <div className="h-10 w-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-base">
-              <User className="w-5 h-5" />
-            </div>
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-xl p-6 space-y-5">
+          <div className="flex items-center gap-2.5 border-b border-slate-800/80 pb-3">
+            <User className="w-4 h-4 text-slate-400" />
             <div>
-              <h2 className="text-lg font-bold text-white">
-                Personal Recruiter Details
+              <h2 className="text-sm sm:text-base font-semibold text-white">
+                Personal recruiter details
               </h2>
-              <p className="text-xs text-slate-400">
-                Information about you as a hiring coordinator
-              </p>
             </div>
           </div>
 
@@ -178,7 +166,7 @@ export const RecruiterProfile: React.FC = () => {
               type="email"
               value={email}
               disabled
-              helperText="Official login & candidate notification email"
+              helperText="Official login and candidate notification email"
             />
           </div>
 
@@ -188,7 +176,7 @@ export const RecruiterProfile: React.FC = () => {
               placeholder="e.g. Senior Talent Partner, HR Lead"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
-              helperText="Your role within the hiring team"
+              helperText="Your role within the hiring organization"
             />
             <Input
               label="Recruiter Experience"
@@ -201,8 +189,8 @@ export const RecruiterProfile: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Phone / Contact Number"
-              placeholder="e.g. +91 98765 43210"
+              label="Phone Number"
+              placeholder="+91 98765 43210"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -215,7 +203,7 @@ export const RecruiterProfile: React.FC = () => {
 
           <Textarea
             label="Recruiter Bio"
-            placeholder="Introduce yourself and your hiring focus (e.g. Hiring top 1% Full Stack Engineers and Designers for high-growth tech teams)..."
+            placeholder="Introduce yourself and your hiring focus (e.g. Hiring high-impact engineers and product leaders for fast-growing technology teams)..."
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={3}
@@ -223,18 +211,13 @@ export const RecruiterProfile: React.FC = () => {
         </div>
 
         {/* Card 2: Company Information */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6">
-          <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-            <div className="h-10 w-10 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-base">
-              <Building2 className="w-5 h-5" />
-            </div>
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-xl p-6 space-y-5">
+          <div className="flex items-center gap-2.5 border-b border-slate-800/80 pb-3">
+            <Building2 className="w-4 h-4 text-slate-400" />
             <div>
-              <h2 className="text-lg font-bold text-white">
-                Company & Organization Details
+              <h2 className="text-sm sm:text-base font-semibold text-white">
+                Organization details
               </h2>
-              <p className="text-xs text-slate-400">
-                This information will be displayed to candidates on your job postings
-              </p>
             </div>
           </div>
 
@@ -248,7 +231,7 @@ export const RecruiterProfile: React.FC = () => {
             />
             <Input
               label="Industry"
-              placeholder="e.g. Software & Technology, Fintech, AI"
+              placeholder="e.g. Software & Technology, Fintech, Cloud"
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
             />
@@ -256,7 +239,7 @@ export const RecruiterProfile: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Headquarter / Office Location"
+              label="Headquarters / Location"
               placeholder="e.g. Bengaluru, India / Remote"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -271,20 +254,20 @@ export const RecruiterProfile: React.FC = () => {
           </div>
 
           <Textarea
-            label="Company Description / About Us"
-            placeholder="Tell candidates about your company culture, mission, team size, and what makes your workplace exciting..."
+            label="About the Organization"
+            placeholder="Describe your company culture, mission, team size, and what makes your engineering team compelling..."
             value={companyDescription}
             onChange={(e) => setCompanyDescription(e.target.value)}
             rows={4}
           />
 
           {/* Company Logo Upload */}
-          <div className="pt-4 border-t border-slate-800">
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
-              Company Logo
+          <div className="pt-3 border-t border-slate-800/80 space-y-2">
+            <label className="block text-xs font-medium text-slate-300">
+              Company logo
             </label>
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <div className="h-20 w-20 rounded-full border-2 border-dashed border-slate-700 bg-slate-950 flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="h-16 w-16 rounded-full border border-slate-800 bg-slate-950 flex items-center justify-center overflow-hidden shrink-0">
                 {logoPreview ? (
                   <img
                     src={logoPreview}
@@ -292,18 +275,18 @@ export const RecruiterProfile: React.FC = () => {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <Building2 className="w-8 h-8 text-slate-600" />
+                  <Building2 className="w-6 h-6 text-slate-600" />
                 )}
               </div>
-              <div className="flex-1 w-full space-y-2">
+              <div className="flex-1 w-full space-y-1.5">
                 <input
                   type="file"
                   accept="image/png, image/jpeg, image/webp"
                   onChange={handleLogoChange}
-                  className="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-500/15 file:text-blue-300 hover:file:bg-blue-500/25 cursor-pointer"
+                  className="block w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-slate-800 file:text-xs file:font-medium file:bg-slate-900 file:text-slate-300 hover:file:bg-slate-800 cursor-pointer"
                 />
                 <p className="text-[11px] text-slate-500">
-                  Supported formats: PNG, JPG, WEBP (Max 2MB). Transparent backgrounds recommended.
+                  Supported formats: PNG, JPG, WEBP up to 2MB. Transparent backgrounds recommended.
                 </p>
               </div>
             </div>
@@ -314,35 +297,34 @@ export const RecruiterProfile: React.FC = () => {
         <div className="flex justify-end">
           <Button
             type="submit"
-            size="lg"
             variant="primary"
             isLoading={isSaving}
-            className="w-full sm:w-auto px-8 py-3 bg-blue-500 hover:bg-blue-400 text-slate-950 text-sm font-bold shadow-lg shadow-blue-500/20"
+            className="w-full sm:w-auto px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-lg"
           >
-            <CheckCircle2 className="w-4 h-4 mr-1.5" />
-            <span>{isSaving ? "Saving Profile..." : "Save Recruiter Profile"}</span>
+            <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
+            <span>{isSaving ? "Saving..." : "Save changes"}</span>
           </Button>
         </div>
       </form>
 
-      {/* Account Session & Sign Out Card at Bottom */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8 backdrop-blur-xl shadow-2xl">
+      {/* Account Session & Sign Out Card */}
+      <div className="bg-slate-900/40 border border-slate-800/80 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-base font-bold text-white">
-            Employer Account Session
+          <h2 className="text-xs font-semibold text-white">
+            Account session
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-            Signed in as <span className="font-semibold text-blue-400">{fullName}</span> ({email})
+          <p className="text-xs text-slate-400 mt-0.5">
+            Signed in as <span className="font-medium text-slate-200">{fullName}</span> ({email})
           </p>
         </div>
         <Button
           type="button"
           variant="danger"
           onClick={handleLogout}
-          className="sm:w-auto w-full flex items-center justify-center gap-2 font-bold bg-rose-500/15 border border-rose-500/30 text-rose-300 hover:bg-rose-500/25 cursor-pointer"
+          className="sm:w-auto w-full flex items-center justify-center gap-1.5 font-medium bg-rose-500/10 border border-rose-500/20 text-rose-300 hover:bg-rose-500/20 text-xs px-3 py-1.5 rounded-lg cursor-pointer"
         >
-          <LogOut className="w-4 h-4" />
-          <span>Sign Out / Logout</span>
+          <LogOut className="w-3.5 h-3.5" />
+          <span>Sign out</span>
         </Button>
       </div>
     </div>
