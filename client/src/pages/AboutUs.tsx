@@ -155,17 +155,17 @@ export const AboutUs: React.FC = () => {
           </p>
         </div>
 
-        {/* Impact Numbers Grid with Bold Typography */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        {/* Impact Numbers Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {platformMetrics.map((item, idx) => (
             <div
               key={idx}
-              className="p-6 sm:p-7 rounded-2xl bg-slate-900/70 border border-white/[0.08] backdrop-blur-md text-center hover:border-white/[0.16] transition-all duration-200 shadow-xl"
+              className="p-4 sm:p-5 rounded-xl bg-slate-900/60 border border-white/[0.08] backdrop-blur-md text-center hover:border-white/[0.16] transition-all duration-200"
             >
-              <div className="text-3xl sm:text-5xl font-extrabold text-white font-mono tracking-tight tabular-nums">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white font-mono tracking-tight tabular-nums whitespace-nowrap">
                 {item.value}
               </div>
-              <div className="mt-2 text-xs sm:text-sm text-slate-400 font-medium">
+              <div className="mt-1.5 text-xs text-slate-400 font-normal">
                 {item.label}
               </div>
             </div>
