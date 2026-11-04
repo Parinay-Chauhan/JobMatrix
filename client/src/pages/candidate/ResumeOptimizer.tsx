@@ -159,8 +159,8 @@ export const ResumeOptimizer: React.FC = () => {
       { skills: updatedSkills },
       {
         onSuccess: () => {
-          toast.success(`Added "${skillToAdd}" to your profile skills`, {
-            description: "Your ATS Match score has increased.",
+          toast.success(`Added "${skillToAdd}" to profile skills`, {
+            description: "Your ATS match score has updated.",
           });
         },
         onError: () => {
@@ -226,19 +226,19 @@ export const ResumeOptimizer: React.FC = () => {
   const matchBand = analysis.score >= 80 ? "high" : analysis.score >= 50 ? "medium" : "low";
   const bandConfig = {
     high: {
-      text: "High Match",
+      text: "High match",
       circleClass: "text-emerald-500",
       badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
       tip: "Your profile strongly matches this job description.",
     },
     medium: {
-      text: "Moderate Match",
+      text: "Moderate match",
       circleClass: "text-amber-500",
       badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/20",
       tip: "You meet some key requirements. Add missing keywords below to improve your score.",
     },
     low: {
-      text: "Needs Improvement",
+      text: "Needs improvement",
       circleClass: "text-rose-500",
       badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/20",
       tip: "Major keyword gap. Use the add buttons below to add relevant skills.",
@@ -246,29 +246,29 @@ export const ResumeOptimizer: React.FC = () => {
   }[matchBand];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-150">
       {/* Hero Header Strip */}
-      <div className="rounded-xl bg-slate-900/60 border border-slate-800/80 p-6 sm:p-8">
+      <div className="rounded-xl bg-slate-900/40 border border-slate-800/80 p-6 sm:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
               Resume optimizer
             </h1>
-            <p className="text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
               Compare your resume against any job description, identify keyword gaps, and tailor your profile for applicant tracking systems.
             </p>
           </div>
 
           {/* Quick Resume Upload/Status Card */}
-          <div className="flex items-center gap-3.5 bg-slate-950/40 border border-slate-800/80 rounded-lg p-3.5 shrink-0">
-            <div className="w-9 h-9 rounded-md bg-slate-800/80 flex items-center justify-center text-slate-300 shrink-0">
-              <FileText className="w-4 h-4 text-slate-400" />
+          <div className="flex items-center gap-3 bg-slate-950/60 border border-slate-800/80 rounded-lg p-3 shrink-0">
+            <div className="w-8 h-8 rounded-md bg-slate-800/80 flex items-center justify-center text-slate-400 shrink-0">
+              <FileText className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs text-slate-400 font-medium block">Attached resume</span>
+              <span className="text-[11px] text-slate-400 font-medium block">Attached resume</span>
               {profile?.resume ? (
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-xs font-medium text-white truncate max-w-[140px]">
+                  <span className="text-xs font-mono text-slate-200 truncate max-w-[140px]">
                     {(profile.resume.split("/").pop() || "").replace(/^\d+[-_]?/, "")}
                   </span>
                   <button
@@ -297,33 +297,41 @@ export const ResumeOptimizer: React.FC = () => {
 
         {/* 4 Summary Stat Tiles */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800/80">
-          <div className="bg-slate-950/40 border border-slate-800/60 rounded-lg p-4">
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-lg p-4">
             <span className="text-xs text-slate-400 font-medium block">ATS readiness</span>
-            <span className="text-2xl font-semibold text-blue-400 tabular-nums mt-1 block">{overallAtsReadiness}%</span>
+            <span className="text-2xl font-semibold text-blue-400 font-mono tabular-nums mt-1 block">
+              {overallAtsReadiness}%
+            </span>
           </div>
 
-          <div className="bg-slate-950/40 border border-slate-800/60 rounded-lg p-4">
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-lg p-4">
             <span className="text-xs text-slate-400 font-medium block">Profile keywords</span>
-            <span className="text-2xl font-semibold text-white tabular-nums mt-1 block">{candidateSkills.length}</span>
+            <span className="text-2xl font-semibold text-white font-mono tabular-nums mt-1 block">
+              {candidateSkills.length}
+            </span>
           </div>
 
-          <div className="bg-slate-950/40 border border-slate-800/60 rounded-lg p-4">
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-lg p-4">
             <span className="text-xs text-slate-400 font-medium block">Active openings</span>
-            <span className="text-2xl font-semibold text-sky-400 tabular-nums mt-1 block">{jobs.length}</span>
+            <span className="text-2xl font-semibold text-slate-200 font-mono tabular-nums mt-1 block">
+              {jobs.length}
+            </span>
           </div>
 
-          <div className="bg-slate-950/40 border border-slate-800/60 rounded-lg p-4">
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-lg p-4">
             <span className="text-xs text-slate-400 font-medium block">Target match</span>
-            <span className="text-2xl font-semibold text-white tabular-nums mt-1 block">{analysis.score}%</span>
+            <span className="text-2xl font-semibold text-white font-mono tabular-nums mt-1 block">
+              {analysis.score}%
+            </span>
           </div>
         </div>
       </div>
 
       {/* 3-Step Guided Guide Card */}
       {showHowItWorks && (
-        <div className="rounded-xl bg-slate-900/60 border border-slate-800/80 p-5 sm:p-6">
+        <div className="rounded-xl bg-slate-900/40 border border-slate-800/80 p-5 sm:p-6">
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80">
-            <div className="flex items-center gap-2 text-white font-medium text-sm">
+            <div className="flex items-center gap-2 text-white font-medium text-xs sm:text-sm">
               <HelpCircle className="w-4 h-4 text-slate-400 shrink-0" />
               <span>How it works (3 steps)</span>
             </div>
@@ -337,36 +345,36 @@ export const ResumeOptimizer: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div className="bg-slate-950/40 p-4 rounded-lg border border-slate-800/60 flex items-start gap-3">
-              <span className="w-6 h-6 rounded-md bg-slate-800 text-slate-300 font-semibold text-xs flex items-center justify-center shrink-0 border border-slate-700">
+            <div className="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80 flex items-start gap-3">
+              <span className="w-5 h-5 rounded bg-slate-800 text-slate-300 font-mono font-medium text-xs flex items-center justify-center shrink-0 border border-slate-700">
                 1
               </span>
               <div>
-                <h4 className="text-sm font-medium text-white">Choose target role</h4>
+                <h4 className="text-xs font-semibold text-white">Choose target role</h4>
                 <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                   Select an active job opening from the list or paste any job description text.
                 </p>
               </div>
             </div>
 
-            <div className="bg-slate-950/40 p-4 rounded-lg border border-slate-800/60 flex items-start gap-3">
-              <span className="w-6 h-6 rounded-md bg-slate-800 text-slate-300 font-semibold text-xs flex items-center justify-center shrink-0 border border-slate-700">
+            <div className="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80 flex items-start gap-3">
+              <span className="w-5 h-5 rounded bg-slate-800 text-slate-300 font-mono font-medium text-xs flex items-center justify-center shrink-0 border border-slate-700">
                 2
               </span>
               <div>
-                <h4 className="text-sm font-medium text-white">Review keyword gaps</h4>
+                <h4 className="text-xs font-semibold text-white">Review keyword gaps</h4>
                 <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                   Inspect matched keywords and see missing skills that ATS filters scan for.
                 </p>
               </div>
             </div>
 
-            <div className="bg-slate-950/40 p-4 rounded-lg border border-slate-800/60 flex items-start gap-3">
-              <span className="w-6 h-6 rounded-md bg-slate-800 text-slate-300 font-semibold text-xs flex items-center justify-center shrink-0 border border-slate-700">
+            <div className="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80 flex items-start gap-3">
+              <span className="w-5 h-5 rounded bg-slate-800 text-slate-300 font-mono font-medium text-xs flex items-center justify-center shrink-0 border border-slate-700">
                 3
               </span>
               <div>
-                <h4 className="text-sm font-medium text-white">Add skills & copy bullets</h4>
+                <h4 className="text-xs font-semibold text-white">Add skills & copy bullets</h4>
                 <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                   Click Add to update your profile and copy role-tailored bullet points into your resume.
                 </p>
@@ -378,15 +386,13 @@ export const ResumeOptimizer: React.FC = () => {
 
       {/* Main Dual-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: Step 1 - Target Job Selector / Custom JD */}
+        {/* LEFT COLUMN: Target Job Selector / Custom JD */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-slate-900/60 rounded-xl border border-slate-800/80 p-5 sm:p-6 space-y-4">
+          <div className="bg-slate-900/40 rounded-xl border border-slate-800/80 p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-              <div>
-                <h2 className="text-base font-semibold text-white">
-                  Target position
-                </h2>
-              </div>
+              <h2 className="text-sm sm:text-base font-semibold text-white">
+                Target position
+              </h2>
 
               {/* Mode Toggle Switch */}
               <div className="inline-flex rounded-lg bg-slate-950 p-1 border border-slate-800/80">
@@ -430,7 +436,7 @@ export const ResumeOptimizer: React.FC = () => {
                       Loading available openings...
                     </div>
                   ) : filteredJobs.length === 0 ? (
-                    <div className="p-6 text-center text-slate-400 text-xs bg-slate-950/40 rounded-lg border border-slate-800/80">
+                    <div className="p-6 text-center text-slate-400 text-xs bg-slate-950/60 rounded-lg border border-slate-800/80">
                       No jobs match your search keywords.
                     </div>
                   ) : (
@@ -445,17 +451,17 @@ export const ResumeOptimizer: React.FC = () => {
                         <div
                           key={j._id}
                           onClick={() => setSelectedJobId(j._id)}
-                          className={`p-3.5 rounded-lg border transition-colors cursor-pointer ${
+                          className={`p-3 rounded-lg border transition-colors cursor-pointer ${
                             isSelected
-                              ? "bg-slate-800/70 border-blue-500/40 text-white"
-                              : "bg-slate-950/40 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/40"
+                              ? "bg-slate-800/80 border-blue-500/40 text-white"
+                              : "bg-slate-950/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/60"
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
-                            <h4 className={`text-sm font-medium line-clamp-1 ${isSelected ? "text-blue-300" : "text-white"}`}>
+                            <h4 className={`text-xs sm:text-sm font-medium line-clamp-1 ${isSelected ? "text-blue-300" : "text-white"}`}>
                               {(j.title || "").replace(/\s+\d{10,14}$/, "")}
                             </h4>
-                            <span className="text-[11px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 shrink-0 font-medium">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 shrink-0 font-medium">
                               {j.jobType || "Full-time"}
                             </span>
                           </div>
@@ -485,7 +491,7 @@ export const ResumeOptimizer: React.FC = () => {
                           key={preset.name}
                           type="button"
                           onClick={() => handleApplyPreset(preset)}
-                          className="p-2.5 rounded-lg bg-slate-950/40 hover:bg-slate-800/50 border border-slate-800/80 hover:border-slate-700 text-left transition-colors cursor-pointer group"
+                          className="p-2.5 rounded-lg bg-slate-950/60 hover:bg-slate-800/60 border border-slate-800/80 hover:border-slate-700 text-left transition-colors cursor-pointer group"
                         >
                           <div className="flex items-center gap-2 text-xs font-medium text-slate-300 group-hover:text-white">
                             <Icon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
@@ -525,13 +531,11 @@ export const ResumeOptimizer: React.FC = () => {
           </div>
 
           {/* Current Profile Skills Manager */}
-          <div className="bg-slate-900/60 rounded-xl border border-slate-800/80 p-5 sm:p-6 space-y-3">
+          <div className="bg-slate-900/40 rounded-xl border border-slate-800/80 p-5 sm:p-6 space-y-3">
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-              <div>
-                <h3 className="text-sm font-semibold text-white">
-                  Active profile skills ({candidateSkills.length})
-                </h3>
-              </div>
+              <h3 className="text-xs sm:text-sm font-semibold text-white">
+                Active profile skills (<span className="font-mono tabular-nums">{candidateSkills.length}</span>)
+              </h3>
               <Link
                 to="/candidate/profile"
                 className="text-xs font-medium text-blue-400 hover:text-blue-300 flex items-center gap-1"
@@ -545,7 +549,7 @@ export const ResumeOptimizer: React.FC = () => {
               {candidateSkills.map((sk) => (
                 <span
                   key={sk}
-                  className="px-2.5 py-1 rounded bg-slate-950/60 border border-slate-800/80 text-slate-300 text-xs font-medium"
+                  className="px-2.5 py-1 rounded-md bg-slate-950 border border-slate-800/80 text-slate-300 text-xs font-medium"
                 >
                   {sk}
                 </span>
@@ -559,17 +563,17 @@ export const ResumeOptimizer: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Step 2 & 3 - Live ATS Analysis & Optimizer */}
+        {/* RIGHT COLUMN: Live ATS Analysis & Optimizer */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="bg-slate-900/60 rounded-xl border border-slate-800/80 overflow-hidden">
+          <div className="bg-slate-900/40 rounded-xl border border-slate-800/80 overflow-hidden">
             {/* Header Strip with Score Summary */}
-            <div className="p-6 border-b border-slate-800/80 bg-slate-950/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-6 border-b border-slate-800/80 bg-slate-950/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+                <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight">
                   {(currentJob.title || "").replace(/\s+\d{10,14}$/, "")}
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-400 flex items-center gap-2 mt-1">
-                  <Building2 className="w-4 h-4 text-slate-500" />
+                <p className="text-xs text-slate-400 flex items-center gap-2 mt-1">
+                  <Building2 className="w-3.5 h-3.5 text-slate-500" />
                   <span>
                     {(typeof currentJob.recruiter === "object" ? currentJob.recruiter?.companyName : undefined) ||
                       currentJob.companyName ||
@@ -584,8 +588,8 @@ export const ResumeOptimizer: React.FC = () => {
               </div>
 
               {/* Gauge Meter */}
-              <div className="flex items-center gap-3.5 bg-slate-950/60 p-4 rounded-lg border border-slate-800/80 shrink-0">
-                <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3 bg-slate-950 p-3.5 rounded-lg border border-slate-800/80 shrink-0">
+                <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                     <path
                       className="text-slate-800"
@@ -605,14 +609,14 @@ export const ResumeOptimizer: React.FC = () => {
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span className="text-base font-semibold text-white tabular-nums">{analysis.score}%</span>
+                    <span className="text-sm font-semibold text-white font-mono tabular-nums">{analysis.score}%</span>
                   </div>
                 </div>
                 <div>
-                  <span className={`px-2.5 py-0.5 rounded text-xs font-medium border ${bandConfig.badgeClass} block text-center`}>
+                  <span className={`px-2 py-0.5 rounded text-[11px] font-medium border ${bandConfig.badgeClass} block text-center`}>
                     {bandConfig.text}
                   </span>
-                  <span className="text-xs text-slate-400 mt-1 block font-medium tabular-nums">
+                  <span className="text-[11px] text-slate-400 mt-1 block font-mono tabular-nums">
                     {analysis.matchedSkills.length} of {analysis.allRequiredSkills.length} skills matched
                   </span>
                 </div>
@@ -620,18 +624,18 @@ export const ResumeOptimizer: React.FC = () => {
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex items-center gap-2 p-3 sm:p-4 border-b border-slate-800/80 bg-slate-950/30 overflow-x-auto">
+            <div className="flex items-center gap-2 p-3 sm:p-4 border-b border-slate-800/80 bg-slate-950/20 overflow-x-auto">
               <button
                 type="button"
                 onClick={() => setActiveTab("skills")}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "skills"
                     ? "bg-slate-800 text-white border border-slate-700"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
                 <span>Skills breakdown</span>
-                <span className="px-1.5 py-0.2 rounded bg-slate-850 text-[11px] font-medium text-slate-300 tabular-nums">
+                <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-[10px] font-mono tabular-nums text-slate-300">
                   {analysis.allRequiredSkills.length}
                 </span>
               </button>
@@ -639,14 +643,14 @@ export const ResumeOptimizer: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("bullets")}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "bullets"
                     ? "bg-slate-800 text-white border border-slate-700"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
                 <span>Tailored resume bullets</span>
-                <span className="px-1.5 py-0.2 rounded bg-slate-850 text-[11px] font-medium text-slate-300 tabular-nums">
+                <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-[10px] font-mono tabular-nums text-slate-300">
                   {analysis.suggestedBullets.length}
                 </span>
               </button>
@@ -654,25 +658,25 @@ export const ResumeOptimizer: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("checklist")}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   activeTab === "checklist"
                     ? "bg-slate-800 text-white border border-slate-700"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
                 <span>ATS checklist</span>
-                <span className="px-1.5 py-0.2 rounded bg-slate-850 text-[11px] font-medium text-slate-300 tabular-nums">
+                <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-[10px] font-mono tabular-nums text-slate-300">
                   {analysis.formattingTips.length}
                 </span>
               </button>
             </div>
 
             {/* Tab Content */}
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-5">
               {activeTab === "skills" && (
-                <div className="space-y-5">
+                <div className="space-y-4">
                   {/* Diagnostic Advice */}
-                  <div className="p-4 rounded-lg bg-slate-950/40 border border-slate-800/80 text-xs text-slate-300 leading-relaxed">
+                  <div className="p-3.5 rounded-lg bg-slate-950/60 border border-slate-800/80 text-xs text-slate-300 leading-relaxed">
                     <p className="font-semibold text-blue-400 mb-0.5">Recommendation</p>
                     {analysis.keywordDensityAdvice}
                   </div>
@@ -682,12 +686,12 @@ export const ResumeOptimizer: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-medium text-amber-300 flex items-center gap-1.5">
                         <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-                        <span>Missing keywords ({analysis.missingSkills.length})</span>
+                        <span>Missing keywords (<span className="font-mono tabular-nums">{analysis.missingSkills.length}</span>)</span>
                       </h4>
                       <span className="text-xs text-amber-400/80">Click + Add to update your profile</span>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 pt-1">
+                    <div className="flex flex-wrap gap-1.5 pt-1">
                       {analysis.missingSkills.map((sk) => (
                         <button
                           key={sk}
@@ -696,7 +700,7 @@ export const ResumeOptimizer: React.FC = () => {
                           className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 border border-amber-500/30 text-amber-200 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
                           title={`Add ${sk} to profile`}
                         >
-                          <Plus className="w-3.5 h-3.5 text-amber-400" />
+                          <Plus className="w-3 h-3 text-amber-400" />
                           <span>{sk}</span>
                         </button>
                       ))}
@@ -710,16 +714,16 @@ export const ResumeOptimizer: React.FC = () => {
                   </div>
 
                   {/* Matched Skills */}
-                  <div className="space-y-3 bg-slate-950/40 border border-slate-800/80 rounded-xl p-4">
+                  <div className="space-y-3 bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Matching skills ({analysis.matchedSkills.length})</span>
+                        <span>Matching skills (<span className="font-mono tabular-nums">{analysis.matchedSkills.length}</span>)</span>
                       </h4>
                       <span className="text-xs text-slate-500">Passed ATS scan</span>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 pt-1">
+                    <div className="flex flex-wrap gap-1.5 pt-1">
                       {analysis.matchedSkills.map((sk) => (
                         <span
                           key={sk}
@@ -741,15 +745,15 @@ export const ResumeOptimizer: React.FC = () => {
 
               {activeTab === "bullets" && (
                 <div className="space-y-4">
-                  <div className="p-3.5 bg-slate-950/40 border border-slate-800/80 rounded-lg text-xs text-slate-300">
+                  <div className="p-3 bg-slate-950/60 border border-slate-800/80 rounded-lg text-xs text-slate-300">
                     Copy these bullet points directly into your resume under relevant experience entries:
                   </div>
 
-                  <div className="space-y-2.5">
+                  <div className="space-y-2">
                     {analysis.suggestedBullets.map((bullet, idx) => (
                       <div
                         key={idx}
-                        className="p-4 rounded-lg bg-slate-950/40 border border-slate-800/80 hover:border-slate-700/80 flex items-start justify-between gap-3 transition-colors"
+                        className="p-3.5 rounded-lg bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/80 flex items-start justify-between gap-3 transition-colors"
                       >
                         <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
                           &bull; {bullet}
@@ -757,7 +761,7 @@ export const ResumeOptimizer: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleCopyBullet(bullet, idx)}
-                          className="p-2 rounded-md bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors shrink-0 cursor-pointer"
+                          className="p-1.5 rounded-md bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors shrink-0 cursor-pointer"
                           title="Copy bullet point"
                         >
                           {copiedIndex === idx ? (
@@ -773,13 +777,13 @@ export const ResumeOptimizer: React.FC = () => {
               )}
 
               {activeTab === "checklist" && (
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   {analysis.formattingTips.map((tip, idx) => (
                     <div
                       key={idx}
-                      className={`p-4 rounded-lg border flex items-start gap-3 ${
+                      className={`p-3.5 rounded-lg border flex items-start gap-3 ${
                         tip.passed
-                          ? "bg-slate-950/40 border-slate-800/80"
+                          ? "bg-slate-950/60 border-slate-800/80"
                           : "bg-amber-500/5 border-amber-500/20"
                       }`}
                     >
@@ -793,7 +797,7 @@ export const ResumeOptimizer: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-2">
                           <h5 className="text-xs font-medium text-white">{tip.title}</h5>
-                          <span className={`text-[10px] font-medium px-1.5 py-0.2 rounded ${tip.passed ? "bg-slate-800 text-emerald-400 border border-slate-700" : "bg-amber-500/10 text-amber-300 border border-amber-500/20"}`}>
+                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${tip.passed ? "bg-slate-800 text-emerald-400 border border-slate-700" : "bg-amber-500/10 text-amber-300 border border-amber-500/20"}`}>
                             {tip.passed ? "Optimized" : "Action needed"}
                           </span>
                         </div>
@@ -815,7 +819,7 @@ export const ResumeOptimizer: React.FC = () => {
         <Modal
           isOpen={isResumeModalOpen}
           onClose={() => setIsResumeModalOpen(false)}
-          title="Attached Resume Document"
+          title="Attached resume document"
           size="xl"
         >
           <div className="space-y-4">
