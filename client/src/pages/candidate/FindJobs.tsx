@@ -1,13 +1,9 @@
 import React, { useState, useMemo } from "react";
 import { toast } from "sonner";
 import {
-  Briefcase,
-  Globe,
-  Layers,
   Search,
   X,
   Filter,
-  CheckCircle2,
 } from "lucide-react";
 import type { Job } from "../../types";
 import { useJobsQuery, useMyApplicationsQuery, useApplyJobMutation } from "../../hooks/queries";
@@ -24,7 +20,6 @@ import { ATSAnalyzerModal } from "../../components/candidate";
 const PAGE_SIZE = 20;
 
 export const FindJobs: React.FC = () => {
-
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -49,8 +44,8 @@ export const FindJobs: React.FC = () => {
   const handleApply = (jobId: string) => {
     applyMutation.mutate(jobId, {
       onSuccess: () => {
-        toast.success("Application submitted successfully.", {
-          description: "You can track status updates in 'My Applications'.",
+        toast.success("Application submitted successfully", {
+          description: "Track status updates in My Applications.",
         });
       },
       onError: (err: unknown) => {
@@ -60,7 +55,7 @@ export const FindJobs: React.FC = () => {
           errResponse?.data?.error ||
           "Failed to apply for this job.";
 
-        toast.error("Application Failed", {
+        toast.error("Application failed", {
           description: errorMsg,
         });
       },
@@ -131,71 +126,46 @@ export const FindJobs: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-200">
+    <div className="space-y-6 animate-in fade-in duration-150">
       {/* Header & Metric Strip */}
-      <div className="relative overflow-hidden rounded-2xl bg-slate-900/90 border border-slate-800/90 p-6 sm:p-8 shadow-xl">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
-              <span>Career Directory</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Explore Available Positions
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
-              Browse verified engineering, design, and product roles with transparent compensation and direct team evaluation.
-            </p>
-          </div>
+      <div className="rounded-xl bg-slate-900/40 border border-slate-800/80 p-6 sm:p-8">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+            Explore positions
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
+            Verified engineering, design, and product roles with transparent requirements and direct team evaluation.
+          </p>
         </div>
 
-        {/* 4 Metric Stat Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mt-7 pt-6 border-t border-slate-800">
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
-              <Briefcase className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[11px] text-slate-400 font-medium block">Total Openings</span>
-              <span className="text-base sm:text-lg font-bold text-white">{jobs.length}</span>
-            </div>
+        {/* 4 Quiet Metric Stat Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800/80">
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-lg p-4">
+            <span className="text-xs text-slate-400 font-medium block">Total openings</span>
+            <span className="text-2xl font-semibold text-white font-mono tabular-nums mt-1 block">{jobs.length}</span>
           </div>
 
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[11px] text-slate-400 font-medium block">Applied Roles</span>
-              <span className="text-base sm:text-lg font-bold text-blue-400">{appliedJobIds.length}</span>
-            </div>
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-lg p-4">
+            <span className="text-xs text-slate-400 font-medium block">Applied roles</span>
+            <span className="text-2xl font-semibold text-blue-400 font-mono tabular-nums mt-1 block">{appliedJobIds.length}</span>
           </div>
 
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
-              <Globe className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[11px] text-slate-400 font-medium block">Remote Roles</span>
-              <span className="text-base sm:text-lg font-bold text-sky-300">{remoteCount}</span>
-            </div>
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-lg p-4">
+            <span className="text-xs text-slate-400 font-medium block">Remote roles</span>
+            <span className="text-2xl font-semibold text-slate-200 font-mono tabular-nums mt-1 block">{remoteCount}</span>
           </div>
 
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
-              <Layers className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[11px] text-slate-400 font-medium block">Job Domains</span>
-              <span className="text-base sm:text-lg font-bold text-white">{categories.length || 0}</span>
-            </div>
+          <div className="bg-slate-950/60 border border-slate-800/80 rounded-lg p-4">
+            <span className="text-xs text-slate-400 font-medium block">Job domains</span>
+            <span className="text-2xl font-semibold text-slate-200 font-mono tabular-nums mt-1 block">{categories.length || 0}</span>
           </div>
         </div>
       </div>
 
       {/* Filter Bar & Category Chips */}
-      <div id="search-bar" className="bg-slate-900/90 rounded-2xl border border-slate-800/90 p-5 sm:p-6 shadow-xl space-y-4">
+      <div id="search-bar" className="bg-slate-900/40 rounded-xl border border-slate-800/80 p-5 sm:p-6 space-y-4">
         {/* Search & Main Selects */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <Input
               placeholder="Search by title, technology, company, or location..."
@@ -209,10 +179,10 @@ export const FindJobs: React.FC = () => {
                 searchTerm ? (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="hover:text-white transition-colors cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 p-1 rounded"
+                    className="hover:text-white transition-colors cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 p-1 rounded-md"
                     title="Clear search"
                   >
-                    <X className="w-3 h-3 text-slate-400" />
+                    <X className="w-3.5 h-3.5 text-slate-400" />
                   </button>
                 ) : undefined
               }
@@ -226,7 +196,7 @@ export const FindJobs: React.FC = () => {
               setCurrentPage(1);
             }}
             options={[
-              { value: "", label: "All Domains" },
+              { value: "", label: "All domains" },
               ...categories.map((cat) => ({ value: cat, label: cat })),
             ]}
           />
@@ -238,7 +208,7 @@ export const FindJobs: React.FC = () => {
               setCurrentPage(1);
             }}
             options={[
-              { value: "", label: "All Employment Types" },
+              { value: "", label: "All employment types" },
               { value: "Full-time", label: "Full-time" },
               { value: "Part-time", label: "Part-time" },
               { value: "Contract", label: "Contract" },
@@ -249,11 +219,11 @@ export const FindJobs: React.FC = () => {
         </div>
 
         {/* Quick Filter Chips & Reset Action */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mr-1 flex items-center gap-1">
-              <Filter className="w-3 h-3" />
-              <span>Quick Filters:</span>
+            <span className="text-xs text-slate-400 font-medium mr-1 flex items-center gap-1.5">
+              <Filter className="w-3.5 h-3.5 text-slate-500" />
+              <span>Filters:</span>
             </span>
             <button
               onClick={() => {
@@ -262,36 +232,36 @@ export const FindJobs: React.FC = () => {
                 setSelectedCategory("");
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 !selectedWorkMode && !selectedJobType && !selectedCategory
-                  ? "bg-blue-500 text-slate-950 font-bold"
-                  : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
+                  ? "bg-slate-800 text-white border border-slate-700"
+                  : "bg-slate-950/60 text-slate-400 border border-slate-800/80 hover:text-white hover:bg-slate-800/50"
               }`}
             >
-              All Roles
+              All roles
             </button>
             <button
               onClick={() => {
                 setSelectedWorkMode("Remote");
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 selectedWorkMode === "Remote"
-                  ? "bg-blue-500 text-slate-950 font-bold"
-                  : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
+                  ? "bg-slate-800 text-white border border-slate-700"
+                  : "bg-slate-950/60 text-slate-400 border border-slate-800/80 hover:text-white hover:bg-slate-800/50"
               }`}
             >
-              Remote Only
+              Remote only
             </button>
             <button
               onClick={() => {
                 setSelectedJobType("Full-time");
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 selectedJobType === "Full-time"
-                  ? "bg-blue-500 text-slate-950 font-bold"
-                  : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
+                  ? "bg-slate-800 text-white border border-slate-700"
+                  : "bg-slate-950/60 text-slate-400 border border-slate-800/80 hover:text-white hover:bg-slate-800/50"
               }`}
             >
               Full-time
@@ -301,10 +271,10 @@ export const FindJobs: React.FC = () => {
                 setSelectedJobType("Internship");
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 selectedJobType === "Internship"
-                  ? "bg-blue-500 text-slate-950 font-bold"
-                  : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
+                  ? "bg-slate-800 text-white border border-slate-700"
+                  : "bg-slate-950/60 text-slate-400 border border-slate-800/80 hover:text-white hover:bg-slate-800/50"
               }`}
             >
               Internships
@@ -314,28 +284,28 @@ export const FindJobs: React.FC = () => {
           {activeFiltersCount > 0 && (
             <button
               onClick={handleResetFilters}
-              className="text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors flex items-center gap-1.5 cursor-pointer py-1 px-2.5 rounded-lg hover:bg-rose-500/10"
+              className="text-xs font-medium text-rose-400 hover:text-rose-300 transition-colors flex items-center gap-1.5 cursor-pointer py-1 px-2.5 rounded-lg hover:bg-rose-500/10"
             >
               <X className="w-3.5 h-3.5" />
-              <span>Reset Filters ({activeFiltersCount})</span>
+              <span>Reset filters (<span className="font-mono tabular-nums">{activeFiltersCount}</span>)</span>
             </button>
           )}
         </div>
       </div>
 
       {/* Results Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight flex items-center gap-2.5">
-          <span>Active Opportunities</span>
-          <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400">
+      <div className="flex items-center justify-between pt-1">
+        <h2 className="text-sm sm:text-base font-semibold text-white tracking-tight flex items-center gap-2">
+          <span>Active opportunities</span>
+          <span className="text-xs font-mono tabular-nums font-medium px-2 py-0.5 rounded-md bg-slate-800/80 border border-slate-700/80 text-slate-300">
             {filteredJobs.length}
           </span>
         </h2>
 
         {filteredJobs.length > 0 && (
           <p className="text-xs text-slate-400">
-            Showing page <span className="font-semibold text-white">{currentPage}</span> of{" "}
-            <span className="font-semibold text-white">{totalPages}</span>
+            Page <span className="font-mono tabular-nums font-medium text-white">{currentPage}</span> of{" "}
+            <span className="font-mono tabular-nums font-medium text-white">{totalPages}</span>
           </p>
         )}
       </div>
@@ -362,7 +332,7 @@ export const FindJobs: React.FC = () => {
           onBrowsePopular={handleResetFilters}
         />
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedJobs.map((job) => {
               const isApplied = appliedJobIds.includes(job._id);
@@ -392,7 +362,7 @@ export const FindJobs: React.FC = () => {
         </div>
       )}
 
-      {/* Interactive AI ATS Resume Optimizer Modal */}
+      {/* ATS Match Analyzer Modal */}
       <ATSAnalyzerModal
         job={selectedAtsJob}
         isOpen={Boolean(selectedAtsJob)}

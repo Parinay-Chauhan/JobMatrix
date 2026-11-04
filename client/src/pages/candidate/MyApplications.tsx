@@ -6,10 +6,6 @@ import {
   Calendar,
   AlertCircle,
   Building2,
-  FileCheck,
-  Clock,
-  CheckCircle2,
-  XCircle,
 } from "lucide-react";
 import { useMyApplicationsQuery } from "../../hooks/queries";
 import { Skeleton, EmptyState, Button, Pagination } from "../../components/common";
@@ -48,19 +44,16 @@ export const MyApplications: React.FC = () => {
   }, [applications]);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-200">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* Header & Stats Strip */}
-      <div className="relative overflow-hidden rounded-2xl bg-slate-900/90 border border-slate-800/90 p-6 sm:p-8 shadow-xl">
+      <div className="rounded-xl bg-slate-900/60 border border-slate-800/80 p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
-              <span>Application Status Tracker</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              My Applications
+            <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              My applications
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
-              Track live recruiter decisions, review progress, and status logs across all submitted roles.
+            <p className="text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
+              Track live review decisions and status updates across your submitted applications.
             </p>
           </div>
 
@@ -68,59 +61,39 @@ export const MyApplications: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
-              className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-medium"
             >
-              + Browse Open Positions
+              Browse positions
             </Button>
           </Link>
         </div>
 
-        {/* 4 Application Status Counters */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 mt-7 pt-6 border-t border-slate-800">
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300 shrink-0">
-              <FileCheck className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[11px] text-slate-400 font-medium block">Total Submitted</span>
-              <span className="text-lg font-bold text-white">{stats.total}</span>
-            </div>
+        {/* 4 Quiet Application Status Counters */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800/80">
+          <div className="bg-slate-950/40 border border-slate-800/60 rounded-lg p-4">
+            <span className="text-xs text-slate-400 font-medium block">Total submitted</span>
+            <span className="text-2xl font-semibold text-white tabular-nums mt-1 block">{stats.total}</span>
           </div>
 
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
-              <Clock className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[11px] text-slate-400 font-medium block">Under Review</span>
-              <span className="text-lg font-bold text-amber-400">{stats.pending}</span>
-            </div>
+          <div className="bg-slate-950/40 border border-slate-800/60 rounded-lg p-4">
+            <span className="text-xs text-slate-400 font-medium block">Under review</span>
+            <span className="text-2xl font-semibold text-amber-400 tabular-nums mt-1 block">{stats.pending}</span>
           </div>
 
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[11px] text-slate-400 font-medium block">Shortlisted / Offered</span>
-              <span className="text-lg font-bold text-blue-400">{stats.shortlisted}</span>
-            </div>
+          <div className="bg-slate-950/40 border border-slate-800/60 rounded-lg p-4">
+            <span className="text-xs text-slate-400 font-medium block">Shortlisted</span>
+            <span className="text-2xl font-semibold text-blue-400 tabular-nums mt-1 block">{stats.shortlisted}</span>
           </div>
 
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-              <XCircle className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[11px] text-slate-400 font-medium block">Archived / Closed</span>
-              <span className="text-lg font-bold text-slate-400">{stats.rejected}</span>
-            </div>
+          <div className="bg-slate-950/40 border border-slate-800/60 rounded-lg p-4">
+            <span className="text-xs text-slate-400 font-medium block">Archived</span>
+            <span className="text-2xl font-semibold text-slate-400 tabular-nums mt-1 block">{stats.rejected}</span>
           </div>
         </div>
       </div>
 
       {errorMessage && (
-        <div className="p-4 rounded-xl text-sm font-semibold border bg-rose-500/10 border-rose-500/30 text-rose-300 flex items-center gap-2.5">
+        <div className="p-4 rounded-lg text-sm border bg-rose-500/10 border-rose-500/20 text-rose-300 flex items-center gap-2.5">
           <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
           <span>{errorMessage}</span>
         </div>
@@ -128,16 +101,16 @@ export const MyApplications: React.FC = () => {
 
       {loading ? (
         <div className="space-y-4">
-          <div className="p-6 bg-slate-900/80 rounded-2xl border border-slate-800 space-y-3">
-            <Skeleton className="h-6 w-1/3" />
+          <div className="p-6 bg-slate-900/60 rounded-xl border border-slate-800/80 space-y-3">
+            <Skeleton className="h-5 w-1/3" />
             <Skeleton className="h-4 w-1/2" />
           </div>
-          <div className="p-6 bg-slate-900/80 rounded-2xl border border-slate-800 space-y-3">
-            <Skeleton className="h-6 w-1/4" />
+          <div className="p-6 bg-slate-900/60 rounded-xl border border-slate-800/80 space-y-3">
+            <Skeleton className="h-5 w-1/4" />
             <Skeleton className="h-4 w-2/3" />
           </div>
-          <div className="p-6 bg-slate-900/80 rounded-2xl border border-slate-800 space-y-3">
-            <Skeleton className="h-6 w-1/3" />
+          <div className="p-6 bg-slate-900/60 rounded-xl border border-slate-800/80 space-y-3">
+            <Skeleton className="h-5 w-1/3" />
             <Skeleton className="h-4 w-1/2" />
           </div>
         </div>
@@ -149,15 +122,15 @@ export const MyApplications: React.FC = () => {
             <Link to="/candidate/find-jobs">
               <Button
                 variant="primary"
-                className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold"
+                className="bg-blue-600 hover:bg-blue-500 text-white font-medium"
               >
-                Explore Active Positions
+                Explore positions
               </Button>
             </Link>
           }
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {paginatedApps.map((app) => {
             const job = typeof app.job === "object" ? app.job : null;
             const title = (job?.title || "Position Title Unavailable").replace(/\s+\d{10,14}$/, "");
@@ -171,26 +144,26 @@ export const MyApplications: React.FC = () => {
             return (
               <div
                 key={app._id}
-                className="bg-slate-900/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 rounded-2xl p-5 sm:p-6 shadow-xl transition-all duration-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group"
+                className="bg-slate-900/60 hover:bg-slate-900/90 border border-slate-800/80 hover:border-slate-700/80 rounded-xl p-5 transition-colors duration-150 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group"
               >
                 <div className="space-y-1.5">
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-blue-300 transition-colors">
+                  <h3 className="text-base font-semibold text-white group-hover:text-blue-300 transition-colors">
                     {title}
                   </h3>
-                  <p className="text-xs font-semibold text-blue-400 flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5" />
+                  <p className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-slate-500" />
                     <span>{companyName}</span>
                   </p>
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 pt-1.5">
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-slate-950 border border-slate-800 px-2 py-0.5 text-slate-300">
-                      <MapPin className="w-3 h-3 text-slate-400" />
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 pt-1">
+                    <span className="inline-flex items-center gap-1 rounded bg-slate-950/60 border border-slate-800/80 px-2 py-0.5 text-slate-300">
+                      <MapPin className="w-3 h-3 text-slate-500" />
                       <span>{location}</span>
                     </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-slate-950 border border-slate-800 px-2 py-0.5 text-slate-300">
-                      <Briefcase className="w-3 h-3 text-slate-400" />
+                    <span className="inline-flex items-center gap-1 rounded bg-slate-950/60 border border-slate-800/80 px-2 py-0.5 text-slate-300">
+                      <Briefcase className="w-3 h-3 text-slate-500" />
                       <span>{jobType}</span>
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-slate-400">
+                    <span className="inline-flex items-center gap-1 text-slate-500 ml-1">
                       <Calendar className="w-3 h-3 text-slate-500" />
                       <span>Applied {new Date(app.createdAt).toLocaleDateString()}</span>
                     </span>
@@ -205,13 +178,15 @@ export const MyApplications: React.FC = () => {
           })}
 
           {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              totalItems={applications.length}
-              pageSize={PAGE_SIZE}
-            />
+            <div className="pt-2">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={applications.length}
+                pageSize={PAGE_SIZE}
+              />
+            </div>
           )}
         </div>
       )}
