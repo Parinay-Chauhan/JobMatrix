@@ -4,40 +4,40 @@ import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 
 export const RecruiterCtaSection: React.FC = () => {
   return (
-    <section id="hire" className="bg-slate-950 py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/[0.08]">
+    <section id="hire" className="bg-slate-950 py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/10">
       <div className="max-w-7xl mx-auto">
-        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/90 via-slate-900/50 to-slate-950/90 border border-white/[0.08] p-8 sm:p-12 backdrop-blur-md shadow-2xl">
+        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/90 via-slate-900/50 to-slate-950/90 border border-white/10 p-8 sm:p-12 backdrop-blur-md shadow-2xl">
           {/* Ambient glow */}
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-28 bg-blue-500/10 blur-3xl rounded-full pointer-events-none" />
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="max-w-2xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-normal">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Hiring infrastructure</span>
               </div>
 
-              <h2 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight leading-tight">
+              <h2 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight leading-tight">
                 Scale your engineering team with top-tier talent
               </h2>
 
-              <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-normal">
+              <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-normal">
                 Access verified developers, AI-ranked ATS candidate profiles, and direct applicant tracking without recruiter spam or commission markups.
               </p>
 
               {/* Quick Metrics */}
-              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.06] max-w-lg">
+              <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/10 max-w-lg">
                 <div>
-                  <div className="text-xl sm:text-2xl font-semibold text-white font-mono tabular-nums">10,000+</div>
-                  <div className="text-xs text-slate-400 mt-0.5">Active profiles</div>
+                  <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">10,000+</div>
+                  <div className="text-sm text-zinc-400 mt-1 font-normal">Active profiles</div>
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-semibold text-blue-400 font-mono tabular-nums">&lt;24h</div>
-                  <div className="text-xs text-slate-400 mt-0.5">First response</div>
+                  <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">&lt; 24h</div>
+                  <div className="text-sm text-zinc-400 mt-1 font-normal">First response</div>
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-semibold text-emerald-400 font-mono tabular-nums">0%</div>
-                  <div className="text-xs text-slate-400 mt-0.5">Placement fee</div>
+                  <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">0%</div>
+                  <div className="text-sm text-zinc-400 mt-1 font-normal">Placement fee</div>
                 </div>
               </div>
             </div>
@@ -53,7 +53,7 @@ export const RecruiterCtaSection: React.FC = () => {
               </Link>
               <Link
                 to="/login"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white text-sm font-normal transition-all"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white text-sm font-normal transition-all"
               >
                 <CheckCircle2 className="w-4 h-4 text-slate-400" />
                 <span>Sign in to dashboard</span>

@@ -4,6 +4,7 @@ import {
   FloatingHeader,
   HeroSection,
   CompanyMarquee,
+  StatsSection,
   PopularSearches,
   ExperienceTimeline,
   JobListingsSection,
@@ -14,8 +15,8 @@ import {
 
 /**
  * Home Page - Main landing page orchestrator
- * Designed with high-end Vercel/Linear dark SaaS aesthetic, clean section hierarchy,
- * modern skill tags, and experience timeline pathway cards.
+ * Designed with a high-end Vercel/Linear dark SaaS aesthetic, clean natural section hierarchy,
+ * refined stats metrics, and airy experience pathway cards.
  */
 export const Home: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ export const Home: React.FC = () => {
         <FloatingHeader />
         <HeroSection />
         <CompanyMarquee />
+        <StatsSection />
         <PopularSearches />
         <ExperienceTimeline />
         <JobListingsSection />

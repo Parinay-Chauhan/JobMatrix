@@ -137,7 +137,7 @@ export const HeroSection: React.FC = () => {
         {/* Subtitle */}
         <p
           ref={heroSubtitleRef}
-          className="mt-5 text-slate-400 text-base sm:text-lg md:text-xl max-w-2xl font-normal leading-relaxed"
+          className="mt-5 text-zinc-400 text-base sm:text-lg md:text-xl max-w-2xl font-normal leading-relaxed"
         >
           Direct connection between ambitious engineers, designers, and high-growth teams. Transparent compensation and verified openings.
         </p>

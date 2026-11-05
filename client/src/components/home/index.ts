@@ -1,6 +1,7 @@
 export { FloatingHeader } from "./FloatingHeader";
 export { HeroSection } from "./HeroSection";
 export { CompanyMarquee } from "./CompanyMarquee";
+export { StatsSection } from "./StatsSection";
 export { PopularSearches } from "./PopularSearches";
 export { ExperienceTimeline } from "./ExperienceTimeline";
 export { JobListingsSection } from "./JobListingsSection";
