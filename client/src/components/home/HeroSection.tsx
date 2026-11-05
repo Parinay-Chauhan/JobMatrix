@@ -110,7 +110,7 @@ export const HeroSection: React.FC = React.memo(() => {
   };
 
   return (
-    <div className="relative pt-28 sm:pt-36 pb-12 sm:pb-16 flex flex-col justify-between overflow-hidden bg-slate-950 font-sans">
+    <div className="relative min-h-[96vh] lg:min-h-screen pt-28 sm:pt-36 pb-16 sm:pb-24 flex flex-col justify-center items-center overflow-hidden bg-slate-950 font-sans">
       {/* Background Decorative Ambient Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[750px] h-[340px] bg-blue-500/15 blur-[130px] pointer-events-none rounded-full" />
       <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-40" />
