@@ -126,10 +126,10 @@ export const HeroSection: React.FC = () => {
           <span>Verified tech hiring network with real-time roles</span>
         </div>
 
-        {/* Main Hero Headline: Bold, prominent Display Scale */}
+        {/* Main Hero Headline */}
         <h1
           ref={heroTitleRef}
-          className="text-5xl sm:text-7xl md:text-8xl font-extrabold text-white tracking-tight leading-[1.05] max-w-5xl"
+          className="text-3xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.12] max-w-4xl"
         >
           Find your next role or hire{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400">
@@ -140,7 +140,7 @@ export const HeroSection: React.FC = () => {
         {/* Subtitle */}
         <p
           ref={heroSubtitleRef}
-          className="mt-6 text-lg sm:text-xl text-slate-300 max-w-3xl font-normal leading-relaxed"
+          className="mt-5 text-base sm:text-lg text-slate-300 max-w-2xl font-normal leading-relaxed"
         >
           Direct connection between ambitious engineers, designers, and high-growth teams. Transparent compensation, deterministic ATS matching, and verified openings.
         </p>
