@@ -142,29 +142,29 @@ export const AboutUs: React.FC = () => {
             <span>Verified engineering hiring architecture</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.08]">
             Fixing tech hiring with radical transparency
           </h1>
 
-          <p className="mt-6 text-base sm:text-lg text-zinc-400 leading-relaxed font-normal max-w-2xl mx-auto">
+          <p className="mt-5 text-sm sm:text-base text-zinc-400 leading-relaxed font-normal max-w-2xl mx-auto">
             JobMatrix was engineered to dismantle the noise of legacy job portals. We connect exceptional software talent with high-growth teams through deterministic ATS matching and verifiable opportunities.
           </p>
         </div>
 
         {/* Clean, Elegant Stats Section (Sans-Serif, Balanced text-3xl/4xl) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
           {platformMetrics.map((item, idx) => (
             <div
               key={idx}
-              className="p-6 sm:p-8 rounded-2xl bg-slate-900/40 border border-white/10 backdrop-blur-md text-left transition-all duration-200 hover:border-white/20 hover:bg-slate-900/60"
+              className="p-5 sm:p-6 rounded-xl bg-slate-900/40 border border-white/[0.08] backdrop-blur-md text-left transition-all duration-200 hover:border-white/20 hover:bg-slate-900/60"
             >
-              <div className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+              <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                 {item.value}
               </div>
-              <div className="mt-3 text-base font-bold text-slate-100 tracking-tight">
+              <div className="mt-2 text-sm font-semibold text-slate-200 tracking-tight">
                 {item.label}
               </div>
-              <p className="mt-1.5 text-sm text-slate-400 font-normal leading-relaxed">
+              <p className="mt-1 text-xs text-slate-400 font-normal leading-relaxed">
                 {item.desc}
               </p>
             </div>
@@ -254,7 +254,7 @@ export const AboutUs: React.FC = () => {
             {experienceMilestones.map((m) => (
               <div
                 key={m.step}
-                className="group relative p-6 sm:p-8 rounded-2xl bg-slate-900/40 border border-white/10 hover:border-white/20 hover:bg-slate-900/70 backdrop-blur-md flex flex-col justify-between transition-all duration-200"
+                className="group relative p-5 sm:p-6 rounded-xl bg-slate-900/40 border border-white/[0.08] hover:border-white/20 hover:bg-slate-900/70 backdrop-blur-md flex flex-col justify-between transition-all duration-200"
               >
                 <div>
                   {/* Single Clean Step Indicator */}
@@ -303,7 +303,7 @@ export const AboutUs: React.FC = () => {
             {coreValues.map((val, idx) => (
               <div
                 key={idx}
-                className="p-6 sm:p-8 rounded-2xl bg-slate-900/40 border border-white/10 hover:border-white/20 transition-all duration-200 backdrop-blur-md space-y-3"
+                className="p-5 sm:p-6 rounded-xl bg-slate-900/40 border border-white/[0.08] hover:border-white/20 transition-all duration-200 backdrop-blur-md space-y-3"
               >
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-white/[0.04] border border-white/10">

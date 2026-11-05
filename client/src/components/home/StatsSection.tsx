@@ -31,21 +31,21 @@ const STATS: StatItem[] = [
 
 export const StatsSection: React.FC = () => {
   return (
-    <section className="relative bg-slate-950 border-t border-white/10 py-14 sm:py-20 font-sans">
+    <section className="relative bg-slate-950 border-t border-white/[0.08] py-10 sm:py-14 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {STATS.map((stat, idx) => (
             <div
               key={idx}
-              className="p-7 sm:p-8 rounded-2xl bg-slate-900/50 border border-white/10 backdrop-blur-md transition-all duration-200 hover:border-white/25 hover:bg-slate-900/80 text-left shadow-lg"
+              className="p-5 sm:p-6 rounded-xl bg-slate-900/40 border border-white/[0.08] backdrop-blur-md transition-all duration-200 hover:border-white/20 hover:bg-slate-900/70 text-left"
             >
-              <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
                 {stat.value}
               </div>
-              <div className="mt-3 text-base sm:text-lg font-bold text-slate-100 tracking-tight">
+              <div className="mt-2 text-sm font-semibold text-slate-200 tracking-tight">
                 {stat.label}
               </div>
-              <p className="mt-1.5 text-sm text-slate-400 font-normal leading-relaxed">
+              <p className="mt-1 text-xs text-slate-400 font-normal leading-relaxed">
                 {stat.description}
               </p>
             </div>
