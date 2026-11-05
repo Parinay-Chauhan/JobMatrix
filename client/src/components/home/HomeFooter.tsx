@@ -32,7 +32,7 @@ export const HomeFooter: React.FC = React.memo(() => {
   ];
 
   return (
-    <footer className="bg-slate-950 text-slate-400 border-t border-slate-800/80 pt-16 pb-12 transition-colors">
+    <footer className="bg-[#121214] text-slate-400 border-t border-white/[0.08] pt-16 pb-12 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Grid: Brand info on left + 4 Navigation Columns */}
         <div className="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-6 gap-8 lg:gap-12 pb-14">
@@ -209,7 +209,7 @@ export const HomeFooter: React.FC = React.memo(() => {
         </div>
 
         {/* Bottom Bar: Copyright & System Status */}
-        <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {currentYear} JobMatrix. All rights reserved.</p>
 
           <div className="flex items-center gap-2">

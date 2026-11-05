@@ -41,7 +41,7 @@ export const DashboardFooter: React.FC = () => {
   ];
 
   return (
-    <footer className="w-full bg-slate-950/95 border-t border-slate-800/80 text-slate-400 relative z-10 transition-colors">
+    <footer className="w-full bg-[#121214] border-t border-white/[0.08] text-slate-400 relative z-10 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:gap-12 pb-10">
           {/* Brand Info & Socials */}
@@ -178,7 +178,7 @@ export const DashboardFooter: React.FC = () => {
         </div>
 
         {/* Bottom Bar: Copyright, Trust badge & Operational Status */}
-        <div className="pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {currentYear} JobMatrix Technologies Inc. All rights reserved.</p>
 
           <div className="flex items-center gap-2">
