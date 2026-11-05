@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
-import { Search, MapPin, Briefcase, ChevronDown } from "lucide-react";
+import { Search, MapPin, Briefcase, ChevronDown, Sparkles } from "lucide-react";
 import { useJobContext } from "../../context/JobContext";
 
 const TRENDING_SKILLS = [
@@ -206,17 +206,21 @@ export const HeroSection: React.FC = React.memo(() => {
         {/* Modern Skill Tags Row */}
         <div
           ref={heroSkillsRef}
-          className="mt-8 flex flex-wrap items-center justify-center gap-2 max-w-3xl"
+          className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-4xl mx-auto"
         >
-          <span className="text-xs sm:text-sm font-medium text-slate-400 mr-1.5">Trending skills:</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-slate-400 mr-0.5 select-none">
+            <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+            <span>Trending:</span>
+          </div>
           {TRENDING_SKILLS.map((skill) => (
             <button
               key={skill}
               type="button"
               onClick={() => handleSkillClick(skill)}
-              className="text-xs font-mono font-medium px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-slate-200 hover:text-white hover:bg-white/[0.08] hover:border-blue-400/40 transition-all duration-150 cursor-pointer"
+              className="group inline-flex items-center gap-1.5 text-xs font-sans font-medium px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-blue-500/10 border border-white/10 hover:border-blue-500/30 text-slate-300 hover:text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_12px_rgba(37,99,235,0.2)] active:scale-95 cursor-pointer"
             >
-              {skill}
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40 group-hover:bg-blue-400 transition-colors" />
+              <span>{skill}</span>
             </button>
           ))}
         </div>
