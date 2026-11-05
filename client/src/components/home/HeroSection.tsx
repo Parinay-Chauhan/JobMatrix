@@ -146,7 +146,7 @@ export const HeroSection: React.FC = React.memo(() => {
         </p>
 
         {/* Responsive Search Bar: Linear / Vercel Dark Glass */}
-        <div ref={heroSearchRef} className="w-full max-w-4xl mt-8 sm:mt-12">
+        <div ref={heroSearchRef} className="w-full max-w-4xl mt-12 sm:mt-16 md:mt-20">
           <div className="bg-slate-900/90 rounded-2xl p-2 sm:p-2.5 backdrop-blur-md shadow-2xl border border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 transition-all duration-300 hover:border-white/20">
             {/* Input 1: Job Title / Skills */}
             <div className="flex-1 flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5 border-b sm:border-b-0 sm:border-r border-white/10 min-w-0">
