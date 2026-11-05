@@ -1,7 +1,6 @@
 import React from "react";
 
-export const CompanyMarquee: React.FC = () => {
-  const baseCompanies = [
+const baseCompanies = [
     {
       name: "Google",
       icon: (
@@ -181,9 +180,10 @@ export const CompanyMarquee: React.FC = () => {
     },
   ];
 
-  // Repeat items to ensure smooth continuous flow on wide displays
-  const trackItems = [...baseCompanies, ...baseCompanies];
+// Repeat items to ensure smooth continuous flow on wide displays
+const trackItems = [...baseCompanies, ...baseCompanies];
 
+export const CompanyMarquee: React.FC = React.memo(() => {
   return (
     <section
       id="companies"
@@ -221,6 +221,8 @@ export const CompanyMarquee: React.FC = () => {
       </div>
     </section>
   );
-};
+});
+
+export default CompanyMarquee;
 
 

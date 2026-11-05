@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, X, Filter } from "lucide-react";
 import { useJobContext } from "../../context/JobContext";
 import { JobCard, JobCardSkeleton, EmptyState } from "../common";
 
-export const JobListingsSection: React.FC = () => {
+export const JobListingsSection: React.FC = React.memo(() => {
   const {
     filteredJobs,
     loading,
@@ -17,6 +17,7 @@ export const JobListingsSection: React.FC = () => {
     clearFilters,
   } = useJobContext();
   const navigate = useNavigate();
+  const handleApplyNav = useCallback(() => navigate("/login"), [navigate]);
 
   const activeSearchQuery = searchTitle || searchLocation || searchExperience;
 
@@ -127,7 +128,7 @@ export const JobListingsSection: React.FC = () => {
                 key={job._id}
                 job={job}
                 actionText="Apply now"
-                onAction={() => navigate("/login")}
+                onAction={handleApplyNav}
               />
             ))}
           </div>
@@ -135,6 +136,6 @@ export const JobListingsSection: React.FC = () => {
       </main>
     </div>
   );
-};
+});
 
 export default JobListingsSection;

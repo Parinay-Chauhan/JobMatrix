@@ -101,6 +101,8 @@ body {
   display: flex;
   width: max-content;
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   animation: marquee 50s linear infinite;
 }
 
@@ -112,6 +114,8 @@ body {
   display: flex;
   width: max-content;
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   animation: marquee-reverse 55s linear infinite;
 }
 
@@ -123,5 +127,7 @@ body {
   display: flex;
   width: max-content;
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   animation: marquee 65s linear infinite;
 }

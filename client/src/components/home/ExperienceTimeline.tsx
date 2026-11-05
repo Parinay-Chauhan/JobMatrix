@@ -46,7 +46,7 @@ const PATHWAYS: PathwayTier[] = [
   },
 ];
 
-export const ExperienceTimeline: React.FC = () => {
+export const ExperienceTimeline: React.FC = React.memo(() => {
   const { searchExperience, setSearchExperience } = useJobContext();
 
   const handleSelectTier = (expValue: string) => {
@@ -135,6 +135,6 @@ export const ExperienceTimeline: React.FC = () => {
       </div>
     </section>
   );
-};
+});
 
 export default ExperienceTimeline;

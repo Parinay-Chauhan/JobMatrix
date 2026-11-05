@@ -29,7 +29,7 @@ const STATS: StatItem[] = [
   },
 ];
 
-export const StatsSection: React.FC = () => {
+export const StatsSection: React.FC = React.memo(() => {
   return (
     <section className="relative bg-slate-950 border-t border-white/[0.08] py-10 sm:py-14 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,6 +54,6 @@ export const StatsSection: React.FC = () => {
       </div>
     </section>
   );
-};
+});
 
 export default StatsSection;

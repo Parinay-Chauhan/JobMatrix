@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { toast } from "sonner";
 import {
   Search,
@@ -41,7 +41,7 @@ export const FindJobs: React.FC = () => {
       .filter((id): id is string => Boolean(id));
   }, [myApplications]);
 
-  const handleApply = (jobId: string) => {
+  const handleApply = useCallback((jobId: string) => {
     applyMutation.mutate(jobId, {
       onSuccess: () => {
         toast.success("Application submitted successfully", {
@@ -60,7 +60,7 @@ export const FindJobs: React.FC = () => {
         });
       },
     });
-  };
+  }, [applyMutation]);
 
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -346,7 +346,7 @@ export const FindJobs: React.FC = () => {
                   isApplied={isApplied}
                   isLoading={isApplyingThisJob}
                   onAction={handleApply}
-                  onOpenATS={(selectedJob) => setSelectedAtsJob(selectedJob)}
+                  onOpenATS={setSelectedAtsJob}
                 />
               );
             })}

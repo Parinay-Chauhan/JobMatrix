@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
 import { useJobsQuery } from "../hooks/queries";
 import type { Job } from "../types";
 
@@ -10,15 +10,15 @@ interface JobContextType {
   setSearchLocation: (value: string) => void;
   searchExperience: string;
   setSearchExperience: (value: string) => void;
-  
+
   // Data States
   jobs: Job[];
   filteredJobs: Job[];
   loading: boolean;
-  
+
   // Header / UI State
   isScrolled: boolean;
-  
+
   // Handlers
   handlePopularSearch: (query: string) => void;
   clearFilters: () => void;
@@ -32,10 +32,19 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [searchExperience, setSearchExperience] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Scroll listener for sticky floating header
+  // High-performance scroll listener using requestAnimationFrame and state transition guard
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 25);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrolled = window.scrollY > 25;
+          setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -45,11 +54,15 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Fetch jobs using React Query
   const { data: jobs = [], isLoading: loading } = useJobsQuery();
 
-  // Optimized filter computation
+  // Optimized filter computation with memoization
   const filteredJobs = useMemo(() => {
     const query = searchTitle.toLowerCase().trim();
     const locQuery = searchLocation.toLowerCase().trim();
     const expQuery = searchExperience.toLowerCase().trim();
+
+    if (!query && !locQuery && !expQuery) {
+      return jobs;
+    }
 
     return jobs.filter((job) => {
       let matchesTitle = true;
@@ -83,37 +96,51 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [jobs, searchTitle, searchLocation, searchExperience]);
 
   // Click on popular category tile
-  const handlePopularSearch = (query: string) => {
+  const handlePopularSearch = useCallback((query: string) => {
     setSearchTitle(query);
     const jobsSection = document.getElementById("jobs");
     if (jobsSection) {
       jobsSection.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, []);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchTitle("");
     setSearchLocation("");
     setSearchExperience("");
-  };
+  }, []);
+
+  // Stable memoized context value to prevent cascading re-renders
+  const contextValue = useMemo(
+    () => ({
+      searchTitle,
+      setSearchTitle,
+      searchLocation,
+      setSearchLocation,
+      searchExperience,
+      setSearchExperience,
+      jobs,
+      filteredJobs,
+      loading,
+      isScrolled,
+      handlePopularSearch,
+      clearFilters,
+    }),
+    [
+      searchTitle,
+      searchLocation,
+      searchExperience,
+      jobs,
+      filteredJobs,
+      loading,
+      isScrolled,
+      handlePopularSearch,
+      clearFilters,
+    ]
+  );
 
   return (
-    <JobContext.Provider
-      value={{
-        searchTitle,
-        setSearchTitle,
-        searchLocation,
-        setSearchLocation,
-        searchExperience,
-        setSearchExperience,
-        jobs,
-        filteredJobs,
-        loading,
-        isScrolled,
-        handlePopularSearch,
-        clearFilters,
-      }}
-    >
+    <JobContext.Provider value={contextValue}>
       {children}
     </JobContext.Provider>
   );

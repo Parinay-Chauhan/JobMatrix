@@ -141,7 +141,7 @@ const row1 = testimonials.slice(0, 6);
 const row2 = testimonials.slice(6, 12);
 const row3 = testimonials.slice(12, 18);
 
-const TestimonialCard: React.FC<{ t: Testimonial }> = ({ t }) => (
+const TestimonialCard: React.FC<{ t: Testimonial }> = React.memo(({ t }) => (
   <div className="shrink-0 w-[300px] sm:w-[320px] bg-slate-900 border border-slate-800/80 hover:border-blue-500/40 rounded-2xl p-5 cursor-default select-none transition-colors duration-200">
     <div className="flex items-center gap-3 mb-3">
       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 ${t.bg}`}>
@@ -154,9 +154,9 @@ const TestimonialCard: React.FC<{ t: Testimonial }> = ({ t }) => (
     </div>
     <p className="text-slate-300 text-[13px] leading-relaxed line-clamp-4">{t.text}</p>
   </div>
-);
+));
 
-export const TestimonialsSection: React.FC = () => {
+export const TestimonialsSection: React.FC = React.memo(() => {
   return (
     <section className="bg-slate-950 py-16 sm:py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 sm:mb-12 text-center">
@@ -172,7 +172,7 @@ export const TestimonialsSection: React.FC = () => {
         {/* Row 1 — Right to Left */}
         <div className="flex overflow-hidden select-none w-full">
           <div className="animate-marquee flex items-stretch gap-4 shrink-0 pr-4">
-            {[...row1, ...row1, ...row1, ...row1].map((t, i) => (
+            {[...row1, ...row1].map((t, i) => (
               <TestimonialCard key={`r1-${i}`} t={t} />
             ))}
           </div>
@@ -181,7 +181,7 @@ export const TestimonialsSection: React.FC = () => {
         {/* Row 2 — Left to Right */}
         <div className="flex overflow-hidden select-none w-full">
           <div className="animate-marquee-reverse flex items-stretch gap-4 shrink-0 pr-4">
-            {[...row2, ...row2, ...row2, ...row2].map((t, i) => (
+            {[...row2, ...row2].map((t, i) => (
               <TestimonialCard key={`r2-${i}`} t={t} />
             ))}
           </div>
@@ -198,6 +198,8 @@ export const TestimonialsSection: React.FC = () => {
       </div>
     </section>
   );
-};
+});
+
+export default TestimonialsSection;
 
 

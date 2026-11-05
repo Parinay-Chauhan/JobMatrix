@@ -5,7 +5,7 @@ import { LayoutDashboard, ArrowRight } from "lucide-react";
 import { useJobContext } from "../../context/JobContext";
 import { useAuth } from "../../context/AuthContext";
 
-export const FloatingHeader: React.FC = () => {
+export const FloatingHeader: React.FC = React.memo(() => {
   const { isScrolled } = useJobContext();
   const { user } = useAuth();
   const headerWrapperRef = useRef<HTMLDivElement>(null);
@@ -133,6 +133,6 @@ export const FloatingHeader: React.FC = () => {
       </header>
     </div>
   );
-};
+});
 
 export default FloatingHeader;

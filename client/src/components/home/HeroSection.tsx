@@ -16,7 +16,7 @@ const TRENDING_SKILLS = [
   "AI / ML",
 ];
 
-export const HeroSection: React.FC = () => {
+export const HeroSection: React.FC = React.memo(() => {
   const {
     searchTitle,
     setSearchTitle,
@@ -223,6 +223,6 @@ export const HeroSection: React.FC = () => {
       </section>
     </div>
   );
-};
+});
 
 export default HeroSection;

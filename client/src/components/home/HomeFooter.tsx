@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export const HomeFooter: React.FC = () => {
+export const HomeFooter: React.FC = React.memo(() => {
   const currentYear = new Date().getFullYear();
 
   const productLinks = [
@@ -220,6 +220,6 @@ export const HomeFooter: React.FC = () => {
       </div>
     </footer>
   );
-};
+});
 
 export default HomeFooter;

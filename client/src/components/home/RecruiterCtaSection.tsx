@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 
-export const RecruiterCtaSection: React.FC = () => {
+export const RecruiterCtaSection: React.FC = React.memo(() => {
   return (
     <section id="hire" className="bg-slate-950 py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -76,6 +76,6 @@ export const RecruiterCtaSection: React.FC = () => {
       </div>
     </section>
   );
-};
+});
 
 export default RecruiterCtaSection;
