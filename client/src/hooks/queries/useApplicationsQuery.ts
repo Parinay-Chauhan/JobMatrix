@@ -4,10 +4,11 @@ import { queryKeys } from "../queryKeys";
 import type { Application, ApplicationStatus } from "../../types";
 
 // 1. Fetch Candidate's own submitted applications
-export const useMyApplicationsQuery = () => {
+export const useMyApplicationsQuery = (options?: { enabled?: boolean }) => {
   return useQuery<Application[]>({
     queryKey: queryKeys.applications.mine(),
     queryFn: () => applicationService.getMyApplications(),
+    enabled: options?.enabled ?? true,
   });
 };
 

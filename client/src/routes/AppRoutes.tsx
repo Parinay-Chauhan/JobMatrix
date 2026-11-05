@@ -118,6 +118,7 @@ export const AppRoutes: React.FC = () => {
           <Route element={<CandidateLayout />}>
             <Route path="/candidate/dashboard" element={<FindJobs />} />
             <Route path="/candidate/find-jobs" element={<FindJobs />} />
+            <Route path="/candidate/jobs/:id" element={<JobDetails />} />
             <Route path="/candidate/applications" element={<MyApplications />} />
             <Route path="/candidate/profile" element={<CandidateProfile />} />
             <Route path="/candidate/resume-optimizer" element={<ResumeOptimizer />} />

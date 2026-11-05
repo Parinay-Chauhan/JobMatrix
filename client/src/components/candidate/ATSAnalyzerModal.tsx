@@ -17,6 +17,7 @@ import type { Job } from "../../types";
 import { useCandidateProfileQuery, useUpdateCandidateProfileMutation } from "../../hooks/queries";
 import { analyzeJobATS } from "../../utils/atsEngine";
 import { Button } from "../common";
+import { useAuth } from "../../context/AuthContext";
 
 export interface ATSAnalyzerModalProps {
   job: Job | null;
@@ -33,7 +34,8 @@ export const ATSAnalyzerModal: React.FC<ATSAnalyzerModalProps> = ({
   onApply,
   isApplied = false,
 }) => {
-  const { data: profile } = useCandidateProfileQuery();
+  const { user } = useAuth();
+  const { data: profile } = useCandidateProfileQuery({ enabled: Boolean(isOpen && user?.role === "candidate") });
   const updateProfileMutation = useUpdateCandidateProfileMutation();
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<"skills" | "bullets" | "checklist">("skills");

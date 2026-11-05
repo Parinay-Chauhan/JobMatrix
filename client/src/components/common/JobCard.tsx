@@ -26,6 +26,8 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
 }) => {
   const navigate = useNavigate();
 
+  const jobId = job._id || (job as any).id;
+
   const companyName =
     (typeof job.recruiter === "object" ? job.recruiter?.companyName : undefined) ||
     job.companyName ||
@@ -40,8 +42,8 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
     e.stopPropagation();
     if (onViewDetails) {
       onViewDetails(job);
-    } else {
-      navigate(`/jobs/${job._id}`);
+    } else if (jobId) {
+      navigate(`/jobs/${jobId}`, { state: { job } });
     }
   };
 
@@ -135,7 +137,7 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
               variant={isApplied ? "outline" : "primary"}
               disabled={isApplied || isLoading}
               isLoading={isLoading}
-              onClick={() => onAction(job._id)}
+              onClick={() => onAction(jobId)}
               className={
                 isApplied
                   ? "border-emerald-500/30 text-emerald-300 bg-emerald-500/10 font-medium flex items-center gap-1.5"

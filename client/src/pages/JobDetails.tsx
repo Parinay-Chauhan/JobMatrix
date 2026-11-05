@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   MapPin,
@@ -10,9 +11,7 @@ import {
   Sparkles,
   Share2,
   ShieldCheck,
-  
   Layers,
-  
 } from "lucide-react";
 import { useJobDetailQuery } from "../hooks/queries/useJobsQuery";
 import {
@@ -22,26 +21,45 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { Button, LoadingSpinner } from "../components/common";
 import { ATSAnalyzerModal } from "../components/candidate";
+import { queryKeys } from "../hooks/queryKeys";
+import type { Job } from "../types";
 import { toast } from "sonner";
 
 export const JobDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryClient = useQueryClient();
   const { user } = useAuth();
 
   const [isATSModalOpen, setIsATSModalOpen] = useState(false);
 
-  // 1. Fetch Job Details
-  const { data: job, isLoading, isError } = useJobDetailQuery(id || "");
+  // 1. Check if job was passed directly in router state (0ms instant transition)
+  const stateJob = (location.state as { job?: Job } | undefined)?.job;
 
-  // 2. Applications check
-  const { data: myApplications = [] } = useMyApplicationsQuery();
+  // 2. Check if job exists in React Query list cache
+  const cachedJobs =
+    queryClient.getQueryData<Job[]>(queryKeys.jobs.all) ||
+    queryClient.getQueryData<Job[]>(queryKeys.jobs.list()) ||
+    [];
+  const cachedJob = cachedJobs.find((j) => (j._id || (j as any).id) === id);
+
+  // 3. Fetch Job Details from server with fallback to state/cache
+  const { data: serverJob, isLoading } = useJobDetailQuery(id);
+
+  const job = serverJob || stateJob || cachedJob;
+
+  // 4. Applications check - strictly enabled ONLY for candidates to prevent 401 unauth resets
+  const { data: myApplications = [] } = useMyApplicationsQuery({
+    enabled: Boolean(user?.role === "candidate"),
+  });
   const applyMutation = useApplyJobMutation();
 
   const isApplied = Boolean(
     job &&
+      user?.role === "candidate" &&
       myApplications.some(
-        (app) => (typeof app.job === "object" ? app.job?._id : app.job) === job._id
+        (app) => (typeof app.job === "object" ? app.job?._id : app.job) === (job._id || (job as any).id)
       )
   );
 
@@ -71,9 +89,10 @@ export const JobDetails: React.FC = () => {
       return;
     }
 
-    if (!job) return;
+    const targetJobId = job?._id || (job as any)?.id;
+    if (!targetJobId) return;
 
-    applyMutation.mutate(job._id, {
+    applyMutation.mutate(targetJobId, {
       onSuccess: () => {
         toast.success("Application submitted successfully", {
           description: "You can track real-time status in My Applications.",
@@ -99,7 +118,8 @@ export const JobDetails: React.FC = () => {
     }
   };
 
-  if (isLoading) {
+  // Only show loading if we have zero data from state, cache, or server
+  if (isLoading && !job) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
         <LoadingSpinner size="lg" />
@@ -108,7 +128,8 @@ export const JobDetails: React.FC = () => {
     );
   }
 
-  if (isError || !job) {
+  // If loading finished and no job was found anywhere
+  if (!job) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
         <div className="p-8 rounded-2xl bg-slate-900/60 border border-white/10 max-w-md w-full backdrop-blur-md">
@@ -243,15 +264,17 @@ export const JobDetails: React.FC = () => {
                   <Share2 className="w-4 h-4" />
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => setIsATSModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/25 text-blue-300 text-xs font-medium transition-all cursor-pointer active:scale-95"
-                  title="Scan resume against this job posting"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                  <span>ATS match</span>
-                </button>
+                {user?.role === "candidate" && (
+                  <button
+                    type="button"
+                    onClick={() => setIsATSModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/25 text-blue-300 text-xs font-medium transition-all cursor-pointer active:scale-95"
+                    title="Scan resume against this job posting"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                    <span>ATS match</span>
+                  </button>
+                )}
 
                 <Button
                   size="md"
@@ -432,14 +455,16 @@ export const JobDetails: React.FC = () => {
         </div>
       </main>
 
-      {/* ATS Match Modal */}
-      <ATSAnalyzerModal
-        job={job}
-        isOpen={isATSModalOpen}
-        onClose={() => setIsATSModalOpen(false)}
-        onApply={handleApply}
-        isApplied={isApplied}
-      />
+      {/* ATS Match Modal - only mounted if user is logged in as candidate and explicitly opened */}
+      {isATSModalOpen && user?.role === "candidate" && (
+        <ATSAnalyzerModal
+          job={job}
+          isOpen={isATSModalOpen}
+          onClose={() => setIsATSModalOpen(false)}
+          onApply={handleApply}
+          isApplied={isApplied}
+        />
+      )}
     </div>
   );
 };

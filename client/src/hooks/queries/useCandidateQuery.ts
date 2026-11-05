@@ -9,7 +9,7 @@ import type {
 } from "../../types";
 
 // 1. Fetch Candidate Profile
-export const useCandidateProfileQuery = () => {
+export const useCandidateProfileQuery = (options?: { enabled?: boolean }) => {
   return useQuery<CandidateProfile>({
     queryKey: queryKeys.candidate.profile(),
     queryFn: async () => {
@@ -20,6 +20,7 @@ export const useCandidateProfileQuery = () => {
       };
       return raw.candidate || raw.data || (response as unknown as CandidateProfile);
     },
+    enabled: options?.enabled ?? true,
   });
 };
 
