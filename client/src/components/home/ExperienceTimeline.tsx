@@ -75,14 +75,14 @@ export const ExperienceTimeline: React.FC = React.memo(() => {
         </div>
 
         {/* Clean Horizontal Timeline Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 relative">
           {PATHWAYS.map((tier) => {
             const isSelected = searchExperience.toLowerCase() === tier.expValue.toLowerCase();
 
             return (
               <div
                 key={tier.step}
-                className={`group relative rounded-2xl border p-7 sm:p-8 backdrop-blur-md flex flex-col justify-between transition-all duration-200 shadow-xl ${
+                className={`group relative rounded-2xl border p-5 sm:p-6 backdrop-blur-md flex flex-col justify-between transition-all duration-200 shadow-xl ${
                   isSelected
                     ? "bg-slate-900/90 border-blue-500/50 shadow-[0_0_25px_rgba(37,99,235,0.25)]"
                     : "bg-slate-900/50 border-white/10 hover:border-white/25 hover:bg-slate-900/80"
@@ -111,10 +111,10 @@ export const ExperienceTimeline: React.FC = React.memo(() => {
                 </div>
 
                 {/* Footer: Benchmark & Action */}
-                <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs text-slate-400 block font-medium">Benchmark</span>
-                    <span className="text-base font-bold text-white">
+                <div className="pt-5 mt-6 border-t border-white/[0.08] flex items-end justify-between gap-3">
+                  <div className="min-w-0">
+                    <span className="text-[11px] text-slate-400 block font-normal">Benchmark</span>
+                    <span className="text-sm sm:text-base font-semibold text-emerald-400 tracking-tight whitespace-nowrap block mt-0.5">
                       {tier.compensation}
                     </span>
                   </div>
@@ -122,10 +122,10 @@ export const ExperienceTimeline: React.FC = React.memo(() => {
                   <button
                     type="button"
                     onClick={() => handleSelectTier(tier.expValue)}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 hover:text-blue-300 group-hover:translate-x-1 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-400 hover:text-blue-300 group-hover:translate-x-1 transition-all cursor-pointer shrink-0 pb-0.5"
                   >
                     <span>View roles</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
