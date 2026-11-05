@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { MapPin, Briefcase, Building2, Check, Sparkles } from "lucide-react";
 import type { Job } from "../../types";
 import Button from "./Button";
@@ -11,6 +12,7 @@ export interface JobCardProps {
   onAction?: (jobId: string) => void;
   showDetails?: boolean;
   onOpenATS?: (job: Job) => void;
+  onViewDetails?: (job: Job) => void;
 }
 
 export const JobCard: React.FC<JobCardProps> = React.memo(({
@@ -20,7 +22,10 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
   isLoading = false,
   onAction,
   onOpenATS,
+  onViewDetails,
 }) => {
+  const navigate = useNavigate();
+
   const companyName =
     (typeof job.recruiter === "object" ? job.recruiter?.companyName : undefined) ||
     job.companyName ||
@@ -30,6 +35,15 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
     typeof job.salary === "number"
       ? `₹${job.salary.toLocaleString()}`
       : job.salary || "Competitive";
+
+  const handleDetailsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onViewDetails) {
+      onViewDetails(job);
+    } else {
+      navigate(`/jobs/${job._id}`);
+    }
+  };
 
   return (
     <div className="group relative flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-slate-900/70 hover:bg-slate-900/95 p-5 sm:p-6 backdrop-blur-md hover:border-white/[0.16] hover:shadow-[0_4px_25px_rgba(0,0,0,0.5)] transition-all duration-200">
@@ -74,7 +88,11 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
         </div>
 
         {/* Title & Company */}
-        <h3 className="text-base font-semibold text-white line-clamp-1 group-hover:text-blue-300 transition-colors">
+        <h3
+          onClick={handleDetailsClick}
+          className="text-base font-semibold text-white line-clamp-1 group-hover:text-blue-300 transition-colors cursor-pointer"
+          title={job.title}
+        >
           {(job.title || "").replace(/\s+\d{10,14}$/, "")}
         </h3>
         <p className="mt-1 text-xs text-blue-400 font-normal flex items-center gap-1.5">
@@ -91,35 +109,9 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
             <span>{job.location || "Remote / Hybrid"}</span>
           </span>
         </div>
-
-        {/* Modern Skill Tags */}
-        {job.requirements && job.requirements.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {job.requirements.slice(0, 3).map((skill, idx) => (
-              <span
-                key={idx}
-                className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.03] border border-white/[0.06] text-slate-300"
-              >
-                {skill}
-              </span>
-            ))}
-            {job.requirements.length > 3 && (
-              <span className="text-[10px] font-mono px-1.5 py-0.5 text-slate-500 self-center">
-                +{job.requirements.length - 3}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Description */}
-        {job.description && (
-          <p className="mt-3 text-xs text-slate-400 line-clamp-2 leading-relaxed">
-            {job.description}
-          </p>
-        )}
       </div>
 
-      {/* Footer / CTA */}
+      {/* Footer / CTA: Compensation + Details button + Apply button */}
       <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-4 gap-3">
         <div>
           <span className="text-[10px] text-slate-400 block font-normal">Compensation</span>
@@ -129,6 +121,14 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleDetailsClick}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 bg-white/[0.04] hover:bg-white/[0.08] hover:text-white border border-white/10 transition-all cursor-pointer active:scale-95"
+          >
+            Details
+          </button>
+
           {onAction && (
             <Button
               size="sm"
