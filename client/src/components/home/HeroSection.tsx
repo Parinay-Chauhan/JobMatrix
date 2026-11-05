@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import gsap from "gsap";
 import { Search, MapPin, Briefcase, ChevronDown, Sparkles, Building2, X, ArrowUpRight, Check } from "lucide-react";
 import { useJobContext } from "../../context/JobContext";
@@ -89,6 +89,8 @@ export const HeroSection: React.FC = React.memo(() => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [isExpDropdownOpen, setIsExpDropdownOpen] = useState(false);
+  const [searchOpenUpward, setSearchOpenUpward] = useState(false);
+  const [expOpenUpward, setExpOpenUpward] = useState(false);
 
   const heroBadgeRef = useRef<HTMLDivElement>(null);
   const heroTitleRef = useRef<HTMLHeadingElement>(null);
@@ -97,6 +99,32 @@ export const HeroSection: React.FC = React.memo(() => {
   const heroSkillsRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const expDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Auto detect if dropdown should open upward when viewport space below is tight
+  const updateDropdownPositions = useCallback(() => {
+    if (searchContainerRef.current) {
+      const rect = searchContainerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      setSearchOpenUpward(spaceBelow < 340 && rect.top > spaceBelow);
+    }
+    if (expDropdownRef.current) {
+      const rect = expDropdownRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      setExpOpenUpward(spaceBelow < 260 && rect.top > spaceBelow);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showSuggestions || isExpDropdownOpen) {
+      updateDropdownPositions();
+      window.addEventListener("scroll", updateDropdownPositions, { passive: true });
+      window.addEventListener("resize", updateDropdownPositions);
+      return () => {
+        window.removeEventListener("scroll", updateDropdownPositions);
+        window.removeEventListener("resize", updateDropdownPositions);
+      };
+    }
+  }, [showSuggestions, isExpDropdownOpen, updateDropdownPositions]);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -356,9 +384,13 @@ export const HeroSection: React.FC = React.memo(() => {
                   setSearchTitle(e.target.value);
                   setShowSuggestions(true);
                   setSelectedIndex(-1);
+                  updateDropdownPositions();
                 }}
                 onFocus={() => {
-                  if (searchTitle.trim().length > 0) setShowSuggestions(true);
+                  if (searchTitle.trim().length > 0) {
+                    setShowSuggestions(true);
+                    updateDropdownPositions();
+                  }
                 }}
                 onKeyDown={handleKeyDown}
                 className="w-full bg-transparent text-white placeholder:text-slate-500 text-sm sm:text-base font-normal focus:outline-none"
@@ -378,11 +410,15 @@ export const HeroSection: React.FC = React.memo(() => {
                 </button>
               )}
 
-              {/* Floating Suggestions Dropdown (Solid, non-transparent background with high z-index) */}
+              {/* Floating Suggestions Dropdown (Solid, non-transparent background with smart vertical flip) */}
               {showSuggestions && query.length > 0 && (
                 <div
                   style={{ backgroundColor: "#121214" }}
-                  className="absolute top-[calc(100%+10px)] left-0 w-full sm:w-[380px] md:w-[420px] max-h-[380px] overflow-y-auto border border-white/15 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[100] p-2 text-left animate-in fade-in slide-in-from-top-2 duration-150"
+                  className={`absolute left-0 w-full sm:w-[380px] md:w-[420px] max-h-[360px] overflow-y-auto border border-white/15 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[100] p-2 text-left animate-in fade-in duration-150 ${
+                    searchOpenUpward
+                      ? "bottom-[calc(100%+10px)] slide-in-from-bottom-2"
+                      : "top-[calc(100%+10px)] slide-in-from-top-2"
+                  }`}
                 >
                   {matchedSuggestions.length === 0 ? (
                     <div className="px-4 py-5 text-center text-xs text-slate-400">
@@ -478,7 +514,10 @@ export const HeroSection: React.FC = React.memo(() => {
               <Briefcase className="w-4 h-4 text-slate-400 shrink-0 pointer-events-none" />
               <button
                 type="button"
-                onClick={() => setIsExpDropdownOpen((prev) => !prev)}
+                onClick={() => {
+                  updateDropdownPositions();
+                  setIsExpDropdownOpen((prev) => !prev);
+                }}
                 className="w-full flex items-center justify-between gap-2 bg-transparent text-white text-sm sm:text-base font-normal focus:outline-none cursor-pointer text-left select-none"
               >
                 <span className="truncate text-white">
@@ -493,11 +532,15 @@ export const HeroSection: React.FC = React.memo(() => {
                 />
               </button>
 
-              {/* Custom Dark Theme Dropdown Menu */}
+              {/* Custom Dark Theme Dropdown Menu (Smart vertical flip) */}
               {isExpDropdownOpen && (
                 <div
                   style={{ backgroundColor: "#121214" }}
-                  className="absolute top-[calc(100%+10px)] right-0 left-0 sm:left-auto sm:w-[240px] border border-white/15 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[100] p-1.5 text-left animate-in fade-in slide-in-from-top-2 duration-150"
+                  className={`absolute right-0 left-0 sm:left-auto sm:w-[240px] border border-white/15 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[100] p-1.5 text-left animate-in fade-in duration-150 ${
+                    expOpenUpward
+                      ? "bottom-[calc(100%+10px)] slide-in-from-bottom-2"
+                      : "top-[calc(100%+10px)] slide-in-from-top-2"
+                  }`}
                 >
                   <div className="px-3 pt-2 pb-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
                     Experience Level
