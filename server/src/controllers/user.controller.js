@@ -54,15 +54,23 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Force role assignment to 'candidate' for public registration
   // Security Hardening: Public users cannot self-assign 'recruiter' or 'admin' roles
-  // const userRole = "candidate";
+  // let userRole = "candidate";
 
   // 2. Allow 'candidate' or 'recruiter' (prevent unauthorized 'admin' assignment)
   const allowedRoles = ["candidate", "recruiter"];
-  const userRole = allowedRoles.includes(role) ? role : "candidate";
+  let userRole = allowedRoles.includes(role) ? role : "candidate";
+
+  // ✅ Admin Email Check: Agar email env me diye ADMIN_EMAIL se match hoti hai toh role 'admin'
+  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  if (adminEmail && email.toLowerCase() === adminEmail) {
+    userRole = "admin";
+  }
 
   // Create a new user in the database ( MongoDB will handle password hashing if you have set up pre-save middleware in the User model)
 
   const user = await User.create({
+
+
     fullName,
     email: email.toLowerCase(),
     password,
@@ -119,7 +127,12 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid User credentials");
   }
-
+  // ✅ Existing account auto-upgrade to admin
+  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  if (adminEmail && user.email.toLowerCase() === adminEmail && user.role !== "admin") {
+    user.role = "admin";
+    await user.save({ validateBeforeSave: false });
+  }
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
     user._id,
   );
