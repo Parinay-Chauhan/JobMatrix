@@ -246,7 +246,7 @@ export const JobDetails: React.FC = () => {
                 <span className="text-xs text-slate-400 block font-normal">
                   Annual Compensation
                 </span>
-                <span className="text-2xl sm:text-3xl font-bold text-white font-mono tabular-nums tracking-tight">
+                <span className="text-2xl sm:text-3xl font-semibold text-emerald-400 tracking-tight">
                   {formattedSalary}
                 </span>
                 <span className="text-[11px] text-emerald-400 block font-medium mt-0.5">
@@ -399,7 +399,7 @@ export const JobDetails: React.FC = () => {
               <div className="space-y-3.5 text-xs sm:text-sm">
                 <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
                   <span className="text-slate-400">Compensation</span>
-                  <span className="font-semibold text-white font-mono">{formattedSalary}</span>
+                  <span className="font-semibold text-emerald-400">{formattedSalary}</span>
                 </div>
 
                 <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">

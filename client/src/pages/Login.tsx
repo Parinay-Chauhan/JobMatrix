@@ -433,7 +433,7 @@ export const Login: React.FC = () => {
                       setForgotSuccess(false);
                       setForgotError("");
                     }}
-                    className="text-xs text-orange-400 hover:text-orange-300 transition-colors font-medium hover:underline cursor-pointer"
+                    className="text-xs text-blue-400 hover:text-blue-300 transition-colors font-medium hover:underline cursor-pointer"
                   >
                     Forgot password?
                   </button>
@@ -523,7 +523,7 @@ export const Login: React.FC = () => {
               Don't have an account?{" "}
               <Link
                 to="/register"
-                className="font-semibold text-orange-400 hover:text-orange-300 transition-colors"
+                className="font-semibold text-blue-400 hover:text-blue-300 transition-colors"
               >
                 Create an account
               </Link>

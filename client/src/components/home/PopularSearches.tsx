@@ -494,7 +494,7 @@ export const PopularSearches: React.FC = () => {
       query: "Part-time",
       tagline: "Flexible Shifts & Timings",
       glowColor: "249, 115, 22", // Automotive Orange
-      iconBg: "bg-orange-500/15 text-orange-400 border border-orange-500/30",
+      iconBg: "bg-blue-500/15 text-blue-400 border border-blue-500/30",
       icon: (
         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -549,7 +549,7 @@ export const PopularSearches: React.FC = () => {
     <section className="bento-section relative overflow-hidden bg-slate-950 border-t border-b border-slate-800/80 py-16 sm:py-20 w-full">
       {/* Ambient Cyber Grid & Glow Highlights */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-orange-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Global Interactive Cursor Spotlight */}
       <GlobalSpotlight
@@ -569,7 +569,7 @@ export const PopularSearches: React.FC = () => {
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
               Popular Searches on{" "}
-              <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
                 JobMatrix
               </span>
             </h2>
@@ -622,10 +622,10 @@ export const PopularSearches: React.FC = () => {
                 </div>
 
                 <div className="flex items-center justify-between pt-5 mt-6 border-t border-slate-800/80">
-                  <span className="text-xs font-bold text-orange-400 group-hover:text-orange-300 transition-colors">
+                  <span className="text-xs font-semibold text-blue-400 group-hover:text-blue-300 transition-colors">
                     Explore roles
                   </span>
-                  <div className="w-8 h-8 rounded-full bg-slate-800/90 group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-orange-500 flex items-center justify-center text-slate-400 group-hover:text-white transition-all duration-300 shadow-md">
+                  <div className="w-8 h-8 rounded-full bg-slate-800/90 group-hover:bg-gradient-to-r group-hover:bg-blue-600 flex items-center justify-center text-slate-400 group-hover:text-white transition-all duration-300 shadow-md">
                     <svg
                       className="w-4 h-4 group-hover:translate-x-0.5 transition-transform"
                       fill="none"

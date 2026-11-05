@@ -26,25 +26,25 @@ export const RecruiterCtaSection: React.FC = () => {
               </p>
 
               {/* Quick Metrics */}
-              <div className="flex flex-wrap items-center gap-8 sm:gap-12 pt-6 border-t border-white/[0.08]">
-                <div>
-                  <div className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-mono tabular-nums">
+              <div className="grid grid-cols-3 gap-6 sm:gap-10 pt-6 border-t border-white/[0.08] max-w-lg">
+                <div className="min-w-0">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-white">
                     10,000+
                   </div>
                   <div className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
                     Active profiles
                   </div>
                 </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-mono tabular-nums">
+                <div className="min-w-0">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-white whitespace-nowrap">
                     &lt; 24h
                   </div>
                   <div className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
                     First response
                   </div>
                 </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-mono tabular-nums">
+                <div className="min-w-0">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-white">
                     0%
                   </div>
                   <div className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">

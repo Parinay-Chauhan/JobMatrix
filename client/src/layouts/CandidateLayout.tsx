@@ -163,12 +163,12 @@ export const CandidateLayout: React.FC = () => {
                 className={({ isActive }) =>
                   `text-sm font-semibold transition-all relative py-1 px-3 rounded-full flex items-center gap-1.5 ${
                     isActive
-                      ? "bg-orange-500/20 text-orange-300 border border-orange-500/40 shadow-xs shadow-orange-500/20"
+                      ? "bg-blue-500/15 text-blue-300 border border-blue-500/30 shadow-xs shadow-blue-500/20"
                       : "text-slate-300 hover:text-blue-300 bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
                   }`
                 }
               >
-                <Sparkles className="w-3.5 h-3.5 text-orange-400" />
+                <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                 <span>ATS Optimizer</span>
               </NavLink>
             </nav>
@@ -278,7 +278,7 @@ export const CandidateLayout: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-orange-400" />
+                  <Sparkles className="w-4 h-4 text-blue-400" />
                   <span>ATS Resume Optimizer</span>
                 </div>
               </NavLink>

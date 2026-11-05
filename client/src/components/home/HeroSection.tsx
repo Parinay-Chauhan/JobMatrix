@@ -129,7 +129,7 @@ export const HeroSection: React.FC = () => {
         {/* Main Hero Headline */}
         <h1
           ref={heroTitleRef}
-          className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.15] max-w-3xl"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-bold text-white tracking-tight leading-[1.18] max-w-3xl"
         >
           Find your next role or hire{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400">

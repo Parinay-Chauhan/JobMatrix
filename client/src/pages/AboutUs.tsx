@@ -158,7 +158,7 @@ export const AboutUs: React.FC = () => {
               key={idx}
               className="p-5 sm:p-6 rounded-xl bg-slate-900/40 border border-white/[0.08] backdrop-blur-md text-left transition-all duration-200 hover:border-white/20 hover:bg-slate-900/60"
             >
-              <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              <div className="text-2xl sm:text-3xl font-semibold text-white tracking-tight whitespace-nowrap">
                 {item.value}
               </div>
               <div className="mt-2 text-sm font-semibold text-slate-200 tracking-tight">

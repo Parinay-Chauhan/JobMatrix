@@ -62,11 +62,11 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         className={`flex flex-col items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/90 p-8 sm:p-12 text-center backdrop-blur-xl shadow-2xl relative overflow-hidden ${className}`}
       >
         {/* Soft background ambient glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-32 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-32 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Pattern 10 Header Badge */}
         <div className="mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 text-slate-300 text-xs font-semibold">
-          <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
           <span>Smart Search Assistant</span>
         </div>
 
@@ -106,7 +106,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
             <button
               type="button"
               onClick={() => onApplySuggestion?.(didYouMean)}
-              className="font-bold text-orange-400 hover:text-orange-300 underline underline-offset-4 decoration-orange-400/80 transition-colors cursor-pointer"
+              className="font-bold text-blue-400 hover:text-blue-300 underline underline-offset-4 decoration-blue-400/80 transition-colors cursor-pointer"
             >
               {didYouMean}
             </button>
@@ -127,10 +127,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <button
             type="button"
             onClick={onSearchAgain || onAction}
-            className="w-full sm:flex-1 py-3 px-6 rounded-xl font-bold text-sm text-white transition-all duration-200 hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-orange-500/25 cursor-pointer"
-            style={{
-              background: "linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)",
-            }}
+            className="w-full sm:flex-1 py-2.5 px-5 rounded-xl font-semibold text-sm text-white bg-blue-600 hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.35)] transition-all duration-200 active:scale-95 cursor-pointer"
           >
             Search again
           </button>
@@ -138,7 +135,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <button
             type="button"
             onClick={handleBrowseTopicsClick}
-            className="w-full sm:flex-1 py-3 px-6 rounded-xl font-bold text-sm text-orange-400 hover:text-orange-300 bg-slate-800/80 hover:bg-slate-800 border border-orange-500/30 transition-all duration-200 cursor-pointer"
+            className="w-full sm:flex-1 py-2.5 px-5 rounded-xl font-medium text-sm text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-all duration-200 active:scale-95 cursor-pointer"
           >
             Browse popular topics
           </button>
@@ -156,7 +153,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
                   key={topic}
                   type="button"
                   onClick={() => onApplySuggestion?.(topic)}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 hover:bg-orange-500/20 text-slate-300 hover:text-orange-300 border border-slate-700 hover:border-orange-500/40 transition-all cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/[0.04] hover:bg-blue-500/15 text-slate-300 hover:text-blue-300 border border-white/10 hover:border-blue-500/30 transition-all cursor-pointer"
                 >
                   {topic}
                 </button>
@@ -168,7 +165,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         {/* "Why it works" Educational Card (exact match to reference image) */}
         {showWhyItWorks && (
           <div className="mt-8 w-full max-w-md rounded-2xl bg-slate-950/70 border border-slate-800 p-4 text-left flex items-start gap-3.5 backdrop-blur-md">
-            <div className="w-8 h-8 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0 text-orange-400 mt-0.5">
+            <div className="w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 text-blue-400 mt-0.5">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"

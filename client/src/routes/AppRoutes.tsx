@@ -45,9 +45,9 @@ const Unauthorized: React.FC = () => {
       : "/login";
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full text-center bg-white p-8 rounded-3xl border border-gray-200/80 shadow-sm">
-        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-2xl bg-rose-50 text-rose-600 mb-5">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4 py-12 font-sans">
+      <div className="max-w-md w-full text-center bg-slate-900/80 p-8 rounded-2xl border border-white/10 backdrop-blur-md shadow-2xl space-y-6">
+        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
           <svg
             className="h-8 w-8"
             fill="none"
@@ -62,24 +62,26 @@ const Unauthorized: React.FC = () => {
             />
           </svg>
         </div>
-        <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-          403 - Access Restricted
-        </h1>
-        <p className="mt-2 text-sm text-gray-500 leading-relaxed">
-          You do not have the required role permissions to access this page. Your account is registered as a{" "}
-          <span className="font-bold text-gray-800 capitalize">
-            {user?.role || "Guest"}
-          </span>
-          .
-        </p>
-        <div className="mt-6 flex flex-col gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            403 - Access Restricted
+          </h1>
+          <p className="mt-2 text-sm text-slate-400 leading-relaxed font-normal">
+            You do not have the required role permissions to access this page. Your account is registered as a{" "}
+            <span className="font-semibold text-slate-200 capitalize">
+              {user?.role || "Guest"}
+            </span>
+            .
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 pt-2">
           <Link to={dashboardLink}>
             <Button variant="primary" className="w-full">
               Go to Your Dashboard
             </Button>
           </Link>
           <Link to="/">
-            <Button variant="ghost" className="w-full">
+            <Button variant="outline" className="w-full">
               Return to Homepage
             </Button>
           </Link>

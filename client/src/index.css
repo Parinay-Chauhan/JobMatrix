@@ -4,22 +4,79 @@
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Deep Navy & Slate Backgrounds */
-  --color-slate-950: #0b1120;
-  --color-slate-900: #0f172a;
-  --color-slate-850: #131d35;
-  --color-slate-800: #1e293b;
+  /* Global Unified Base: Dark Zinc #09090b */
+  --color-slate-950: #09090b;
+  --color-zinc-950: #09090b;
+  --color-gray-950: #09090b;
 
-  /* Light Backgrounds */
-  --color-gray-50: #f8fafc;
+  /* Cards / Containers: #18181b */
+  --color-slate-900: #18181b;
+  --color-zinc-900: #18181b;
   --color-gray-900: #18181b;
+
+  /* Elevated Surfaces & Subtle Borders */
+  --color-slate-850: #202024;
+  --color-zinc-850: #202024;
+  --color-slate-800: #27272a;
+  --color-zinc-800: #27272a;
+  --color-slate-700: #3f3f46;
+  --color-zinc-700: #3f3f46;
+  --color-slate-600: #52525b;
+  --color-zinc-600: #52525b;
+
+  /* Text Colors: Pure White #ffffff (Headings), Zinc/Slate #a1a1aa (Body/Subtext) */
+  --color-slate-400: #a1a1aa;
+  --color-zinc-400: #a1a1aa;
+  --color-slate-500: #71717a;
+  --color-zinc-500: #71717a;
+  --color-slate-300: #d4d4d8;
+  --color-zinc-300: #d4d4d8;
+  --color-slate-200: #e4e4e7;
+  --color-zinc-200: #e4e4e7;
+  --color-slate-100: #f4f4f5;
+  --color-zinc-100: #f4f4f5;
+
+  /* Primary Accent: Electric Blue #2563eb */
+  --color-blue-600: #2563eb;
+  --color-blue-500: #3b82f6;
+  --color-blue-400: #60a5fa;
+  --color-blue-300: #93c5fd;
+
+  /* Secondary Accent: Emerald #10b981 */
+  --color-emerald-600: #059669;
+  --color-emerald-500: #10b981;
+  --color-emerald-400: #34d399;
+  --color-emerald-300: #6ee7b7;
+
+  /* Legacy Accent Override: normalize orange to primary electric blue */
+  --color-orange-500: #2563eb;
+  --color-orange-400: #60a5fa;
+  --color-orange-300: #93c5fd;
+  --color-orange-600: #1d4ed8;
+
+  /* Light Theme Fallback override to keep dark zinc consistency */
+  --color-gray-50: #09090b;
+  --color-slate-50: #09090b;
 }
 
-/* Custom Typography & Smoothing */
+/* Custom Typography & Global Root Theme */
 html {
   font-family: var(--font-sans);
+  background-color: #09090b;
+  color: #a1a1aa;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #09090b;
+  color: #a1a1aa;
+  min-height: 100vh;
+}
+
+::selection {
+  background-color: rgba(37, 99, 235, 0.3);
+  color: #93c5fd;
 }
 
 @keyframes marquee {

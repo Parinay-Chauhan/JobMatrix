@@ -117,7 +117,7 @@ export const JobCard: React.FC<JobCardProps> = React.memo(({
       <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-4 gap-3">
         <div>
           <span className="text-[10px] text-slate-400 block font-normal">Compensation</span>
-          <span className="text-sm font-semibold text-white font-mono tabular-nums">
+          <span className="text-sm font-semibold text-emerald-400 tabular-nums">
             {formattedSalary}
           </span>
         </div>

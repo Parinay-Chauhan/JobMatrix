@@ -50,10 +50,10 @@ export const DashboardFooter: React.FC = () => {
               <div className="flex items-end gap-1 h-5 py-0.5">
                 <span className="w-1 h-3 bg-blue-500 rounded-full" />
                 <span className="w-1 h-4.5 bg-sky-400 rounded-full" />
-                <span className="w-1 h-2 bg-orange-500 rounded-full" />
+                <span className="w-1 h-2 bg-blue-500 rounded-full" />
               </div>
               <span className="text-xl font-bold tracking-tight text-white group-hover:opacity-90 transition-opacity">
-                Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-orange-400 bg-clip-text text-transparent">Matrix</span>
+                Job<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-blue-500 bg-clip-text text-transparent">Matrix</span>
               </span>
               <span className="ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 border border-slate-700/80 text-slate-300">
                 {isCandidate ? "Candidate Portal" : isRecruiter ? "Employer Portal" : "Portal"}
