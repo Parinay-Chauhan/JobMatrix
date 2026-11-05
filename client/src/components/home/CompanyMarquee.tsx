@@ -187,7 +187,7 @@ export const CompanyMarquee: React.FC = React.memo(() => {
   return (
     <section
       id="companies"
-      className="relative overflow-hidden bg-slate-950/80 border-t border-slate-800/60 pt-4 pb-6 sm:pt-5 sm:pb-7 w-full z-10 shrink-0"
+      className="relative overflow-hidden bg-slate-950 border-t border-b border-white/[0.08] py-6 sm:py-8 w-full z-10 shrink-0"
     >
       {/* Edge gradient overlays */}
       <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent z-10 pointer-events-none" />

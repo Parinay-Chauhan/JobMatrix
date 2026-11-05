@@ -24,11 +24,11 @@ export const Home: React.FC = () => {
       <div className="min-h-screen bg-slate-950 flex flex-col font-sans selection:bg-blue-500/20 selection:text-blue-200">
         <FloatingHeader />
         <HeroSection />
-        <CompanyMarquee />
         <StatsSection />
         <PopularSearches />
         <ExperienceTimeline />
         <JobListingsSection />
+        <CompanyMarquee />
         <TestimonialsSection />
         <RecruiterCtaSection />
         <HomeFooter />
