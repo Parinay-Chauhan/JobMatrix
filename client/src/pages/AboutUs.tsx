@@ -158,13 +158,13 @@ export const AboutUs: React.FC = () => {
               key={idx}
               className="p-6 sm:p-8 rounded-2xl bg-slate-900/40 border border-white/10 backdrop-blur-md text-left transition-all duration-200 hover:border-white/20 hover:bg-slate-900/60"
             >
-              <div className="text-3xl sm:text-4xl font-semibold text-white tracking-tight">
+              <div className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
                 {item.value}
               </div>
-              <div className="mt-2 text-sm font-medium text-slate-200">
+              <div className="mt-3 text-base font-bold text-slate-100 tracking-tight">
                 {item.label}
               </div>
-              <p className="mt-1 text-sm text-zinc-400 font-normal leading-relaxed">
+              <p className="mt-1.5 text-sm text-slate-400 font-normal leading-relaxed">
                 {item.desc}
               </p>
             </div>

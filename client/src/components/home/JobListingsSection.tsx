@@ -26,14 +26,14 @@ export const JobListingsSection: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium mb-3">
-              <Filter className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-blue-300 text-xs sm:text-sm font-semibold tracking-wide mb-3">
+              <Filter className="w-4 h-4" />
               <span>Opportunities</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
               Latest job openings
             </h2>
-            <p className="text-sm sm:text-base text-zinc-400 mt-2 font-normal leading-relaxed">
+            <p className="text-base sm:text-lg text-slate-300 mt-2 font-normal leading-relaxed">
               Explore available opportunities posted by verified tech companies
             </p>
           </div>

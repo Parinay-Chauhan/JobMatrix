@@ -31,21 +31,21 @@ const STATS: StatItem[] = [
 
 export const StatsSection: React.FC = () => {
   return (
-    <section className="relative bg-slate-950 border-t border-white/10 py-12 sm:py-16">
+    <section className="relative bg-slate-950 border-t border-white/10 py-14 sm:py-20 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {STATS.map((stat, idx) => (
             <div
               key={idx}
-              className="p-6 sm:p-8 rounded-2xl bg-slate-900/40 border border-white/10 backdrop-blur-md transition-all duration-200 hover:border-white/20 hover:bg-slate-900/60 text-left"
+              className="p-7 sm:p-8 rounded-2xl bg-slate-900/50 border border-white/10 backdrop-blur-md transition-all duration-200 hover:border-white/25 hover:bg-slate-900/80 text-left shadow-lg"
             >
-              <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+              <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
                 {stat.value}
               </div>
-              <div className="mt-2 text-sm font-medium text-slate-200">
+              <div className="mt-3 text-base sm:text-lg font-bold text-slate-100 tracking-tight">
                 {stat.label}
               </div>
-              <p className="mt-1 text-sm text-zinc-400 font-normal leading-relaxed">
+              <p className="mt-1.5 text-sm text-slate-400 font-normal leading-relaxed">
                 {stat.description}
               </p>
             </div>

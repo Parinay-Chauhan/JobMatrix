@@ -17,27 +17,27 @@ export const RecruiterCtaSection: React.FC = () => {
                 <span>Hiring infrastructure</span>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight leading-tight">
+              <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
                 Scale your engineering team with top-tier talent
               </h2>
 
-              <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-normal">
+              <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
                 Access verified developers, AI-ranked ATS candidate profiles, and direct applicant tracking without recruiter spam or commission markups.
               </p>
 
               {/* Quick Metrics */}
               <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/10 max-w-lg">
                 <div>
-                  <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">10,000+</div>
-                  <div className="text-sm text-zinc-400 mt-1 font-normal">Active profiles</div>
+                  <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">10,000+</div>
+                  <div className="text-sm sm:text-base text-slate-300 mt-1.5 font-medium">Active profiles</div>
                 </div>
                 <div>
-                  <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">&lt; 24h</div>
-                  <div className="text-sm text-zinc-400 mt-1 font-normal">First response</div>
+                  <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">&lt; 24h</div>
+                  <div className="text-sm sm:text-base text-slate-300 mt-1.5 font-medium">First response</div>
                 </div>
                 <div>
-                  <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">0%</div>
-                  <div className="text-sm text-zinc-400 mt-1 font-normal">Placement fee</div>
+                  <div className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">0%</div>
+                  <div className="text-sm sm:text-base text-slate-300 mt-1.5 font-medium">Placement fee</div>
                 </div>
               </div>
             </div>
