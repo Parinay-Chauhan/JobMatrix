@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import gsap from "gsap";
-import { Search, MapPin, Briefcase, ChevronDown, Sparkles, Building2, X, ArrowUpRight } from "lucide-react";
+import { Search, MapPin, Briefcase, ChevronDown, Sparkles, Building2, X, ArrowUpRight, Check } from "lucide-react";
 import { useJobContext } from "../../context/JobContext";
 
 const TRENDING_SKILLS = [
@@ -62,6 +62,13 @@ const CURATED_SKILLS = [
   "Git",
 ];
 
+const EXPERIENCE_OPTIONS = [
+  { value: "", label: "All experience", badge: "All levels" },
+  { value: "entry-level", label: "Entry-level", badge: "0–2 yrs" },
+  { value: "mid-level", label: "Mid-level", badge: "2–5 yrs" },
+  { value: "senior-level", label: "Senior-level", badge: "5+ yrs" },
+];
+
 interface SuggestionItem {
   id: string;
   label: string;
@@ -81,6 +88,7 @@ export const HeroSection: React.FC = React.memo(() => {
 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [isExpDropdownOpen, setIsExpDropdownOpen] = useState(false);
 
   const heroBadgeRef = useRef<HTMLDivElement>(null);
   const heroTitleRef = useRef<HTMLHeadingElement>(null);
@@ -88,13 +96,17 @@ export const HeroSection: React.FC = React.memo(() => {
   const heroSearchRef = useRef<HTMLDivElement>(null);
   const heroSkillsRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  const expDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close suggestions on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
         setShowSuggestions(false);
         setSelectedIndex(-1);
+      }
+      if (expDropdownRef.current && !expDropdownRef.current.contains(e.target as Node)) {
+        setIsExpDropdownOpen(false);
       }
     };
 
@@ -458,22 +470,66 @@ export const HeroSection: React.FC = React.memo(() => {
               />
             </div>
 
-            {/* Dropdown 3: Experience */}
-            <div className="flex items-center gap-2 px-4 py-3 sm:px-5 sm:py-3.5 min-w-0 sm:min-w-[190px] relative border-b sm:border-b-0 border-white/10">
+            {/* Dropdown 3: Custom Experience Dropdown */}
+            <div
+              ref={expDropdownRef}
+              className="relative z-40 flex items-center gap-2 px-4 py-3 sm:px-5 sm:py-3.5 min-w-0 sm:min-w-[210px] border-b sm:border-b-0 border-white/10"
+            >
               <Briefcase className="w-4 h-4 text-slate-400 shrink-0 pointer-events-none" />
-              <div className="relative flex-1">
-                <select
-                  value={searchExperience}
-                  onChange={(e) => setSearchExperience(e.target.value)}
-                  className="w-full bg-transparent text-white text-sm sm:text-base font-normal focus:outline-none appearance-none cursor-pointer pr-6 [&>option]:bg-slate-950 [&>option]:text-white"
+              <button
+                type="button"
+                onClick={() => setIsExpDropdownOpen((prev) => !prev)}
+                className="w-full flex items-center justify-between gap-2 bg-transparent text-white text-sm sm:text-base font-normal focus:outline-none cursor-pointer text-left select-none"
+              >
+                <span className="truncate text-white">
+                  {searchExperience
+                    ? (EXPERIENCE_OPTIONS.find((o) => o.value === searchExperience)?.label || "All experience")
+                    : "All experience"}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
+                    isExpDropdownOpen ? "rotate-180 text-blue-400" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Custom Dark Theme Dropdown Menu */}
+              {isExpDropdownOpen && (
+                <div
+                  style={{ backgroundColor: "#121214" }}
+                  className="absolute top-[calc(100%+10px)] right-0 left-0 sm:left-auto sm:w-[240px] border border-white/15 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[100] p-1.5 text-left animate-in fade-in slide-in-from-top-2 duration-150"
                 >
-                  <option value="">All experience</option>
-                  <option value="entry-level">Entry-level (0–2 yrs)</option>
-                  <option value="mid-level">Mid-level (2–5 yrs)</option>
-                  <option value="senior-level">Senior-level (5+ yrs)</option>
-                </select>
-                <ChevronDown className="w-4 h-4 text-slate-400 absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
+                  <div className="px-3 pt-2 pb-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                    Experience Level
+                  </div>
+                  <div className="space-y-1">
+                    {EXPERIENCE_OPTIONS.map((opt) => {
+                      const isSelected = searchExperience === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => {
+                            setSearchExperience(opt.value);
+                            setIsExpDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-left text-xs sm:text-sm transition-all duration-150 cursor-pointer ${
+                            isSelected
+                              ? "bg-blue-600/20 text-white font-medium border border-blue-500/35"
+                              : "text-slate-300 hover:bg-white/[0.06] hover:text-white border border-transparent"
+                          }`}
+                        >
+                          <div className="flex flex-col min-w-0">
+                            <span className="truncate">{opt.label}</span>
+                            <span className="text-[10px] text-slate-400 font-normal">{opt.badge}</span>
+                          </div>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Search Button */}
