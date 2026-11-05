@@ -328,12 +328,12 @@ export const HeroSection: React.FC = React.memo(() => {
         </p>
 
         {/* Responsive Search Bar: Linear / Vercel Dark Glass */}
-        <div ref={heroSearchRef} className="w-full max-w-4xl mt-12 sm:mt-16 md:mt-20">
-          <div className="relative bg-slate-900/90 rounded-2xl p-2 sm:p-2.5 backdrop-blur-md shadow-2xl border border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 transition-all duration-300 hover:border-white/20">
+        <div ref={heroSearchRef} className="relative z-30 w-full max-w-4xl mt-12 sm:mt-16 md:mt-20">
+          <div className="relative z-30 bg-slate-900/90 rounded-2xl p-2 sm:p-2.5 backdrop-blur-md shadow-2xl border border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 transition-all duration-300 hover:border-white/20">
             {/* Input 1: Job Title / Skills with Live Autocomplete */}
             <div
               ref={searchContainerRef}
-              className="relative flex-1 flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5 border-b sm:border-b-0 sm:border-r border-white/10 min-w-0"
+              className="relative z-40 flex-1 flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5 border-b sm:border-b-0 sm:border-r border-white/10 min-w-0"
             >
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
@@ -366,9 +366,12 @@ export const HeroSection: React.FC = React.memo(() => {
                 </button>
               )}
 
-              {/* Floating Suggestions Dropdown */}
+              {/* Floating Suggestions Dropdown (Solid, non-transparent background with high z-index) */}
               {showSuggestions && query.length > 0 && (
-                <div className="absolute top-[calc(100%+10px)] left-0 w-full sm:w-[380px] md:w-[420px] max-h-[380px] overflow-y-auto bg-[#121214] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.85)] backdrop-blur-2xl z-50 p-2 text-left animate-in fade-in slide-in-from-top-2 duration-150">
+                <div
+                  style={{ backgroundColor: "#121214" }}
+                  className="absolute top-[calc(100%+10px)] left-0 w-full sm:w-[380px] md:w-[420px] max-h-[380px] overflow-y-auto border border-white/15 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[100] p-2 text-left animate-in fade-in slide-in-from-top-2 duration-150"
+                >
                   {matchedSuggestions.length === 0 ? (
                     <div className="px-4 py-5 text-center text-xs text-slate-400">
                       No matching roles, skills, or companies for &ldquo;
@@ -487,7 +490,7 @@ export const HeroSection: React.FC = React.memo(() => {
         {/* Modern Skill Tags Row */}
         <div
           ref={heroSkillsRef}
-          className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-4xl mx-auto"
+          className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-4xl mx-auto"
         >
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-slate-400 mr-0.5 select-none">
             <Sparkles className="w-3.5 h-3.5 text-blue-400" />
